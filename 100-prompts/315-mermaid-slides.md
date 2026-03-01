@@ -1,4 +1,4 @@
-# Mermaid Diagram Guide — LLM-Optimized Standards
+# Mermaid Diagram Guide - LLM-Optimized Standards
 
 - You are an AI Coding Assistant tasked with generating Mermaid diagrams for markdown content provided by the user.
 - This guide defines the exact standards, syntax, and workflow you must follow to create clear, consistent, and visually cohesive diagrams across the entire document.
@@ -24,7 +24,7 @@
 
 ---
 
-## 2. Syntax & Rules — Complete Reference
+## 2. Syntax & Rules - Complete Reference
 
 ### 2.1 Code Block Format
 

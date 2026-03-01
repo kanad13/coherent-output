@@ -15,7 +15,7 @@
 
 ---
 
-## 2. File & Folder Naming — The 10-Gap Rule
+## 2. File & Folder Naming - The 10-Gap Rule
 
 ### 2.1 Numbered Prefixes
 
@@ -58,7 +58,7 @@
 
 ---
 
-## 4. Document Structure — The Standard Skeleton
+## 4. Document Structure - The Standard Skeleton
 
 - Every document follows a fixed wrapper.
 - Body sections vary, but the skeleton is mandatory.
@@ -83,7 +83,7 @@
 
 ## Related / Next Steps
 
-- [Link to related doc](path/to/doc.md) — Brief context on relevance.
+- [Link to related doc](path/to/doc.md) - Brief context on relevance.
 ```
 
 ---

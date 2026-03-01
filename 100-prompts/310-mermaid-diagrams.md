@@ -24,7 +24,7 @@
 
 ---
 
-## 2. Syntax & Rules — Complete Reference
+## 2. Syntax & Rules - Complete Reference
 
 ### 2.1 Code Block & Titles
 
@@ -74,7 +74,7 @@ graph TB
 ### 3.1 Color Application Rules
 
 - Every node must have an explicit `style` attribute.
-- Use ONLY the values below — do not invent colors.
+- Use ONLY the values below - do not invent colors.
 - Do not leave any node unstyled.
 
 ```css

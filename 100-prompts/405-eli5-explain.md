@@ -29,26 +29,22 @@ Phase 4: Progressive Deepening (Loop as needed)
 When the user asks for help understanding a topic, infer:
 
 - **Scope & Specificity**
-
   - Is the request narrowly focused ("I'm struggling with X") or broad ("Help me understand Y")?
   - Are there hints about which aspects matter most?
-  - Look for phrases like "I don't understand," "I keep getting confused," "I struggle with"—these signal pain points
+  - Look for phrases like "I don't understand," "I keep getting confused," "I struggle with"-these signal pain points
 
 - **Implied Prerequisites & Knowledge**
-
   - What does their phrasing suggest they already know?
   - Example: If someone asks "Why does German use dative here?" they likely understand what dative _is_
   - Example: If they ask "What's a preposition and how do cases work?" they're starting from zero
   - Infer whether they have foundational vocabulary
 
 - **Context & Use Case (if mentioned)**
-
   - Do they mention _why_ they need this knowledge? (Studying for exams, work project, hobby)
   - This context shapes example selection and depth focus
   - If not mentioned, use general-audience examples
 
 - **Previous Learning Attempts (if mentioned)**
-
   - Did they say "I tried [approach] but didn't understand" or "I've never studied this"?
   - This signals whether they need a completely new angle or a deeper dive into existing concepts
 
@@ -85,46 +81,39 @@ Begin Phase 2 immediately. The inference from the request itself should be suffi
 **Principles to follow:**
 
 1. **Start with the "why"**
-
    - Begin with the fundamental principle or problem the topic solves
    - Explain what gap or need this topic addresses
    - Example: "German cases exist because German wants to be explicit about a noun's role in the sentence"
 
 2. **Build hierarchically**
-
    - Organize concepts from simplest/most foundational to more complex
    - Each section should logically build on the previous one
    - Use clear subheaders to show the structure
 
 3. **Use prose-based explanations**
-
    - Default to narrative, conversational explanations
    - Avoid tables until you have deeply explained each element individually
    - Explain _through words_, not just lists
 
 4. **Explain each core element with depth**
-
    - For each key concept, provide:
      - **What it is** (clear definition)
      - **Why it works that way** (underlying logic or principle)
      - **Examples in context** (multiple examples if the concept is subtle)
      - **How/when to apply it** (practical usage guidance)
-   - Avoid creating separate "examples" or "applications" sections—embed them in the explanation
+   - Avoid creating separate "examples" or "applications" sections-embed them in the explanation
 
 5. **Eliminate redundancy ruthlessly**
-
    - Ask before writing: "Will someone who understands Section X still need Section Y?"
    - If yes, merge them or deepen one
    - Don't restate the same idea in different words across sections
 
 6. **Connect patterns and logic**
-
    - Explicitly point out when similar logic applies to different concepts
    - Use phrases like: "Notice that..." or "The pattern here is..." or "This follows the same logic as..."
    - Help the learner see the unified system, not isolated facts
 
 7. **Make examples teach, not decorate**
-
    - Every example should clarify the concept
    - Explain _why_ the example demonstrates the point
    - Use counter-examples ("Don't confuse X with Y because...") to reinforce understanding
@@ -170,11 +159,9 @@ Begin Phase 2 immediately. The inference from the request itself should be suffi
 After delivering the foundational explanation, explicitly ask:
 
 - **"Which parts felt clear? Where did something still feel fuzzy?"**
-
   - Invites both positive and constructive feedback without being interrogative
 
 - **"Was there a part that confused rather than clarified?"**
-
   - Signals you're open to improving the explanation
 
 - **"Open floor: What questions do you have?"**
@@ -184,7 +171,7 @@ After delivering the foundational explanation, explicitly ask:
 
 When the user identifies confusion:
 
-- Don't add _more_ information—reframe what you already explained
+- Don't add _more_ information-reframe what you already explained
 - Find a different angle or a different example
 - Check if the confusion stems from an unexamined prerequisite concept
 - Test whether the structure of the explanation was the problem
@@ -227,19 +214,15 @@ Based on the learner's feedback and questions, determine:
 **Options for next layers** (choose based on context):
 
 1. **Exceptions and Edge Cases**
-
    - "Now that you understand the core principle, here's where it bends and why..."
 
 2. **Related or Opposing Concepts**
-
    - "Now that you understand X, let's compare it to Y to see how they differ..."
 
 3. **Practical Application or Context**
-
    - "Now that you understand the theory, let's see how this plays out in real situations..."
 
 4. **Deeper Principles**
-
    - "The core principle we covered rests on a deeper principle. Let's explore that..."
 
 5. **Integration with Previous Knowledge**

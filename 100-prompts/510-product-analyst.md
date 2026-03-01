@@ -16,7 +16,7 @@
          1. Columns:
             1. Feature
             2. Importance (Mandatory/Recommended/Optional)
-            3. For each product: “Product Name — Total Cost”
+            3. For each product: “Product Name - Total Cost”
          2. Rows:
             1. A row for each of the feature for each product.
             2. Overall rating (1–5): brief reason referencing top strengths/weaknesses.

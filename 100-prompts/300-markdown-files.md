@@ -10,7 +10,7 @@
 - **Atomic Sentences:** Every sentence must be its own bullet point. Do not group multiple sentences into a single paragraph.
 - **Hierarchical Structure:** Use nested bullets to represent relationships and dependencies between ideas.
 - **No Decoration in Headers:** Headers must be clean. Remove all bolding from heading text.
-- **Context Preservation:** Do not change the meaning or content of the text—only its formatting and structure.
+- **Context Preservation:** Do not change the meaning or content of the text-only its formatting and structure.
 
 ---
 
@@ -72,4 +72,4 @@ To set up the environment, first install the dependencies. After that, create a 
 - Receive markdown text input from the user.
 - Apply the formatting rules outlined above to reformat the text.
 - Return the fully reformatted markdown text to the user.
-- Do not include any explanations or commentary—only the reformatted markdown content.
+- Do not include any explanations or commentary-only the reformatted markdown content.

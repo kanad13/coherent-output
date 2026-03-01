@@ -18,26 +18,26 @@
 
 **PHASE 1: UNDERSTAND** → **PHASE 2: TRANSFORM** (repeated per section)
 
-This workflow is linear and efficient: complete PHASE 1 once for the entire document, then repeat PHASE 2 for each section. Inline definitions within the transformed text serve as your glossary—no separate document needed.
+This workflow is linear and efficient: complete PHASE 1 once for the entire document, then repeat PHASE 2 for each section. Inline definitions within the transformed text serve as your glossary-no separate document needed.
 
 ---
 
-### PHASE 1: UNDERSTAND — STEP 1: ANALYZE the Text (Do This Once)
+### PHASE 1: UNDERSTAND - STEP 1: ANALYZE the Text (Do This Once)
 
 - **Important:** Do not write yet
 - **Action:** Answer these questions and any other relevant analysis about the ENTIRE source text:
-  - **What concepts need explaining?** — List all terms, tools, or ideas unfamiliar to a first-time reader
-  - **What relationships are not apparent?** — How do the concepts connect or depend on each other?
-  - **What assumptions are hidden?** — What does the text take for granted that a reader wouldn't know?
-  - **What prior knowledge is assumed?** — What background would help understanding?
-  - **What's the core message?** — The main point or takeaway in one sentence
+  - **What concepts need explaining?** - List all terms, tools, or ideas unfamiliar to a first-time reader
+  - **What relationships are not apparent?** - How do the concepts connect or depend on each other?
+  - **What assumptions are hidden?** - What does the text take for granted that a reader wouldn't know?
+  - **What prior knowledge is assumed?** - What background would help understanding?
+  - **What's the core message?** - The main point or takeaway in one sentence
 - **Output:** ONE document-level analysis (bulleted list of findings for the entire text)
 - **Progress Check:** You now understand the document's scope and key concepts.
 - **Next:** Proceed to PHASE 2 (TRANSFORM). Identify all H2 headings (top-level sections only) before starting.
 
 ---
 
-### PHASE 2: TRANSFORM — Repeat for EACH Section
+### PHASE 2: TRANSFORM - Repeat for EACH Section
 
 **Loop Setup:** Identify all **top-level sections (H2 headings only)** in the document. You will repeat STEP 2 below for each of them, one section at a time in a systematic manner. (Note: Process each H2 and its subsections as a unit; don't treat H3/H4 separately.)
 
@@ -130,11 +130,11 @@ This workflow is linear and efficient: complete PHASE 1 once for the entire docu
 ## 5. QUICK REFERENCE: Success Criteria
 
 - **Your Work Succeeds When:** The reader (someone with general education, no domain expertise) can answer these questions:
-  - **What is this about?** — They can state the main topic in one sentence
-  - **Why does it matter?** — They understand the purpose and practical value
-  - **How do the pieces fit together?** — They can trace connections using linking words ("because," "therefore," "enables," "requires") and find definitions inline where terms first appear
-  - **Is there jargon I don't understand?** — NO, all unfamiliar terms are defined inline in clear language
-  - **Is the output complete?** — YES, you have one complete Simplified Document with all terms defined inline
-  - **Is the content still accurate?** — YES, all facts, numbers, tool names, and technical details are preserved
-  - **Can I follow the examples?** — YES, you understand how concepts work through concrete examples
-  - **Could someone new to this topic understand it?** — YES, reading the simplified text alone should be sufficient
+  - **What is this about?** - They can state the main topic in one sentence
+  - **Why does it matter?** - They understand the purpose and practical value
+  - **How do the pieces fit together?** - They can trace connections using linking words ("because," "therefore," "enables," "requires") and find definitions inline where terms first appear
+  - **Is there jargon I don't understand?** - NO, all unfamiliar terms are defined inline in clear language
+  - **Is the output complete?** - YES, you have one complete Simplified Document with all terms defined inline
+  - **Is the content still accurate?** - YES, all facts, numbers, tool names, and technical details are preserved
+  - **Can I follow the examples?** - YES, you understand how concepts work through concrete examples
+  - **Could someone new to this topic understand it?** - YES, reading the simplified text alone should be sufficient
