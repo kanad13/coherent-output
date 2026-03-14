@@ -1,0 +1,662 @@
+<!--
+	╔════════════════════════════════════════════════════════════════════════════╗
+	║                        MOBILE FIND & REPLACE EDITOR                        ║
+	╚════════════════════════════════════════════════════════════════════════════╝
+
+	PROJECT PURPOSE:
+	A mobile-optimized plain-text editor with built-in find & replace functionality.
+	Designed for iPad and iPhone. Zero external dependencies. Pure text editing.
+
+	KEY FEATURES:
+	• Find & Replace bar always visible at the top (primary feature)
+	• Case-sensitive / case-insensitive toggle (Aa button, or Alt+C shortcut)
+	• Auto-save to browser localStorage (500ms debounce)
+	• Touch-friendly interface optimized for mobile
+	• Word wrap enabled by default
+	• Responsive layout (desktop and mobile)
+	• Minimal, clean UI with no clutter
+
+	MAINTENANCE NOTES:
+	• No external dependencies — file is self-contained
+	• Storage: localStorage key is 'notepadContent' (see STORAGE_KEY variable)
+	• Auto-save delay: 500ms (see SAVE_DELAY variable) — adjust if lag is noticed
+	• Browser compatibility: Modern browsers (ES6 compatible)
+	• Mobile: Tested on iPad and iPhone (Safari)
+	• Maximum content: Limited by browser localStorage (~5-10MB depending on browser)
+
+	USAGE:
+	• Type in the Find field to search in real-time
+	• Press Enter in Find to jump to the next match
+	• Click Aa (or press Alt+C) to toggle case-sensitive matching
+	• Use "Next" to navigate through matches
+	• Use "Replace" to replace one match at a time (Enter in Replace field also works)
+	• Use "Replace All" to replace all occurrences at once
+	• Press Escape in any find/replace field to return focus to the editor
+
+	COMMON CUSTOMIZATIONS:
+	• To change debounce delay: Edit SAVE_DELAY value in JavaScript
+	• To change font: Modify textarea font-family in CSS
+	• To adjust button/input sizes: Modify .fr-buttons and .fr-row padding
+	• For tablet/desktop: Adjust @media query breakpoint (currently 768px)
+
+	KNOWN LIMITATIONS:
+	• Find/Replace is plain-text only (no regex mode)
+	• No undo history beyond browser's native textarea undo (Cmd/Ctrl+Z)
+	• localStorage has a ~5–10 MB browser limit (DOMException is caught and logged)
+
+	Type: Standalone HTML/CSS/JavaScript (Mobile-First)
+	License: MIT (feel free to use and modify)
+
+	─────────────────────────────────────────────────────────────────────────────
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Notepad</title>
+	<style>
+		* {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+		}
+
+    	body {
+    		display: flex;
+    		flex-direction: column;
+    		min-height: 100vh;
+    		/* fallback for browsers without dvh support */
+    		min-height: 100dvh;
+    		/* dynamic viewport — excludes mobile browser chrome */
+    		font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    		background-color: #f5f5f5;
+    	}
+
+    	.header {
+    		padding: 0 15px;
+    		background-color: #fff;
+    		border-bottom: 1px solid #e0e0e0;
+    		display: flex;
+    		flex-direction: row;
+    		align-items: center;
+    		gap: 15px;
+    		box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    		flex-wrap: nowrap;
+    		min-height: 50px;
+    	}
+
+    	.header-top {
+    		display: flex;
+    		align-items: center;
+    		padding: 0;
+    		border-bottom: none;
+    		flex: 0 0 auto;
+    	}
+
+    	.title {
+    		font-size: 16px;
+    		font-weight: 600;
+    		color: #333;
+    		white-space: nowrap;
+    	}
+
+    	.header-search {
+    		display: flex;
+    		gap: 4px;
+    		flex-wrap: nowrap;
+    		padding: 0;
+    		align-items: center;
+    		flex: 0 0 auto;
+    		margin-left: auto;
+    	}
+
+
+
+    	.editor-container {
+    		flex: 1;
+    		display: flex;
+    		overflow: hidden;
+    		padding: 15px;
+    	}
+
+    	textarea {
+    		flex: 1;
+    		padding: 15px;
+    		font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+    		/* 16px minimum prevents iOS Safari from auto-zooming when the textarea is focused */
+    		font-size: 16px;
+    		line-height: 1.6;
+    		border: 1px solid #ddd;
+    		border-radius: 6px;
+    		background-color: #fff;
+    		color: #333;
+    		resize: none;
+    		outline: none;
+    		transition: border-color 0.2s;
+    		white-space: pre-wrap;
+    		word-wrap: break-word;
+    	}
+
+    	textarea:focus {
+    		border-color: #007bff;
+    		box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+    	}
+
+    	textarea::placeholder {
+    		color: #aaa;
+    	}
+
+    	.find-replace-panel {
+    		display: flex;
+    		gap: 8px;
+    		flex-wrap: wrap;
+    		align-items: center;
+    		padding: 0;
+    		background: transparent;
+    		border: none;
+    		box-shadow: none;
+    	}
+
+    	.fr-row {
+    		display: flex;
+    		gap: 3px;
+    		align-items: center;
+    		flex: 0 1 auto;
+    		min-width: auto;
+    	}
+
+    	.fr-row label {
+    		min-width: auto;
+    		font-size: 12px;
+    		font-weight: 600;
+    		color: #666;
+    		white-space: nowrap;
+    	}
+
+    	/* Per-row label widths to keep inputs aligned without inline styles */
+    	.fr-row--find label {
+    		min-width: 35px;
+    	}
+
+    	.fr-row--replace label {
+    		min-width: 60px;
+    	}
+
+    	.fr-row input[type="text"] {
+    		flex: 1;
+    		padding: 4px 6px;
+    		font-size: 11px;
+    		border: 1px solid #ddd;
+    		border-radius: 2px;
+    		font-family: monospace;
+    		min-width: 60px;
+    		width: 120px;
+    	}
+
+    	.fr-row input[type="text"]:focus {
+    		border-color: #007bff;
+    		outline: none;
+    		box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1);
+    	}
+
+    	.fr-buttons {
+    		display: flex;
+    		gap: 3px;
+    		flex: 0 1 auto;
+    		min-width: auto;
+    	}
+
+    	.fr-buttons button {
+    		flex: 0 1 auto;
+    		padding: 4px 7px;
+    		font-size: 10px;
+    		border: 1px solid #ccc;
+    		border-radius: 2px;
+    		background-color: #f0f0f0;
+    		color: #333;
+    		cursor: pointer;
+    		transition: background 0.2s;
+    		font-weight: 500;
+    		white-space: nowrap;
+    	}
+
+    	.fr-buttons button:active {
+    		background-color: #d0d0d0;
+    	}
+
+    	.fr-buttons button:hover {
+    		background-color: #e0e0e0;
+    	}
+
+    	/* WCAG 2.4.7 Focus Visible — :focus-visible targets keyboard nav only, not mouse clicks */
+    	.fr-buttons button:focus-visible {
+    		outline: 2px solid #007bff;
+    		outline-offset: 2px;
+    	}
+
+    	.fr-buttons button.primary {
+    		background-color: #007bff;
+    		color: white;
+    		border-color: #007bff;
+    	}
+
+    	.fr-buttons button.primary:hover {
+    		background-color: #0056b3;
+    	}
+
+    	.fr-buttons button.primary:active {
+    		background-color: #003d82;
+    	}
+
+    	.fr-buttons button.primary:focus-visible {
+    		outline-color: #003d82;
+    	}
+
+    	.fr-info {
+    		font-size: 11px;
+    		/* #666 meets WCAG AA contrast (7:1 on white) */
+    		color: #666;
+    		min-width: 50px;
+    		display: flex;
+    		align-items: center;
+    		font-weight: 500;
+    	}
+
+    	/* Case-sensitive toggle (Aa button) — sits inline in the find row */
+    	.fr-toggle {
+    		padding: 4px 6px;
+    		font-size: 10px;
+    		font-weight: 700;
+    		font-family: inherit;
+    		border: 1px solid #ccc;
+    		border-radius: 2px;
+    		background: #f0f0f0;
+    		color: #666;
+    		cursor: pointer;
+    		flex-shrink: 0;
+    		transition: background 0.15s, color 0.15s, border-color 0.15s;
+    		line-height: 1;
+    		white-space: nowrap;
+    	}
+
+    	.fr-toggle:hover {
+    		background: #e0e0e0;
+    	}
+
+    	.fr-toggle:active {
+    		background: #d0d0d0;
+    	}
+
+    	/* Active = case-sensitive mode is ON */
+    	.fr-toggle.active {
+    		background: #007bff;
+    		color: #fff;
+    		border-color: #007bff;
+    	}
+
+    	.fr-toggle.active:hover {
+    		background: #0056b3;
+    		border-color: #0056b3;
+    	}
+
+    	.fr-toggle:focus-visible {
+    		outline: 2px solid #007bff;
+    		outline-offset: 2px;
+    	}
+
+    	.fr-toggle.active:focus-visible {
+    		outline-color: #003d82;
+    	}
+
+    	@media (max-width: 768px) {
+    		.header {
+    			flex-wrap: wrap;
+    			padding: 8px 12px;
+    			min-height: auto;
+    			gap: 8px;
+    		}
+
+    		.header-top {
+    			flex: 0 0 100%;
+    			min-height: auto;
+    		}
+
+    		.title {
+    			font-size: 14px;
+    		}
+
+    		.header-search {
+    			flex: 0 0 100%;
+    			gap: 4px;
+    			align-items: stretch;
+    		}
+
+    		.find-replace-panel {
+    			flex-direction: column;
+    			gap: 6px;
+    			align-items: stretch;
+    		}
+
+    		.fr-row {
+    			width: 100%;
+    			flex: none;
+    			min-width: unset;
+    			align-items: stretch;
+    		}
+
+    		.fr-row label {
+    			min-width: auto;
+    		}
+
+    		.fr-row input[type="text"] {
+    			min-width: unset;
+    		}
+
+    		.fr-buttons {
+    			width: 100%;
+    			flex: none;
+    			min-width: unset;
+    			justify-content: space-between;
+    		}
+
+    		.fr-buttons button {
+    			padding: 7px 8px;
+    			font-size: 11px;
+    		}
+    	}
+    </style>
+
+</head>
+
+<body>
+
+    <header class="header">
+    	<div class="header-top">
+    		<div class="title">Notepad</div>
+    	</div>
+    	<div class="header-search" id="findReplacePanel" role="search" aria-label="Find and replace">
+    		<div class="fr-row fr-row--find">
+    			<label for="findInput">Find:</label>
+    			<input type="text" id="findInput" placeholder="Search text..." autocomplete="off" spellcheck="false"
+    				autocorrect="off" autocapitalize="off" />
+    			<!--
+    				The Aa button toggles case-sensitive matching.
+    				Alt+C is the keyboard shortcut (handled in the findInput keydown listener).
+    				aria-pressed reflects the current state for screen readers.
+    			-->
+    			<button id="caseToggleBtn" class="fr-toggle" title="Toggle case sensitive (Alt+C)"
+    				aria-pressed="false">Aa</button>
+    			<!-- aria-live: announces match count updates to screen readers as the user types -->
+    			<div class="fr-info" id="findInfo" aria-live="polite" aria-atomic="true"></div>
+    		</div>
+    		<div class="fr-row fr-row--replace">
+    			<label for="replaceInput">Replace:</label>
+    			<input type="text" id="replaceInput" placeholder="Replace with..." autocomplete="off" spellcheck="false"
+    				autocorrect="off" autocapitalize="off" />
+    		</div>
+    		<div class="fr-buttons">
+    			<button id="findNextBtn">Next</button>
+    			<button id="replaceBtn">Replace</button>
+    			<button id="replaceAllBtn" class="primary">Replace All</button>
+    		</div>
+    	</div>
+    </header>
+
+    <main class="editor-container">
+    	<textarea id="editor" placeholder="Start typing..."></textarea>
+    </main>
+
+    <script>
+    	// ═══════════════════════════════════════════════════════════════════════
+    	// CONFIGURATION & DOM REFERENCES
+    	// ═══════════════════════════════════════════════════════════════════════
+
+    	const editor = document.getElementById('editor');
+    	const findInput = document.getElementById('findInput');
+    	const replaceInput = document.getElementById('replaceInput');
+    	const findInfo = document.getElementById('findInfo');
+    	const caseToggleBtn = document.getElementById('caseToggleBtn');
+
+    	let saveTimeout = null;
+    	let currentFindIndex = -1;
+    	let findMatches = [];
+    	let caseSensitive = false; // toggled by the Aa button or Alt+C
+
+    	const STORAGE_KEY = 'notepadContent'; // localStorage key — change if needed
+    	const SAVE_DELAY = 500;              // auto-save debounce delay in ms
+    	const REGEX_ESCAPE = /[.*+?^${}()|[\]\\]/g; // escapes find text so it’s treated as a plain string
+
+    	// ═══════════════════════════════════════════════════════════════════════
+    	// PERSISTENCE
+    	// ═══════════════════════════════════════════════════════════════════════
+
+    	/**
+    	 * Saves content to localStorage with debouncing to prevent excessive writes.
+    	 * Waits SAVE_DELAY ms after the last keystroke before persisting — avoids
+    	 * hammering storage on every character typed.
+    	 * Logs to console if localStorage access fails (quota exceeded, private mode, etc).
+    	 */
+    	function saveContent() {
+    		clearTimeout(saveTimeout);
+    		saveTimeout = setTimeout(() => {
+    			try {
+    				localStorage.setItem(STORAGE_KEY, editor.value);
+    			} catch (error) {
+    				console.error('Failed to save:', error);
+    			}
+    		}, SAVE_DELAY);
+    	}
+
+    	/**
+    	 * Flushes any pending debounced save immediately.
+    	 * Called on beforeunload so edits made just before navigation are not lost.
+    	 * Synchronous write (no setTimeout) because the page is about to close.
+    	 */
+    	function flushSave() {
+    		if (saveTimeout === null) return;
+    		clearTimeout(saveTimeout);
+    		saveTimeout = null;
+    		try {
+    			localStorage.setItem(STORAGE_KEY, editor.value);
+    		} catch (e) { /* best-effort — nothing actionable at unload time */ }
+    	}
+
+    	/**
+    	 * Restores content from localStorage on page load.
+    	 * Silently succeeds if no saved content exists (first-time use).
+    	 */
+    	function loadContent() {
+    		try {
+    			const saved = localStorage.getItem(STORAGE_KEY);
+    			if (saved) editor.value = saved;
+    		} catch (error) {
+    			console.error('Failed to load:', error);
+    		}
+    	}
+
+    	// ═══════════════════════════════════════════════════════════════════════
+    	// FIND & REPLACE
+    	// ═══════════════════════════════════════════════════════════════════════
+
+    	/**
+    	 * Builds a search RegExp from plain-text input, respecting caseSensitive.
+    	 * Input is escaped via REGEX_ESCAPE so special characters are treated as literals.
+    	 * Used by both findAll() and replaceAll() to keep flag logic in one place.
+    	 */
+    	function buildSearchRegex(searchText) {
+    		return new RegExp(searchText.replace(REGEX_ESCAPE, '\\$&'), caseSensitive ? 'g' : 'gi');
+    	}
+
+    	/**
+    	 * Scans editor content and populates findMatches with {start, end} pairs.
+    	 * Resets currentFindIndex so the next findNext() starts from the top.
+    	 */
+    	function findAll(searchText) {
+    		if (!searchText) {
+    			findMatches = [];
+    			currentFindIndex = -1;
+    			updateFindInfo();
+    			return;
+    		}
+
+    		const text = editor.value;
+    		const regex = buildSearchRegex(searchText);
+    		findMatches = [];
+    		let match;
+
+    		while ((match = regex.exec(text)) !== null) {
+    			findMatches.push({ start: match.index, end: match.index + match[0].length });
+    		}
+
+    		currentFindIndex = -1;
+    		updateFindInfo();
+    	}
+
+    	/**
+    	 * Selects the next occurrence in the textarea (wraps around on the last match).
+    	 */
+    	function findNext() {
+    		if (findMatches.length === 0) return;
+
+    		currentFindIndex = (currentFindIndex + 1) % findMatches.length;
+    		const match = findMatches[currentFindIndex];
+
+    		editor.focus();
+    		editor.setSelectionRange(match.start, match.end);
+    		updateFindInfo();
+    	}
+
+    	/**
+    	 * Replaces the currently highlighted match, then advances to the next one.
+    	 *
+    	 * After replacement the replaced entry is spliced out of findMatches and
+    	 * offsets of all subsequent entries are shifted by the length delta, so
+    	 * stale indices are never revisited by later findNext() calls.
+    	 */
+    	function replaceOne() {
+    		if (currentFindIndex === -1 || findMatches.length === 0) return;
+
+    		const match = findMatches[currentFindIndex];
+    		const replaceVal = replaceInput.value;
+    		const before = editor.value.substring(0, match.start);
+    		const after = editor.value.substring(match.end);
+
+    		editor.value = before + replaceVal + after;
+    		saveContent();
+
+    		// Shift offsets of matches that follow the replaced one
+    		const delta = replaceVal.length - (match.end - match.start);
+    		findMatches.forEach((m, i) => {
+    			if (i > currentFindIndex) { m.start += delta; m.end += delta; }
+    		});
+
+    		// Remove the now-replaced entry
+    		findMatches.splice(currentFindIndex, 1);
+
+    		if (findMatches.length === 0) {
+    			currentFindIndex = -1;
+    		} else {
+    			// currentFindIndex now naturally points to what was the next entry
+    			currentFindIndex = currentFindIndex % findMatches.length;
+    			const next = findMatches[currentFindIndex];
+    			editor.focus();
+    			editor.setSelectionRange(next.start, next.end);
+    		}
+
+    		updateFindInfo();
+    	}
+
+    	/**
+    	 * Replaces all occurrences at once.
+    	 *
+    	 * A replacer function (() => replaceText) is used instead of a string literal
+    	 * so that $& / $' / $` / $1…$n in the replace field are treated as plain text,
+    	 * not as JS replacement pattern tokens.
+    	 */
+    	function replaceAll() {
+    		if (findMatches.length === 0) return;
+
+    		const searchText = findInput.value;
+    		const replaceText = replaceInput.value;
+
+    		editor.value = editor.value.replace(
+    			buildSearchRegex(searchText),
+    			() => replaceText // function form prevents $& / $' / $` interpretation
+    		);
+
+    		saveContent();
+    		findAll(searchText); // re-scan to update match counter
+    	}
+
+    	/**
+    	 * Updates the match counter label.
+    	 * Four states depending on input value and navigation position:
+    	 *   • field is empty          → '' (nothing shown)
+    	 *   • has text, no matches    → 'No matches'
+    	 *   • matches exist, no nav   → 'N found'
+    	 *   • actively navigating     → 'X of N'
+    	 */
+    	function updateFindInfo() {
+    		if (!findInput.value) {
+    			findInfo.textContent = '';
+    		} else if (findMatches.length === 0) {
+    			findInfo.textContent = 'No matches';
+    		} else if (currentFindIndex === -1) {
+    			findInfo.textContent = `${findMatches.length} found`;
+    		} else {
+    			findInfo.textContent = `${currentFindIndex + 1} of ${findMatches.length}`;
+    		}
+    	}
+
+    	/**
+    	 * Toggles case-sensitive matching on/off.
+    	 * Updates the button's visual active state and aria-pressed, then re-runs the search.
+    	 */
+    	function toggleCase() {
+    		caseSensitive = !caseSensitive;
+    		caseToggleBtn.classList.toggle('active', caseSensitive);
+    		caseToggleBtn.setAttribute('aria-pressed', String(caseSensitive));
+    		findAll(findInput.value);
+    	}
+
+    	// ═══════════════════════════════════════════════════════════════════════
+    	// EVENT LISTENERS
+    	// ═══════════════════════════════════════════════════════════════════════
+
+    	editor.addEventListener('input', saveContent);
+    	findInput.addEventListener('input', () => findAll(findInput.value));
+
+    	findInput.addEventListener('keydown', (e) => {
+    		if (e.key === 'Enter') { e.preventDefault(); findNext(); }
+    		if (e.key === 'Escape') { editor.focus(); }
+    		// Alt+C toggles case sensitivity without leaving the find field
+    		if (e.altKey && e.key === 'c') { e.preventDefault(); toggleCase(); }
+    	});
+
+    	replaceInput.addEventListener('keydown', (e) => {
+    		if (e.key === 'Enter') { e.preventDefault(); replaceOne(); }
+    		if (e.key === 'Escape') { editor.focus(); }
+    	});
+
+    	document.getElementById('findNextBtn').addEventListener('click', findNext);
+    	document.getElementById('replaceBtn').addEventListener('click', replaceOne);
+    	document.getElementById('replaceAllBtn').addEventListener('click', replaceAll);
+    	caseToggleBtn.addEventListener('click', toggleCase);
+
+    	// Flush any pending debounced save before the page unloads
+    	window.addEventListener('beforeunload', flushSave);
+
+    	// ═══════════════════════════════════════════════════════════════════════
+    	// INIT
+    	// ═══════════════════════════════════════════════════════════════════════
+
+    	// Script is at the bottom of <body> — DOM is ready, no DOMContentLoaded needed.
+    	loadContent();
+    </script>
+
+</body>
+
+</html>

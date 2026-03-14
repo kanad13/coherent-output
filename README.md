@@ -25,3 +25,4 @@
   - [**300-instructions/**](300-instructions/README.md) - VS Code & Copilot customization (.instructions, .prompt, .agent files).
   - [**400-hooks/**](400-hooks/README.md) - Logic and trigger patterns for context-aware artifact selection.
   - [**500-rubrics/**](500-rubrics/README.md) - Quality evaluation frameworks and scoring templates.
+  - [**600-tools/**](600-tools/README.md) - Practical utilities and standalone applications ready for immediate use.
