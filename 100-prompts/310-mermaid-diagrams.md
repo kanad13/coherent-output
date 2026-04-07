@@ -10,6 +10,7 @@ This guide defines the exact standards, syntax, and workflow you must follow to 
 - **One Diagram, One Message:** Each diagram must communicate exactly one key insight. If a given block of text is complex, do not cram it into a single diagram; create multiple focused diagrams.
 - **Multiple Diagrams when Necessary:** If a section contains multiple distinct concepts, create separate diagrams for each. Do not attempt to combine them into one.
 - **Progressive Disclosure:** Use multiple diagrams to progressively reveal complexity. Start with a high-level overview (Macro View), then create additional diagrams to show Structural and Behavioral details as needed.
+- **Enhance Understanding:** Diagrams should clarify and simplify complex concepts, making them easier to grasp. So you should always ask yourself: "What diagram(s) would make this concept easier to understand?" and then create those diagrams.
 - **Aggressive Simplicity:** Maximum of 4 to 6 nodes per diagram. Remove any node that does not advance the narrative. A slide with too much information loses the audience.
 - **Coverage:** Every major concept must have at least one diagram. If a section contains 3 distinct concepts, there should be 3 diagrams. Do not leave any concept unvisualized.
 
