@@ -1,0 +1,21 @@
+{
+	"name": "ubuntu",
+	"build": {
+		"dockerfile": "Dockerfile",
+		"context": "."
+	},
+	// The Ubuntu base image uses 'vscode' as the default user
+	"remoteUser": "vscode",
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"KunalPathak.lightweight-markdown-preview",
+				"KunalPathak.mermaid-slideshow",
+				"KunalPathak.safe-pdf-viewer",
+				"esbenp.prettier-vscode"
+			]
+		}
+	},
+	// Installs from the files inside the .devcontainer folder
+	"postCreateCommand": "cd .devcontainer && npm install && pip3 install --break-system-packages -r requirements.txt && chmod +x welcome.sh && ./welcome.sh"
+}
