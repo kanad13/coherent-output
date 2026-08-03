@@ -1,130 +1,80 @@
 # Commit Scribe
 
-## Purpose
+Create a local Git commit for the current changes in the repository and write a commit message that explains why the change exists.
 
-Inspect the complete dirty Git worktree, understand why every change exists, stage every intentional changed or untracked file, write a detailed commit message, create the commit, and finish with a clean worktree.
+## Understand the Change
 
-The default scope ends with a new local commit. Push, amend, rebase, reset, discard, and history-rewrite operations begin after an explicit user request.
+Use the strongest available context:
 
-## Safety Boundary
+1. The user's current request.
+2. Relevant context from the current conversation.
+3. Repository instructions and commit conventions.
+4. The working-tree diff, untracked files, and recent commit history.
 
-Before staging, stop and report a blocker if the worktree contains:
+When this prompt is used in an ongoing conversation, use the conversation actively. Recover the problems discussed, discoveries made, decisions taken, fixes implemented, and checks performed. Do not reconstruct the commit from the diff alone when the conversation already explains the intent.
 
-- Likely credentials, private keys, access tokens, or sensitive personal data
-- Unresolved merge conflicts
-- A nested repository or submodule state requiring separate handling
-- Files so large or unusual that committing them is likely accidental
-- Evidence that the current directory differs from the intended repository
+When this prompt is used in a new conversation, infer the intent from the repository and its history.
 
-These checks protect against irreversible disclosure and repository damage. Surface every suspicious file and show the exact condition preventing the all-files commit.
+Before committing, understand:
 
-## Workflow
+- The problem or goal.
+- What changed.
+- Why the chosen approach addresses the problem or requirements.
+- Important discoveries, decisions, constraints, or trade-offs.
 
-### 1. Inspect the Repository
+## Inspect the Change Set
 
-Gather:
+Inspect the repository root, current branch, status, staged and unstaged diffs, untracked files, deleted files, recent commits, and relevant repository instructions.
 
-- Repository root and current branch
-- `git status --short`
-- Staged diff
-- Unstaged diff
-- Untracked files and their relevant contents
-- Diff statistics
-- Recent commit history, including at least the last three commits
-- Repository commit conventions or contributing instructions
-- Relevant chat context, issue references, and task description
+Treat all staged, unstaged, deleted, and untracked changes as one candidate change set.
 
-Read every dirty file closely enough to understand its contribution. Treat staged, unstaged, deleted, and untracked files as one complete candidate change set.
+Run relevant tests, linters, builds, or focused checks. Report checks that failed, were skipped, or were unavailable.
 
-**Visible output — Change Inventory:**
+## Write the Commit Message
 
-| Path | State | What changed | Why it appears to have changed | Evidence |
-| --- | --- | --- | --- | --- |
+Select a commit type from the following list:
 
-### 2. Reconstruct the Intent
+- `feat` — new capability
+- `fix` — bug correction
+- `refactor` — structural change without intended behavior change
+- `perf` — performance improvement
+- `docs` — documentation change
+- `test` — test change
+- `build` — build or dependency change
+- `ci` — continuous-integration change
+- `chore` — other maintenance
 
-Determine:
-
-- The overall problem or goal
-- How the files work together
-- The primary change type and scope
-- Important design decisions visible in the code or conversation
-- Non-obvious discoveries or trade-offs supported by evidence
-- Tests, documentation, and configuration associated with the change
-
-Use evidence-supported business rationale, design decisions, and rejected alternatives. Describe the supported facts and remaining uncertainty when intent is incomplete.
-
-**Visible output — Commit Rationale:**
-
-- Problem or goal
-- Selected approach and evidence-supported reason
-- Technical impact
-- Important insights
-- Uncertainty, if any
-
-### 3. Verify the Complete Change Set
-
-- Search for conflict markers and obvious secret patterns.
-- Inspect whether untracked files are generated artifacts or intentional source material.
-- Run relevant tests, linters, builds, or validation checks when feasible.
-- Confirm the diff is free of accidental debug output and unrelated sensitive data.
-- Include all dirty changes in one complete commit by default, even when they span several concerns. Split or exclude changes after an explicit user request.
-
-If validation fails, report the failure and apply fixes covered by the current task authorization.
-
-### 4. Write the Commit Message
-
-Follow the repository's established convention when one exists. Use Conventional Commits for repositories lacking an established convention.
-
-Choose among:
-
-- `feat`: New user-visible capability
-- `fix`: Bug correction
-- `refactor`: Structural code change that preserves user-visible behavior
-- `perf`: Performance improvement
-- `docs`: Documentation-only change
-- `test`: Test-only change
-- `style`: Non-functional formatting change
-- `build`: Build system or dependency change
-- `ci`: Continuous-integration change
-- `chore`: Other maintenance
-
-Use this template:
+Use this structure for the commit message:
 
 ```text
-<type>(<scope>): <concise present-tense description>
+<type>(<scope>): <concise summary of the complete change>
 
-THE WHY
-- Explain the problem, need, or goal supported by the evidence.
-- Explain why the implemented approach addresses it.
+Problem
+- What problem, need, or goal led to this change?
 
-KEY INSIGHTS
-- Include only non-obvious, evidence-supported discoveries, constraints, or trade-offs.
-- Include this section when meaningful insights exist.
+Solution
+- What changed?
+- How does it address the problem or requirements?
 
-MODIFIED FILES
-- `path`: Explain what changed and how it contributes to the overall intent.
+Decisions
+- Important non-obvious decisions, discoveries, constraints, or trade-offs.
+
+Implementation
+- Briefly describe the implementation, architecture, or approach.
+
+Notes
+- Any relevant notes not covered above.
 ```
 
-The subject must summarize the complete commit across all included files.
+## Create the Commit
 
-### 5. Stage and Commit Everything
+1. Stage the complete intentional change set, including deletions and untracked files.
+2. Re-check the staged diff and confirm it matches the understood change.
+3. Create one local commit.
+4. Inspect the resulting commit and final worktree status.
 
-1. Stage the complete worktree, including deletions and untracked files, with `git add -A` or the safe equivalent.
-2. Re-run `git status --short` and inspect the staged diff.
-3. Confirm the staged set matches the Change Inventory.
-4. Create one commit using the validated message.
-5. Inspect the resulting commit and final worktree status.
+Do not push, amend, rebase, reset, discard changes, or rewrite history unless the user explicitly requests it.
 
-Completion requires a clean worktree. If tooling recreates files after the commit, identify why and either include them in a follow-up commit or report the blocker.
+## Report the Result
 
-## Handoff
-
-Report:
-
-- Commit hash and subject
-- High-level rationale
-- Files included
-- Verification results
-- Final worktree status
-- Anything blocked by the safety boundary
+Report the commit hash and subject, the problem addressed, the solution, important decisions, verification results, included files, final worktree status, and any unresolved limitation or excluded file.
