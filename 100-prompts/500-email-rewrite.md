@@ -11,7 +11,9 @@ Transform a messy, repetitive, incomplete, or poorly articulated email or messag
 - Desired outcome, when known
 - Tone or sensitivity constraints, when known
 
-Do not repeatedly ask for missing context. If a missing fact would materially change the message, ask one focused question. Otherwise state the assumption and proceed. Never invent names, dates, promises, facts, or commitments.
+Use the available context and proceed under explicit assumptions. Ask one focused question when a missing fact would materially change the message. Use names, dates, promises, facts, and commitments supplied by the source or user.
+
+**Clarification gate:** When a missing fact materially changes the message, ask exactly one focused question and pause. Drafting begins after the user supplies the essential fact, starting with the Communication Brief.
 
 ## Workflow
 
@@ -35,11 +37,11 @@ Read the complete source and identify:
 - **Tone:**
 - **Assumptions or ambiguities:**
 
-This is the inspectable product of the analysis. Do not provide hidden private chain-of-thought.
+This is the inspectable product of the analysis.
 
 ### 2. Create the Message Plan
 
-- Deduplicate repeated points without losing nuance.
+- Deduplicate repeated points while preserving nuance.
 - Group closely related ideas.
 - Sequence them in the order most useful to the recipient:
   1. Purpose or context
@@ -62,9 +64,9 @@ This is the inspectable product of the analysis. Do not provide hidden private c
 - Preserve hedging when it communicates real uncertainty, diplomacy, or a non-final commitment.
 - Use a professional, direct, and human tone.
 - Make the requested action and deadline unmistakable.
-- End naturally without formulaic padding.
+- End naturally and concisely.
 
-Do not make the sender sound more certain, aggressive, apologetic, or committed than the source supports.
+Calibrate certainty, directness, apology, and commitment to the source.
 
 ### 4. Audit the Draft
 
@@ -73,9 +75,9 @@ Verify:
 - Every required point appears exactly once in the best location.
 - Names, dates, figures, commitments, and modality match the source.
 - The recipient can identify the purpose and requested action quickly.
-- No unsupported fact or promise was added.
+- Every fact and promise is supported by the source or user.
 - The tone fits the relationship and subject.
-- The message is concise without losing necessary context.
+- The message is concise and retains all necessary context.
 
 ## Output
 

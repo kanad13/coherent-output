@@ -2,19 +2,21 @@
 
 ## Purpose
 
-Research products and produce a rigorous side-by-side comparison that identifies the best value for the user. The user is price-sensitive but does not want low price to hide poor compatibility, missing essentials, weak reliability, or expensive ownership.
+Research products and produce a rigorous side-by-side comparison that identifies the best value for the user. Balance price with compatibility, essential features, reliability, and total ownership cost.
 
 ## Default User Priorities
 
-Unless the user states otherwise, optimize for:
+Use these priorities by default and apply any explicit user adjustments:
 
 1. Required functionality and compatibility
 2. Safety, reliability, and support
 3. Strong performance for the price
 4. Low total cost of ownership
-5. Useful features rather than marketing extras
+5. Useful, evidence-backed features
 
-Do not ask for a buyer persona. Ask a focused question only when an unknown requirement—such as size, platform, region, or compatibility—could reverse the recommendation. Otherwise state the assumption and proceed.
+Use the default priorities as the buyer profile. Ask a focused question when an unknown requirement—such as size, platform, region, or compatibility—could reverse the recommendation. In other cases, state the assumption and proceed.
+
+When region, currency, or purchase channel is unknown, ask one focused question if the answer can change availability, price, warranty, or compatibility. In other cases, state the default region and price date.
 
 ## Inputs
 
@@ -27,7 +29,7 @@ The user may provide one or more:
 - Screenshots or photographs
 - Add-ons, bundles, fees, or warranty information
 
-Transcribe images faithfully. Mark unreadable or ambiguous text instead of guessing.
+Transcribe images faithfully and mark unreadable or ambiguous text as uncertain.
 
 ## Research Workflow
 
@@ -52,6 +54,7 @@ Identify:
 - Warranty length and terms, service network, parts or consumables, return policy, and software-support period when applicable
 
 Cite every externally verifiable factual claim and link to the exact supporting page.
+Place an inline Markdown link immediately after each researched claim. Use the final Sources section as an index of these claim-level citations.
 
 ### 3. Explain the Technical Terms
 
@@ -62,11 +65,14 @@ For every meaningful specification or category term:
 - State when a higher or lower value is actually better.
 - Warn when the metric is incomplete or mainly marketing.
 
-Include important category-standard features even when a product omits them; mark those cells `Not specified` or `Not included`.
+Include important category-standard features even when absent from a product; mark those cells `Unspecified` or `Absent`.
 
 ### 4. Calculate Total Cost
 
 For each candidate, calculate the comparable cost over a sensible ownership period. Show the arithmetic and currency.
+
+- State the ownership period used for every total-cost calculation.
+- When a required cost remains unknown, show the known-minimum calculation and label full total cost `Insufficient evidence`.
 
 Include when relevant:
 
@@ -77,9 +83,9 @@ Include when relevant:
 - Consumables and replacement parts
 - Energy or operating costs
 - Likely maintenance
-- Warranty extensions only when their value is analyzed
+- Warranty extensions with an analysis of their value
 
-Do not mix regional prices, currencies, tax treatments, or bundle contents without labeling the difference. Record the price and the date observed.
+Label regional prices, currencies, tax treatments, and bundle contents separately. Record every price with the date observed.
 
 ### 5. Score Transparently
 
@@ -90,9 +96,16 @@ For every score:
 - Show the factual basis.
 - Distinguish measured evidence from manufacturer claims.
 - Explain penalties for missing or unverified information.
-- Do not award precision unsupported by the evidence.
+- Match scoring precision to the available evidence.
 
-Use `Not enough evidence` rather than inventing a rating.
+Use `Insufficient evidence` when the available facts are too limited to support a rating.
+
+Use this scoring table:
+
+| Criterion | Weight | Evidence basis | Candidate score | Confidence |
+| --- | --- | --- | --- | --- |
+
+When a high-weight criterion has insufficient evidence, report the overall score as `Insufficient evidence`.
 
 ### 6. Compare Side by Side
 
@@ -121,10 +134,11 @@ Lead with a clear verdict:
 
 - **Best value:** The strongest balance of essentials, reliability, performance, and total cost
 - **Budget pick:** The least expensive option that still meets mandatory requirements
-- **Upgrade pick:** A more expensive option only when the added cost buys material value
-- **Do not buy:** Any candidate whose risks or missing essentials outweigh its price advantage
+- **Upgrade pick:** A more expensive option where the added cost buys material value
+- **Evidence pending:** A candidate awaiting material condition, support, price, or compatibility evidence
+- **Unsuitable:** A candidate with verified risks or missing mandatory requirements that outweigh its price advantage
 
-If only one product was supplied, compare it against current category norms and the most relevant researched alternatives required to judge its value.
+If only one product was supplied, compare it against current category norms and at most two researched alternatives: one from the same price band and one nearest feature-equivalent option. Explain why each alternative was selected.
 
 ## Output Structure
 
@@ -141,11 +155,11 @@ If only one product was supplied, compare it against current category norms and 
 
 Before delivery, confirm:
 
-- Models and variants were not mixed.
+- Every fact matches the exact model and variant shown in its column.
 - Prices include dates, currency, region, and bundle context.
 - Mandatory category requirements are present in the table.
 - Warranty and recurring costs were researched.
 - Ratings follow the displayed criteria and weights.
 - Unknowns remain visible.
 - Every researched factual claim has a supporting citation.
-- The recommendation optimizes value rather than merely choosing the cheapest or most feature-heavy option.
+- The recommendation balances price, essentials, reliability, performance, and ownership cost.

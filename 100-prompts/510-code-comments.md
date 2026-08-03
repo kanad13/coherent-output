@@ -8,17 +8,17 @@ Verbosity is intentional. Comment every code line or smallest format-safe unit. 
 
 ## Scope
 
-This prompt documents existing code. It does not perform a general code-quality review, refactor code, fix defects, change behavior, or recommend alternative implementations unless the user separately asks.
+This prompt focuses exclusively on documenting existing code. General code-quality review, refactoring, defect correction, behavior changes, and alternative implementations begin through separate user requests.
 
-If the code appears incorrect and that prevents an accurate explanation, flag the uncertainty outside the code. Do not silently fix it.
+If the code appears incorrect and prevents an accurate explanation, flag the uncertainty outside the code and preserve the executable code unchanged.
 
 ## Documentation Principles
 
-- Write for a beginner with no assumed familiarity with the codebase.
+- Write from first principles for a beginner encountering the codebase for the first time.
 - Use plain language before technical terminology.
 - Define technical terms at first use.
 - Explain syntax, data flow, control flow, side effects, and dependencies.
-- Explain why a line or construct is present, not only what its syntax means.
+- Explain both why a line or construct is present and what its syntax means.
 - Connect each local operation to the surrounding function, file, and program.
 - Preserve all executable code and behavior exactly.
 - Use the target language's valid documentation and comment syntax.
@@ -61,7 +61,7 @@ Before each logical block, explain:
 
 ### Line-by-Line Comments
 
-Comment every executable or declarative line using an inline comment when valid and readable. Otherwise place the explanation immediately above the line.
+Comment every executable or declarative line using an inline comment when valid and readable. Place the explanation immediately above the line in other cases.
 
 For each line or smallest format-safe unit, explain as applicable:
 
@@ -73,7 +73,7 @@ For each line or smallest format-safe unit, explain as applicable:
 - How it affects control flow or program state
 - Any beginner-relevant language or framework behavior
 
-Do not use empty comments such as “increment counter” when the code already says `counter += 1`. Explain the purpose: for example, what the counter represents and why advancing it matters.
+Make every comment add purpose or context beyond the visible syntax. For `counter += 1`, explain what the counter represents and why advancing it matters.
 
 ### Closing or Flow Summaries
 
@@ -81,11 +81,11 @@ After a long or complex block, add a brief comment summarizing the state produce
 
 ## Format-Safe Handling
 
-- Never insert comments where they make the file invalid.
-- For JSON or another format without comments, do not alter the file syntax. Create an adjacent annotated Markdown explanation unless the user specified another safe format.
+- Insert comments exclusively in syntax-safe positions.
+- For JSON or another format lacking comment syntax, preserve the file and create an adjacent annotated Markdown explanation or another user-specified safe format.
 - Preserve shebangs, encoding declarations, frontmatter, generated markers, and required file headers in their valid positions.
-- Do not place comments inside string literals, serialized data, regular expressions, or generated code.
-- For compact expressions, templates, or fluent call chains, comment the smallest unit that can be explained without breaking syntax.
+- Place explanations around string literals, serialized data, regular expressions, and generated code while preserving their contents.
+- For compact expressions, templates, or fluent call chains, comment the smallest unit that preserves valid syntax.
 
 ## Workflow
 
@@ -105,7 +105,7 @@ After a long or complex block, add a brief comment summarizing the state produce
 - Concepts requiring explanation
 - Any context that remains uncertain
 
-Do not ask the user to choose a detail level; beginner-focused, comprehensive detail is the default.
+Use beginner-focused, comprehensive detail as the default.
 
 ### 2. Add Documentation
 
@@ -114,7 +114,7 @@ Do not ask the user to choose a detail level; beginner-focused, comprehensive de
 - Add section-level orientation.
 - Comment every line or smallest safe unit.
 - Keep terminology consistent across files.
-- Do not change executable behavior.
+- Preserve executable behavior exactly.
 
 ### 3. Verify
 
@@ -124,15 +124,20 @@ Run or perform all relevant checks:
 - Parse, compile, lint, or test the files when tools are available.
 - Confirm every code line or safe unit has a useful explanation.
 - Confirm comments match actual behavior and context.
-- Confirm no comment is invalid, misleading, or merely a restatement.
+- Confirm every comment is valid, accurate, purposeful, and richer than a syntax restatement.
 - Confirm a beginner can trace inputs, control flow, state changes, outputs, and system connections.
 
 ## Handoff
+
+For code supplied directly in chat:
+
+- Return the complete documented code for every comment-capable file in a copy-ready fenced block.
+- For formats lacking comment syntax, return the unchanged source and the complete adjacent annotated Markdown document.
 
 Report:
 
 - Files documented
 - Context inspected
 - Verification performed
-- Any line or format that could not safely receive an inline comment and how it was documented instead
+- Any line documented adjacently because its format prevented a safe inline comment
 - Any uncertainty that prevented a reliable explanation

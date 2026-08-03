@@ -2,18 +2,18 @@
 
 ## Purpose
 
-Reorganize disordered, repetitive, or poorly sequenced material into a coherent document without simplifying its terminology, changing its substantive meaning, or imposing a new authorial voice.
+Reorganize disordered, repetitive, or poorly sequenced material into a coherent document while preserving its terminology, substantive meaning, and authorial voice.
 
 This prompt changes information architecture. Use the technical-text simplification prompt separately when vocabulary and explanations must also be made easier.
 
 ## Non-Negotiables
 
 - Preserve every distinct fact, concept, example, qualification, and intentional emphasis.
-- Deduplicate repeated ideas without deleting meaningful variations.
+- Deduplicate repeated ideas while preserving meaningful variations.
 - Keep each section focused on one primary question.
 - Sequence content by dependency, chronology, general-to-specific progression, or problem-to-resolution—whichever best fits the source.
 - Preserve the source's tone and level of technical detail.
-- Do not invent transitions that assert unsupported relationships.
+- Use transitions grounded in relationships established by the source.
 
 ## Workflow
 
@@ -48,8 +48,8 @@ Identify:
 - Duplicate or circular passages
 - Concepts introduced before prerequisites
 - Mixed topics within one section
-- Orphan details without context
-- Headings that do not match their content
+- Orphan details lacking context
+- Headings mismatched with their content
 - Transitions that hide logical gaps
 - Examples separated from the ideas they illustrate
 - Conclusions buried after supporting detail
@@ -64,20 +64,20 @@ For every proposed section, specify:
 - Why its position is appropriate
 - Cross-references required elsewhere
 
-Use a hierarchy no deeper than necessary. Prefer descriptive headings over generic labels such as `Overview` or `Details`.
+Use the shallowest hierarchy that expresses the document's structure. Prefer descriptive headings over generic labels such as `Overview` or `Details`.
 
-Do not draft the reorganized prose until every content unit has exactly one primary home.
+Begin drafting after every content unit has exactly one primary home.
 
 ### 4. Rebuild the Document
 
 - Move each content unit to its approved primary home.
 - Merge duplicate wording while preserving distinct facts and nuances.
 - Add minimal transitions needed for flow.
-- Use cross-references instead of repeating full explanations.
+- Use cross-references to reduce repeated full explanations.
 - Preserve examples, evidence, terminology, modality, and voice.
 - Lead sections and paragraphs with their controlling point when the source supports it.
 
-Do not perform a general plain-language rewrite during this step.
+Preserve the original language level during this step. Use the technical-text simplification prompt for a subsequent plain-language rewrite.
 
 ### 5. Audit Preservation and Structure
 
@@ -91,8 +91,8 @@ Verify:
 - Every content ID appears in the new document.
 - Every section answers one main question.
 - Prerequisites precede dependent ideas.
-- Duplicates were consolidated without losing distinctions.
-- No new factual claim or stronger obligation was introduced.
+- Duplicates were consolidated with every meaningful distinction preserved.
+- The factual set and obligation strength match the source.
 - Heading hierarchy and cross-references are valid.
 
 Correct failures before delivery.
@@ -107,4 +107,4 @@ Return:
 4. Reorganized document
 5. Traceability and quality audit
 
-If editing a file, keep analysis artifacts in the conversation unless the user explicitly asks to store them in the document.
+For file edits, keep analysis artifacts in the conversation by default and store them in the document when the user requests that placement.

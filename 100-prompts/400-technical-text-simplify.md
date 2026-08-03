@@ -2,26 +2,26 @@
 
 ## Purpose
 
-Transform complex technical material into a self-contained explanation the user can understand without losing any fact, concept, condition, example, qualification, relationship, or technical detail from the source.
+Transform complex technical material into a self-contained explanation the user can understand while preserving every fact, concept, condition, example, qualification, relationship, and technical detail from the source.
 
-The goal is not summarization. The goal is complete comprehension with full content preservation.
+The goal is complete comprehension with full content preservation.
 
 ## Audience and Accessibility Requirements
 
-The user is the sole audience. Assume general education but no reliable prior knowledge of the topic.
+The user is the sole audience. Assume general education and limited prior knowledge of the topic.
 
 - Explain from first principles.
 - Use short, direct sentences.
 - Keep one main idea per sentence or bullet.
 - Define unfamiliar terms where they first become necessary.
-- Make dependencies and causal relationships explicit only when supported by the source.
+- Make source-supported dependencies and causal relationships explicit.
 - Use focused visuals for every major concept.
 - Preserve precise names, numbers, formulas, commands, examples, exceptions, warnings, and uncertainty.
 - Prefer completeness and navigability over brevity.
 
 ## Visible Analysis Standard
 
-Show the artifacts of careful analysis so the user can review whether the source was understood correctly. Do not provide hidden private chain-of-thought. Provide inventories, mappings, assumptions, evidence, decisions, and verification results.
+Show the artifacts of careful analysis so the user can review whether the source was understood correctly. Provide inventories, mappings, assumptions, evidence, decisions, and verification results.
 
 ## Workflow and Required Outputs
 
@@ -42,13 +42,13 @@ Create a **Preservation Ledger** containing:
 - Relationships that are explicit in the source
 - Ambiguities or contradictions that must remain visible
 
-Assign stable identifiers such as `P001`, `P002`, and `P003` to ledger items. Combine exact repetitions, but record where the repeated idea appeared and preserve any meaningful variation.
+Assign stable identifiers such as `P001`, `P002`, and `P003` to ledger items. Combine exact repetitions while recording every occurrence and preserving meaningful variations.
 
 **Required output 1:** The document-level analysis and Preservation Ledger.
 
 ### Phase 2: Comprehension and Visualization Map
 
-Plan how the explanation will become easier to understand without changing its substance.
+Plan how the explanation will become easier to understand while preserving its substance.
 
 For each major concept, determine:
 
@@ -67,7 +67,7 @@ Select among:
 - Matplotlib, Seaborn, Plotly, or Vega-Lite charts
 - Timelines, annotated equations, trees, maps, or spatial sketches
 
-If a preferred format cannot render, provide an ASCII or Markdown fallback.
+Provide an ASCII or Markdown fallback when a preferred format is unavailable.
 
 **Required output 2:** A concise section and visualization plan that maps every major concept to its intended explanation and visual.
 
@@ -78,10 +78,10 @@ Rewrite the source using these rules:
 #### Preserve the Substance
 
 - Preserve every item in the ledger.
-- Do not silently correct factual claims in the source. Flag suspected errors separately.
-- Do not invent causes, intentions, dependencies, or examples.
-- Preserve uncertainty and modality: `may`, `should`, and `must` are not interchangeable.
-- Keep code, formulas, commands, identifiers, measurements, and technical names exact unless the source itself is incorrect and the correction is clearly labeled.
+- Preserve source claims and flag suspected errors separately.
+- Use causes, intentions, dependencies, and examples grounded in the source.
+- Preserve uncertainty and modality exactly across `may`, `should`, and `must`.
+- Keep code, formulas, commands, identifiers, measurements, and technical names exact. Label every source correction explicitly.
 
 #### Make the Language Accessible
 
@@ -90,16 +90,16 @@ Rewrite the source using these rules:
 - Replace unnecessary jargon with common words.
 - Retain necessary technical terms and define them.
 - Split dense sentences into focused units.
-- Use connecting words such as `because`, `therefore`, `requires`, and `enables` only when the relationship is supported.
+- Use connecting words such as `because`, `therefore`, `requires`, and `enables` for source-supported relationships.
 - Explain what each example demonstrates.
 - Use comparisons and counterexamples to distinguish easily confused concepts.
 
-#### Define Terms Without Creating Clutter
+#### Define Terms Clearly
 
 - Define a term immediately when the reader needs it.
 - Use a short parenthetical definition for simple terms.
 - Use an indented definition bullet when the explanation needs more space.
-- Use a small glossary only when repeated inline definitions would make the text harder to follow.
+- Use a small glossary when it improves the flow more than repeated inline definitions.
 
 #### Visualize Every Major Concept
 
@@ -107,13 +107,13 @@ Rewrite the source using these rules:
 - Use one visual for one primary insight.
 - Label the visual and explain how to read it.
 - Use several progressive visuals for a complex concept.
-- Do not substitute a visual for the written explanation; provide both.
+- Pair every visual with a written explanation.
 
 #### Preserve Structure Intelligently
 
 - Preserve the source's useful headings, sequence, and formatting.
 - Add headings when necessary to make a long unstructured source navigable.
-- Support plain text, a single section, or a complete Markdown document; do not assume H2 headings exist.
+- Support plain text, a single section, or a complete Markdown document with any heading structure.
 
 **Required output 3:** The complete simplified document.
 
@@ -125,13 +125,13 @@ Use this traceability table:
 
 | Ledger ID | Source content | Target location | Treatment | Preserved? |
 | --- | --- | --- | --- | --- |
-| `P001` | [Concept or detail] | [Section] | Exact / Simplified wording / Defined / Visualized | Yes / No |
+| `P001` | [Concept or detail] | [Section] | Exact / Simplified wording / Defined / Visualized | Preserved / Gap |
 
 Then verify:
 
 - Every ledger item has a target location.
-- No technical detail or qualifier was weakened.
-- No unsupported fact or causal relationship was introduced.
+- Every technical detail and qualifier retains its original strength.
+- Every added fact and causal relationship is supported by the source.
 - Every major concept has both an explanation and a visual.
 - Every visual matches the written explanation.
 - The output can stand alone for a beginner.
@@ -141,6 +141,6 @@ If anything is missing or distorted, correct the document and repeat the affecte
 ## Delivery Rules
 
 - If the user supplied text in chat, show all required outputs in sequence.
-- If the user asked for a file edit, place only the simplified document in the target file unless they request the analysis artifacts there. Show the analysis, plan, and audit in the conversation.
-- Do not overwrite a source file unless the user explicitly asked for in-place editing.
-- End with any suspected source errors or irreducible ambiguities; do not silently resolve them.
+- For file edits, place the simplified document in the target file and show the analysis, plan, and audit in the conversation. Store analysis artifacts in the file when the user requests them there.
+- Create a separate output file by default. Use in-place editing after the user explicitly requests it.
+- End with every suspected source error or irreducible ambiguity preserved for review.

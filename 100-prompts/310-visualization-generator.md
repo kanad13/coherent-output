@@ -6,11 +6,11 @@ Transform written or structured content into a comprehensive set of clear visual
 
 ## Audience and Design Priorities
 
-The user relies heavily on visuals for comprehension and attention. Visual coverage is a functional requirement, not decoration.
+The user relies heavily on visuals for comprehension and attention. Visual coverage is a central comprehension aid.
 
 - One visualization communicates one primary insight.
-- Use several small visuals instead of one dense visual.
-- Visualize every major concept, but not every sentence or minor detail.
+- Use several small, focused visuals, each carrying one primary insight.
+- Visualize every major concept and incorporate its supporting sentences and minor details into the relevant visual set.
 - Use consistent names, direction, colors, and symbols across related visuals.
 - Explain how to read each visualization.
 - Pair a detailed visual with a simpler overview when complexity requires both.
@@ -34,7 +34,7 @@ The user relies heavily on visuals for comprehension and attention. Visual cover
 | Formula or transformation | Annotated equation, worked derivation, or pipeline diagram |
 | UI or document layout | Wireframe, box diagram, annotated screenshot, or HTML/SVG mockup |
 
-Choose formats available in the current environment. If the preferred format cannot be rendered or embedded, provide a Mermaid, Markdown, or ASCII fallback.
+Choose formats available in the current environment. Provide a Mermaid, Markdown, or ASCII fallback when the preferred format is unavailable.
 
 ## Workflow
 
@@ -61,7 +61,7 @@ When a concept is complex, use progressive disclosure:
 3. **Behavior:** Flow, sequence, or state changes
 4. **Detail:** Data, rules, exceptions, or quantitative evidence
 
-Do not force all four views when fewer communicate the concept completely.
+Use the subset of views required to communicate the concept completely.
 
 ### 3. Create the Visuals
 
@@ -71,15 +71,15 @@ General rules:
 - Use nouns for entities and verbs for relationships where applicable.
 - Prefer left-to-right flow for sequences and top-to-bottom flow for hierarchies.
 - Limit visual clutter. If a visual becomes difficult to scan, split it.
-- Use captions that state the insight, not merely the chart type.
+- Use captions that state the visual's primary insight.
 - Provide a one- or two-sentence reading guide below each visual.
-- Do not invent relationships or values absent from the source.
+- Use relationships and values grounded in the source.
 
 For diagram code:
 
 - Use stable, simple identifiers.
 - Quote labels when syntax requires it.
-- Avoid parser-sensitive characters unless escaped correctly.
+- Escape parser-sensitive characters correctly.
 - Keep styling separate from content when the language supports it.
 
 #### Mermaid
@@ -89,7 +89,7 @@ For diagram code:
 - Keep node IDs simple and stable; keep displayed labels brief.
 - Use nouns for node labels and verbs for labeled relationships when applicable.
 - Quote labels containing punctuation or syntax-sensitive characters.
-- Use `<br/>` only when a short line break materially improves readability.
+- Use `<br/>` for short line breaks that materially improve readability.
 - Keep subgraphs limited and give each one a clear direction.
 - Define reusable `classDef` styles and assign a class to every node when custom styling is used.
 - Add a title using supported frontmatter or place a Markdown caption immediately above the diagram.
@@ -113,23 +113,23 @@ For diagram code:
 #### ASCII
 
 - Keep line widths suitable for the target document.
-- Use a legend when symbols are not self-evident.
+- Use a legend for symbols that require explanation.
 - Test alignment in a monospace code block.
-- Prefer ASCII as a dependable fallback, not as an excuse to omit a better primary visual when rendering tools are available.
+- Use ASCII as a dependable fallback and use richer primary visuals when rendering tools are available.
 
 For quantitative charts:
 
 - Label axes, units, series, and sources.
 - Use honest scales and meaningful baselines.
 - Show uncertainty or missing data.
-- Avoid three-dimensional effects that distort comparison.
+- Use two-dimensional forms with accurate visual proportions.
 
 ### 4. Style Accessibly
 
-- Use readable contrast and do not rely on color alone.
+- Use readable contrast together with labels, shapes, line styles, or patterns.
 - Combine color with labels, shapes, line styles, or patterns.
 - Keep a consistent semantic palette across the visual set.
-- Avoid emojis as structural symbols.
+- Use plain text labels, shapes, lines, and patterns as structural symbols.
 - Provide alt text or a textual interpretation for image-based output.
 
 Suggested semantic palette:
@@ -153,7 +153,7 @@ For every visual, verify:
 - It is readable at the expected display size.
 - Syntax renders successfully when rendering tools are available.
 - Colors and symbols remain understandable in grayscale.
-- A fallback is present when the primary format may not render.
+- A fallback accompanies every primary format with uncertain rendering support.
 
 End with a coverage check that maps every major concept to at least one completed visual.
 

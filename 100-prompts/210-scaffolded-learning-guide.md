@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Create a self-contained, visually rich learning guide for the user. Begin with the minimum prerequisites and build step by step to the requested topic or target level without assuming forgotten background knowledge.
+Create a self-contained, visually rich learning guide for the user. Begin with the minimum prerequisites, reintroduce essential background knowledge, and build step by step to the requested topic or target level.
 
 ## Learner Profile
 
@@ -12,10 +12,10 @@ The user is the sole audience. Optimize for:
 - Strong visual support and explicit relationships
 - Short, focused sections
 - Concrete examples before abstraction
-- Complete conceptual coverage rather than a shallow summary
-- Clear navigation for a reader who may have difficulty sustaining attention
+- Complete conceptual coverage with the requested depth
+- Clear navigation that supports scanning, pausing, and easy resumption
 
-Do not repeatedly ask who the audience is. Infer the starting point from the request and supplied context. If uncertain, state a reasonable assumption and proceed.
+Treat the user profile above as fixed. Infer the starting point from the request and supplied context. State a reasonable assumption and proceed when the starting point remains uncertain.
 
 ## Inputs
 
@@ -35,12 +35,15 @@ Before writing the lesson, identify:
 - The dependency order: which ideas must be understood before others
 - Likely misconceptions or hidden assumptions
 - The major concepts that require visual representation
+- A labeled depth target: `practical overview`, `working understanding`, `exam-ready`, or `implementation depth`
 
-**Visible output — Learning Map:** Show the planned progression, prerequisite dependencies, and visualization choices. Keep it concise but inspectable.
+When the request leaves depth open, choose the best-fitting target and state it in the Learning Map.
+
+**Visible output — Learning Map:** Show the depth target, planned progression, prerequisite dependencies, named major concepts, and visualization choices in a concise, inspectable form. Every concept named as major receives at least one visual in the guide.
 
 ### 2. Select Visualizations Deliberately
 
-Every major concept must receive an appropriate visual representation. Use several small, focused visuals instead of one overloaded graphic.
+Every major concept must receive an appropriate visual representation. Use several small, focused visuals, each carrying one primary insight.
 
 Choose the format according to the relationship being explained:
 
@@ -93,7 +96,7 @@ Before delivery, confirm that:
 - Every prerequisite used later was introduced earlier.
 - Every major concept has an appropriate visual.
 - Visuals are readable and explained.
-- No essential concept, rule, condition, or relationship was omitted.
+- Every essential concept, rule, condition, and relationship is present.
 - Examples are correct and actually teach the associated concept.
 - Jargon is defined at first use.
 - Sections remain focused and navigable.
@@ -108,6 +111,19 @@ If the user says part of the guide is unclear:
 4. Use a different visual form from the original when possible.
 5. Add a new worked example or counterexample.
 6. Ask one focused comprehension question.
-7. Return to the larger learning path only after the unclear point is resolved.
+7. Return to the larger learning path after resolving the unclear point.
 
-Do not regenerate the whole guide or add unrelated advanced material when the user asks about one unclear aspect.
+Focus each follow-up on the unclear aspect and return to the larger guide after resolving it.
+
+## Output Structure
+
+1. Learning Map and depth target
+2. Orientation
+3. Prerequisites
+4. Core mechanism
+5. Major-concept sections with their visuals
+6. Connections between concepts
+7. Target-level nuance
+8. Misconceptions
+9. Integrated worked example
+10. Visual recap and understanding checklist

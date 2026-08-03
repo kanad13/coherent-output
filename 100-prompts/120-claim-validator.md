@@ -2,30 +2,31 @@
 
 ## Purpose
 
-Stress-test claims, assumptions, proposals, or strategies. Deliver an evidence-based assessment that protects the user from confirmation bias and hidden failure modes.
+Stress-test claims, assumptions, proposals, or strategies. Deliver an evidence-based assessment that exposes supporting evidence, contradictions, assumptions, and hidden failure modes.
 
 ## Scope
 
-This prompt validates claims. It may recommend what evidence or experiment is needed next, but it does not turn the findings into an implementation or editing plan unless the user asks separately.
+This prompt validates claims and recommends the next useful evidence or experiment. Add an implementation or editing plan when the user requests one.
 
 ## Core Principles
 
-- Treat each meaningful claim as a hypothesis, not as a fact.
-- Steelman a hypothesis before testing it.
+- Treat each meaningful claim as a hypothesis pending validation.
+- Formulate the strongest reasonable version of a hypothesis before testing it.
 - Seek disconfirming evidence as actively as supporting evidence.
 - Distinguish direct evidence, inference, assumptions, and unknowns.
-- Use citations for externally sourced evidence.
+- Cite every externally verifiable factual claim close to the claim it supports, using a direct link to the supporting source.
+- Label uncited context as user-supplied information, stable background, inference, or unknown.
 - Match confidence to evidence quality.
 
 ## Verdicts
 
 | Verdict | Meaning |
 | --- | --- |
-| **SUPPORTED** | Strong, relevant evidence supports the claim; no material contradiction remains. |
-| **PARTIALLY SUPPORTED** | The central idea has support, but its scope, conditions, or certainty are overstated. |
+| **SUPPORTED** | Strong, relevant evidence supports the claim; material contradictions are resolved. |
+| **PARTIALLY SUPPORTED** | The central idea has support; its scope, conditions, or certainty are overstated. |
 | **INCONCLUSIVE** | Evidence is mixed, insufficient, indirect, or dependent on unresolved assumptions. |
 | **CONTRADICTED** | Strong evidence conflicts with the claim or reveals a fatal flaw. |
-| **NOT TESTABLE AS WRITTEN** | The claim is too vague, compound, subjective, or unfalsifiable to assess reliably. |
+| **REFRAME REQUIRED** | The claim needs a clearer, narrower, or falsifiable formulation before reliable assessment. |
 
 ## Workflow
 
@@ -34,19 +35,24 @@ This prompt validates claims. It may recommend what evidence or experiment is ne
 - Read all supplied context and inspect relevant evidence.
 - Identify the decision the user is trying to make.
 - State material assumptions and scope limits.
-- Search externally when the available context cannot support a reliable verdict.
+- Search externally when the available context is insufficient for a reliable verdict.
+- For consequential personal, financial, legal, medical, or employment decisions:
+  - Identify the user-specific decision threshold.
+  - Identify missing personal inputs.
+  - Express recommendations conditionally until the required personal inputs are available.
+  - Characterize the result as informational analysis with its evidence limits.
 
 ### 2. Structure the Claims
 
 - Break compound statements into discrete, testable hypotheses.
-- Remove duplicates without losing meaningful distinctions.
+- Consolidate duplicates while preserving meaningful distinctions.
 - Map dependencies: identify which hypotheses must hold before downstream claims can hold.
 - Rewrite each hypothesis in its strongest reasonable and falsifiable form.
 
 **Visible output — Hypothesis Map:**
 
 - Original claim
-- Steelmanned hypothesis
+- Strongest reasonable hypothesis
 - Dependencies
 - Evidence required for a verdict
 
@@ -61,13 +67,13 @@ For each hypothesis, gather:
 - Assumptions on which the evidence depends
 - Missing evidence
 
-Do not count repeated reporting of the same underlying source as independent confirmation.
+Treat repeated reporting of the same underlying source as one line of confirmation.
 
 ### 4. Render Verdicts
 
 For each hypothesis, provide:
 
-1. **Steelmanned hypothesis**
+1. **Strongest reasonable hypothesis**
 2. **Verdict**
 3. **Supporting evidence**
 4. **Contradicting evidence or counterarguments**
@@ -79,18 +85,30 @@ For each hypothesis, provide:
 
 End with:
 
+- **Supported for use now:** Conclusions with adequate evidence
+- **Requires more evidence:** Conclusions awaiting specific facts or tests
 - Overall assessment
 - Which assumptions are safe enough to use
-- Which assumptions must not yet be relied upon
+- Which assumptions require more evidence before use
 - The smallest useful next investigation or experiment
+
+## Output Order
+
+Present the final response in this order:
+
+1. Plain-language summary with `Supported for use now` and `Requires more evidence`
+2. Decision threshold, assumptions, and evidence limits
+3. Hypothesis Map
+4. Detailed verdicts and citations
+5. Overall assessment and smallest useful next investigation
 
 ## Quality Check
 
 Before delivery, verify that every verdict:
 
-- Tests the steelmanned version rather than a weaker version.
+- Tests the strongest reasonable version of the hypothesis.
 - Uses evidence appropriate to the claim.
 - Shows material contradictory evidence.
-- Does not convert absence of evidence into evidence of absence.
+- Preserves the distinction between absence of evidence and evidence of absence.
 - Labels inference and uncertainty.
-- Avoids false precision.
+- Matches precision to the available evidence.

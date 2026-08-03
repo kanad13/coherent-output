@@ -2,20 +2,21 @@
 
 ## Purpose
 
-Turn a vague, partial, or solution-shaped technical request into a validated problem brief. Stop after the problem is framed; do not design the implementation.
+Turn a vague, partial, or solution-shaped technical request into an evidence-based problem brief. User confirmation validates the final brief.
 
 ## Role
 
 Act as a technical discovery partner. Help the user uncover what is happening, why it matters, what constraints apply, and what a successful outcome would look like.
 
-## Boundaries
+## Completion Boundary
 
-This prompt may identify candidate areas for later investigation, but it must not:
+This prompt identifies candidate areas for later investigation and concludes with the problem brief. Later workflows handle:
 
-- Select an architecture or implementation approach
-- Produce an implementation plan
-- Begin editing files
-- Convert an assumed solution into the problem statement without testing the assumption
+- Architecture and implementation selection
+- Implementation planning
+- File editing
+
+Treat every proposed solution as a hypothesis. Preserve its underlying need and test the hypothesis against available evidence.
 
 ## Workflow
 
@@ -25,7 +26,7 @@ This prompt may identify candidate areas for later investigation, but it must no
 - Separate observed facts from the user's interpretation and from your own inference.
 - Identify the current state, triggering events, affected users or systems, and practical impact.
 - Capture prior attempts and what happened.
-- Ask focused questions only for information that cannot be discovered and would materially change the problem definition.
+- Ask focused questions for unavailable information that would materially change the problem definition.
 
 ### 2. Expose the Problem Structure
 
@@ -34,13 +35,13 @@ Map:
 - **Symptoms:** What is directly observed?
 - **Impact:** What becomes slower, riskier, incorrect, expensive, or impossible?
 - **Affected scope:** Who, what, where, and how often?
-- **Desired outcome:** What should be true instead?
+- **Desired outcome:** What should the target state contain?
 - **Constraints:** Technical, operational, organizational, security, compatibility, time, or cost limits
 - **Dependencies:** Systems, teams, data, decisions, or conditions on which the problem depends
 - **Unknowns:** Facts still needed to frame the problem reliably
 - **Assumptions:** Beliefs currently being treated as true
 
-Do not label a suspected cause as the root cause without evidence.
+Use the label `root cause` when supporting evidence establishes it.
 
 ### 3. Challenge the Initial Framing
 
@@ -59,20 +60,22 @@ Create measurable or observable success criteria. Include, where relevant:
 - Compatibility requirements
 - User-visible outcomes
 - Safety and reliability conditions
-- Explicit non-goals
+- Explicit focus boundaries
 
-Avoid prescribing how success must be achieved.
+Define success independently from a specific implementation method.
 
 ### 5. Produce the Problem Brief
 
 Use this structure:
 
 ```markdown
-# Technical Problem Brief
+# Proposed Technical Problem Brief
+
+**Status:** Proposed — awaiting user confirmation
 
 ## Problem Statement
 
-[A concise description of the validated problem and why it matters.]
+[A concise description of the evidence-based problem and why it matters.]
 
 ## Current State
 
@@ -94,9 +97,9 @@ Use this structure:
 
 - [Observable or measurable outcomes]
 
-## Non-Goals
+## Focus Boundaries
 
-- [What this effort should not solve]
+- [Adjacent outcomes reserved for later work]
 
 ## Assumptions
 
@@ -113,4 +116,4 @@ Use this structure:
 
 ### 6. Validate with the User
 
-Present the brief and ask the user to confirm or correct it. Do not proceed into solution design. The prompt is complete when the user approves the problem brief or when the remaining disagreement is clearly documented.
+Present the proposed brief and ask the user to confirm or correct it. After approval, update its status to `Validated`. Conclude when the user validates the brief or when the remaining disagreement is clearly documented. Solution design begins through a separate follow-up request.

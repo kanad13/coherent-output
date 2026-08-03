@@ -2,9 +2,9 @@
 
 ## Purpose
 
-Inspect the complete dirty Git worktree, understand why every change exists, stage every intentional changed or untracked file, write a detailed commit message, and create the commit. Do not leave valid dirty changes behind.
+Inspect the complete dirty Git worktree, understand why every change exists, stage every intentional changed or untracked file, write a detailed commit message, create the commit, and finish with a clean worktree.
 
-Do not push, amend, rebase, reset, discard, or rewrite history unless the user explicitly asks.
+The default scope ends with a new local commit. Push, amend, rebase, reset, discard, and history-rewrite operations begin after an explicit user request.
 
 ## Safety Boundary
 
@@ -12,11 +12,11 @@ Before staging, stop and report a blocker if the worktree contains:
 
 - Likely credentials, private keys, access tokens, or sensitive personal data
 - Unresolved merge conflicts
-- A nested repository or submodule state that cannot be safely included
+- A nested repository or submodule state requiring separate handling
 - Files so large or unusual that committing them is likely accidental
-- Evidence that the current directory is not the intended repository
+- Evidence that the current directory differs from the intended repository
 
-These checks exist to prevent irreversible disclosure or repository damage. Do not silently omit suspicious files; show the user exactly what prevented the all-files commit.
+These checks protect against irreversible disclosure and repository damage. Surface every suspicious file and show the exact condition preventing the all-files commit.
 
 ## Workflow
 
@@ -34,7 +34,7 @@ Gather:
 - Repository commit conventions or contributing instructions
 - Relevant chat context, issue references, and task description
 
-Read every dirty file closely enough to understand its contribution. Do not assume the existing staged set represents the full requested commit.
+Read every dirty file closely enough to understand its contribution. Treat staged, unstaged, deleted, and untracked files as one complete candidate change set.
 
 **Visible output — Change Inventory:**
 
@@ -52,7 +52,7 @@ Determine:
 - Non-obvious discoveries or trade-offs supported by evidence
 - Tests, documentation, and configuration associated with the change
 
-Do not invent business rationale or rejected alternatives. If intent remains uncertain, describe only what the evidence supports.
+Use evidence-supported business rationale, design decisions, and rejected alternatives. Describe the supported facts and remaining uncertainty when intent is incomplete.
 
 **Visible output — Commit Rationale:**
 
@@ -67,20 +67,20 @@ Do not invent business rationale or rejected alternatives. If intent remains unc
 - Search for conflict markers and obvious secret patterns.
 - Inspect whether untracked files are generated artifacts or intentional source material.
 - Run relevant tests, linters, builds, or validation checks when feasible.
-- Confirm the diff does not contain accidental debug output or unrelated sensitive data.
-- Include all dirty changes in the commit even when they span several concerns; do not split or omit them unless the user explicitly asks.
+- Confirm the diff is free of accidental debug output and unrelated sensitive data.
+- Include all dirty changes in one complete commit by default, even when they span several concerns. Split or exclude changes after an explicit user request.
 
-If validation fails, report the failure. Fix it only when the current task authorizes code changes.
+If validation fails, report the failure and apply fixes covered by the current task authorization.
 
 ### 4. Write the Commit Message
 
-Follow the repository's established convention when one exists. Otherwise use Conventional Commits.
+Follow the repository's established convention when one exists. Use Conventional Commits for repositories lacking an established convention.
 
 Choose among:
 
 - `feat`: New user-visible capability
 - `fix`: Bug correction
-- `refactor`: Structural code change without a feature or bug fix
+- `refactor`: Structural code change that preserves user-visible behavior
 - `perf`: Performance improvement
 - `docs`: Documentation-only change
 - `test`: Test-only change
@@ -100,13 +100,13 @@ THE WHY
 
 KEY INSIGHTS
 - Include only non-obvious, evidence-supported discoveries, constraints, or trade-offs.
-- Omit this section when there are no meaningful insights.
+- Include this section when meaningful insights exist.
 
 MODIFIED FILES
 - `path`: Explain what changed and how it contributes to the overall intent.
 ```
 
-The subject must summarize the complete commit, not only the largest file.
+The subject must summarize the complete commit across all included files.
 
 ### 5. Stage and Commit Everything
 
@@ -116,7 +116,7 @@ The subject must summarize the complete commit, not only the largest file.
 4. Create one commit using the validated message.
 5. Inspect the resulting commit and final worktree status.
 
-Do not declare completion if valid dirty changes remain. If tooling recreates files after the commit, identify why and either include them in a follow-up commit or report the blocker.
+Completion requires a clean worktree. If tooling recreates files after the commit, identify why and either include them in a follow-up commit or report the blocker.
 
 ## Handoff
 

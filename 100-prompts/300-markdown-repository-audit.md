@@ -2,27 +2,28 @@
 
 ## Purpose
 
-Audit a Markdown-focused repository or documentation folder against the user's preferred structure, naming, navigation, formatting, asset, and linking standards. Produce a detailed correction plan. Apply the plan only when the user explicitly asks for implementation.
+Audit a Markdown-focused repository or documentation folder against the user's preferred structure, naming, navigation, formatting, asset, and linking standards. Produce a detailed correction plan. Apply the plan after the user explicitly requests implementation.
 
 ## Scope
 
-Apply these standards to human-maintained documentation content. Do not force documentation naming rules onto source code, generated files, dependency folders, build artifacts, or tool-owned directories unless the user explicitly includes them.
+Apply these standards to human-maintained documentation content. Treat source code, generated files, dependency folders, build artifacts, and tool-owned directories as outside the audit scope until the user explicitly includes them.
 
-Repository-specific instructions override this prompt. Report the conflict rather than silently ignoring either rule.
+Repository-specific instructions take precedence. Report each conflict and the resulting applied rule.
 
 ## Standards
 
 ### 1. Predictable Numbering and Naming
 
 - Human-maintained content files and content folders use a three-digit numeric prefix and a lowercase kebab-case name.
+- Required root and directory index files use the exact name `README.md`. Treat this as the standard index-file exception to numeric-prefix and kebab-case rules.
 - Use primary sequence numbers in increments of ten:
   - `010-introduction.md`
   - `020-architecture.md`
   - `030-operations.md`
-- Use an intermediate number such as `015-prerequisites.md` only when inserting between established items.
-- Treat existing numeric identities as stable. Do not renumber merely to remove harmless gaps.
-- Rename an existing numbered item only when:
-  - Its name no longer describes its content.
+- Reserve an intermediate number such as `015-prerequisites.md` for insertion between established items.
+- Treat existing numeric identities as stable. Close harmless gaps during a user-approved reorganization.
+- Rename an existing numbered item when:
+  - Its current name misrepresents its content.
   - Its position is materially misleading.
   - The user approves a deliberate reorganization.
 - Use descriptive names that state the document's actual purpose.
@@ -78,11 +79,11 @@ Use this default skeleton for substantive documents:
 
 - Use the table of contents when a document has more than five headings or is difficult to scan.
 - Keep each section focused on one primary question.
-- Allow short reference pages to omit unnecessary wrapper sections; record the justified exception.
+- Allow short reference pages to use a slimmed-down skeleton and record the justified exception.
 
 ### 5. Assets
 
-- Store human-maintained non-Markdown assets in a stable root-level `assets/` directory unless repository tooling requires another location.
+- Store human-maintained non-Markdown assets in a stable root-level `assets/` directory, with repository tooling requirements determining any alternative location.
 - Use descriptive, sequentially numbered, lowercase kebab-case asset names.
 - Keep generated assets in an explicitly identified generated location when applicable.
 - Use the repository's supported link form and verify rendered links. Prefer repo-root-relative paths when they render correctly on the target platform.
@@ -94,7 +95,7 @@ Use this default skeleton for substantive documents:
 - Sequential guides link to the preceding and next step.
 - Substantive documents end with related or next-step links.
 - Use stable heading anchors.
-- Avoid orphan documents.
+- Ensure every document is reachable from an appropriate index or related-content path.
 - Verify internal links, anchors, image paths, and case-sensitive paths.
 
 ## Audit Workflow
@@ -170,7 +171,7 @@ Use this output structure:
 - [Checks to run after implementation]
 ```
 
-Do not edit during an audit-only request.
+An audit-only request concludes with the audit and correction plan.
 
 ## Implementation Mode
 

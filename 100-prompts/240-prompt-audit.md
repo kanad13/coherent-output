@@ -4,16 +4,16 @@
 
 Audit one AI prompt and produce an evidence-based improvement report. Identify what the prompt is trying to do, whether it does that job reliably, and which specific changes would improve it.
 
-Do not rewrite the prompt unless the user asks after reviewing the audit. The audit must contain enough concrete guidance for a capable AI agent to perform that rewrite later.
+Produce the audit first. A rewrite follows after the user reviews the findings and requests implementation. The audit must contain enough concrete guidance for a capable AI agent to perform that rewrite later.
 
 ## Audit Principles
 
-- Judge the prompt against its intended user and use case, not generic prompt-writing fashion.
-- Treat personal output preferences as requirements unless they directly undermine the prompt's purpose.
+- Judge the prompt against its intended user, use case, and contract.
+- Treat personal output preferences as requirements and flag any direct conflict with the prompt's purpose.
 - Prefer one clear job per prompt.
 - Supporting analysis and verification are allowed when they directly improve that job.
-- Do not require examples, rigid workflows, fixed lengths, or visible progress unless they materially help this prompt.
-- Do not request private chain-of-thought. Require inspectable artifacts such as assumptions, evidence, decisions, plans, and validation results.
+- Include examples, workflows, length rules, and visible progress when they materially help this prompt.
+- Require inspectable artifacts such as assumptions, evidence, decisions, plans, and validation results.
 - Distinguish genuine conflicts from mere verbosity.
 
 ## Workflow
@@ -29,9 +29,9 @@ Identify:
 - **Primary output:** The main deliverable
 - **Completion condition:** How success can be observed
 - **Tools or permissions:** Browsing, code execution, file reads, edits, external actions
-- **Non-goals:** Adjacent tasks the prompt should not perform
+- **Focus boundaries:** Adjacent tasks reserved for another prompt or follow-up
 
-If the contract cannot be inferred reliably, mark that as a finding rather than silently inventing it.
+Record an unclear contract as a finding and identify the missing information.
 
 ### 2. Map the Prompt
 
@@ -49,7 +49,7 @@ Identify duplicated, conflicting, unreachable, or misplaced instructions.
 
 ### 3. Evaluate the Prompt
 
-Assess each dimension as `Strong`, `Needs attention`, or `Not applicable`.
+Assess each dimension as `Strong`, `Needs attention`, or `Context-dependent`.
 
 | Dimension | What to examine |
 | --- | --- |
@@ -59,12 +59,12 @@ Assess each dimension as `Strong`, `Needs attention`, or `Not applicable`.
 | Workflow | Are steps necessary, ordered, and executable? |
 | Decision support | Are important choices supported near the point of use? |
 | Output contract | Is the deliverable explicit and usable? |
-| Scope control | Are non-goals and handoff points clear? |
-| Instruction consistency | Do requirements reinforce rather than contradict one another? |
+| Scope control | Are focus boundaries and handoff points clear? |
+| Instruction consistency | How well do the requirements reinforce one another? |
 | Tool realism | Are tool, browsing, file, and permission assumptions realistic? |
-| Accuracy and uncertainty | Does it prevent invention and expose uncertainty appropriately? |
+| Accuracy and uncertainty | How effectively does it ground claims and expose uncertainty? |
 | User fit | Does it honor the intended user's accessibility, detail, tone, and format needs? |
-| Efficiency | Is the prompt as long and rigid as necessary, but no more? |
+| Efficiency | Is the prompt complete and as concise as its purpose allows? |
 | Verification | Does it validate the promised result using observable checks? |
 | Maintainability | Can a future editor understand and update it safely? |
 
@@ -78,7 +78,12 @@ Mentally simulate at least:
 - A large or complex input
 - A tool or evidence failure, when relevant
 
-Report only scenario findings that expose a real strength or failure mode. Do not fabricate sample outputs merely to fill the report.
+Report scenario findings that demonstrate a real strength or failure mode. Use sample outputs when they provide evidence for the finding.
+
+Record the results in a scenario table:
+
+| Scenario | Expected behavior | Prompt support observed | Finding |
+| --- | --- | --- | --- |
 
 ### 5. Determine Disposition
 
@@ -89,9 +94,9 @@ Choose one:
 - **Major rework:** Same job, unreliable current design
 - **Split:** Contains independently invokable jobs
 - **Merge:** Substantially duplicates another named prompt
-- **Retire:** Adds no distinct value or conflicts with the library
+- **Retire:** Superseded by another prompt or incompatible with the library
 
-Recommend merging only for true duplication. Do not create a larger general-purpose prompt merely to reduce file count.
+Recommend merging for true duplication and preserve purpose-built boundaries across distinct jobs.
 
 ## Output Format
 
@@ -106,7 +111,8 @@ Recommend merging only for true duplication. Do not create a larger general-purp
 - **Inputs:**
 - **Primary output:**
 - **Completion condition:**
-- **Non-goals:**
+- **Tools or permissions:**
+- **Focus boundaries:**
 
 ## Overall Assessment
 
@@ -121,6 +127,11 @@ Recommend merging only for true duplication. Do not create a larger general-purp
 ## Scorecard
 
 | Dimension | Assessment | Evidence from the prompt | Impact |
+| --- | --- | --- | --- |
+
+## Scenario Tests
+
+| Scenario | Expected behavior | Prompt support observed | Finding |
 | --- | --- | --- | --- |
 
 ## What Works

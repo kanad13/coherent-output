@@ -6,9 +6,9 @@ Create a shareable version of a document by removing or consistently replacing i
 
 ## Safety Boundary
 
-De-identification reduces disclosure risk; it cannot guarantee that re-identification is impossible. Report residual risk honestly.
+De-identification reduces disclosure risk. Report the remaining re-identification risk and the limits of the completed checks.
 
-Do not overwrite the source document. Do not commit or publish the anonymized output or restoration key unless the user explicitly requests it.
+Preserve the source document and create a separate anonymized output. Commit or publish the anonymized output after the user explicitly requests that action. Keep every restoration key in its approved private location.
 
 ## Sensitive Information Categories
 
@@ -22,7 +22,7 @@ Inspect for both direct and indirect identifiers:
 - **Identifiers:** Employee, customer, device, IP, account, contract, and transaction identifiers
 - **Business-sensitive facts:** Budgets, headcount, revenue, pricing, incidents, unpublished metrics, roadmaps
 - **Embedded data:** Filenames, paths, URLs, image text, comments, document properties, revision history, EXIF or other metadata
-- **Quasi-identifiers:** Combinations of otherwise ordinary facts that could reveal an identity
+- **Quasi-identifiers:** Combinations of individually ordinary facts that could reveal an identity
 
 ## Workflow
 
@@ -53,8 +53,8 @@ Assign one treatment to each inventory item:
 
 - **Replace:** Use a consistent pseudonym or typed placeholder.
 - **Generalize:** Replace precision with a broader value, such as an exact date with a month or an exact amount with a range.
-- **Redact:** Remove information when no meaningful safe substitute exists.
-- **Preserve:** Retain only when the sharing purpose requires it and the risk is acceptable.
+- **Redact:** Remove information when deletion provides the safest treatment.
+- **Preserve:** Retain information required by the sharing purpose when the risk is acceptable.
 
 Default to typed placeholders such as `PERSON_01`, `ORG_01`, and `PROJECT_01` for maximum auditability. Use readable pseudonyms when narrative readability matters. Every replacement must be unique and consistent.
 
@@ -67,7 +67,11 @@ Create a manifest containing:
 
 - Order literal replacements from longest to shortest.
 - Flag uncertain entities and indirect identifiers separately.
-- Pause for approval before applying replacements unless the user explicitly requested autonomous execution.
+- Present the manifest and pause for approval by default. Proceed autonomously when the user explicitly requests that mode.
+- Treat the manifest and restoration key as sensitive material.
+- Display or store original values in a user-approved private context.
+- Use masked values when approval can be completed with a partial identifier.
+- Keep both artifacts separate from public issues, commits, shared packages, and publications.
 
 ### 5. Apply Deterministic Changes
 
@@ -77,6 +81,7 @@ Create a manifest containing:
 - Handle pattern-based data such as emails, phone numbers, IDs, and URLs.
 - Inspect and sanitize filenames, links, images, comments, tracked changes, and metadata when the format supports them.
 - Preserve formatting and document structure wherever possible.
+- When an available tool lacks access to an embedded feature, report the feature and the resulting residual risk. Release proceeds after capable tooling verifies it or the user explicitly accepts the documented residual risk.
 
 ### 6. Audit the Result
 
@@ -99,9 +104,9 @@ If reversibility is required:
 - Create a separate restoration key only with the user's approval.
 - Store it outside the shareable output location.
 - Use a user-approved path and restrictive access controls when available.
-- Never include the key in the anonymized document, repository, archive, or final shared package.
+- Keep the key exclusively in its approved secure location, separate from the anonymized document, repository, archive, and final shared package.
 
-If reversibility is not required, do not create a key.
+Create a restoration key for reversible workflows.
 
 ## Handoff
 
@@ -113,4 +118,4 @@ Report:
 - Whether a restoration key exists and where it was stored
 - Any uncertain matches, unsupported file features, or residual re-identification risks
 
-Never claim that the result is risk-free.
+Describe the result as risk-reduced and include the residual risks.

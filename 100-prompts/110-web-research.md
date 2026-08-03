@@ -6,7 +6,7 @@ Research a question using current external sources and deliver a well-supported 
 
 ## Scope
 
-This prompt performs research and synthesis. It does not independently stress-test a strategy or produce an implementation plan unless the user explicitly requests those outputs.
+This prompt performs research and synthesis. Add strategy stress-testing or an implementation plan when the user requests those outputs.
 
 ## Workflow
 
@@ -15,14 +15,14 @@ This prompt performs research and synthesis. It does not independently stress-te
 - Identify the user's actual decision or information need.
 - Extract the topic, timeframe, geography, constraints, and desired depth.
 - State any interpretation that materially affects the search.
-- Ask a clarifying question only when different answers would lead to materially different research. Otherwise, make a reasonable, explicit assumption and proceed.
+- Ask a clarifying question when different answers would lead to materially different research. In other cases, make a reasonable, explicit assumption and proceed.
 
 **Visible output:** A short research brief containing the question, scope, and assumptions.
 
 ### 2. Build and Execute the Search
 
 - Break broad questions into focused subquestions.
-- Use several targeted queries rather than one broad query.
+- Use several targeted queries that cover the important subquestions.
 - Prefer sources in this order when applicable:
   1. Primary evidence, official documentation, laws, standards, filings, datasets, or original research
   2. Reputable specialist or institutional analysis
@@ -30,9 +30,9 @@ This prompt performs research and synthesis. It does not independently stress-te
   4. Community discussion only for lived experience or clearly labeled anecdotal evidence
 - For current events, compare both publication dates and the dates on which events occurred.
 - For technical questions, prefer official documentation and original specifications.
-- Search for contradictory evidence, not only confirming evidence.
+- Search for both confirming and contradictory evidence.
 
-Do not use a fixed source count mechanically. Use enough independent, relevant sources to support the answer. For consequential or disputed claims, seek at least two independent sources when available.
+Choose the source count according to the claim's complexity and consequence. For consequential or disputed claims, seek at least two independent, relevant sources when available.
 
 ### 3. Evaluate the Evidence
 
@@ -47,7 +47,7 @@ For each important source, consider:
 Separate:
 
 - Verified facts
-- Source claims that cannot be independently verified
+- Source claims awaiting independent verification
 - Reasonable inference
 - Opinion or interpretation
 - Unknowns and evidence gaps
@@ -62,12 +62,19 @@ Use this default structure, adapting it to the question:
 4. Practical implications or next steps, when relevant
 5. Sources
 
+For a comparison or choice:
+
+- Include a compact decision table covering the user's stated criteria.
+- Identify the recommended option.
+- State the conditions that would change the recommendation.
+- Define unfamiliar technical terms at first use.
+
 Citation requirements:
 
 - Cite every externally verifiable factual claim close to the claim it supports.
-- Link to the specific supporting page, not a search-results page or generic homepage.
+- Link directly to the specific page that supports the claim.
 - Include dates when freshness matters.
-- Do not cite a source for a claim it does not directly support.
+- Match every citation to a claim the source directly supports.
 - If a paragraph combines claims from different sources, attach each citation to the relevant sentence or clause.
 - Clearly label uncited background knowledge and use it only for stable, well-established context.
 
@@ -78,9 +85,9 @@ Confirm that:
 - The answer addresses the research brief.
 - Important claims are cited.
 - Source dates and authority are appropriate.
-- Conflicting evidence is visible rather than averaged away.
+- Conflicting evidence is presented explicitly with its implications.
 - Inferences are labeled.
-- No source, quotation, statistic, or URL was invented.
+- Every source, quotation, statistic, and URL is authentic and verified.
 - Quotations are short, accurate, and necessary.
 
 ## Limited or Failed Research
@@ -90,6 +97,6 @@ If evidence is limited:
 1. Broaden or reformulate the search.
 2. Try primary, academic, archived, regional, or alternative-language sources when appropriate.
 3. Report what was verified, what remains unknown, and why.
-4. Suggest the most useful next search only when it could realistically resolve the gap.
+4. Suggest a next search when it could realistically resolve the gap.
 
-Never fill an evidence gap with confident speculation.
+Treat evidence gaps as unknowns and label every tentative interpretation.
