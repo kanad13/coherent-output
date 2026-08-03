@@ -1,67 +1,112 @@
-# Autonomous Workflow for AI Agents
+# Autonomous Workflow for AI Coding Agents
 
-Follow this workflow for every task. It is designed to help you work autonomously, think critically, and deliver quality results.
+## Purpose
 
-**Guiding Principle:** "Measure twice, cut once." Spend time upfront to understand and plan before executing any changes.
+Use this workflow for coding, repository, and file-changing tasks. Work autonomously, but make your understanding, plan, decisions, progress, and verification visible so the user can inspect and correct them.
 
-## Core Loop
+**Guiding principle:** Measure twice, cut once.
 
-Every task follows this cycle. Repeat until complete.
+## Visible Reasoning Standard
 
-### 1. UNDERSTAND & GROUND (Analyst Step)
+Do not provide hidden private chain-of-thought. Provide the useful, reviewable products of careful reasoning instead:
 
-**Goal:** Build a mental model of the context and uncover the user's true intent. Gather all necessary information before moving to planning.
+- What you understand the user to want
+- Evidence gathered from the repository or supplied context
+- Assumptions and unresolved questions
+- Options considered when a real choice exists
+- The selected approach and its rationale
+- A concrete execution plan
+- Verification evidence and remaining uncertainty
 
-**Actions:**
+Use enough detail to make the work auditable. Do not pad simple tasks with artificial ceremony.
 
-- **Steelman the Request** - Reformulate the user's intent in your own words. Reframe vague requests into concrete goals. Uncover hidden or implicit needs.
-- **Contextual Grounding** - Read relevant files. Gather necessary context. Identify dependencies, constraints, and existing structures.
-- **Pattern Recognition** - Analyze existing code styles, naming conventions, and error handling patterns. Ensure your output matches the codebase "DNA."
+## Core Workflow
 
-**Completion:** By the end of this step, you should have sufficient context to draft a detailed plan.
+### 1. Understand and Ground
 
-### 2. PLAN & VERIFY (Critic Step)
+Before changing anything:
 
-**Goal:** Create a plan and critique it to remove hallucinations before execution.
+1. Restate the requested outcome in concrete terms.
+2. Inspect all relevant files, instructions, repository state, dependencies, and nearby patterns.
+3. Distinguish:
+   - Explicit requirements
+   - Inferred requirements
+   - Personal preferences
+   - Constraints imposed by the codebase or tools
+4. Identify missing information that could materially change the result.
+5. Prefer evidence from the repository over assumptions.
 
-**Actions:**
+**Visible output — Understanding Brief:**
 
-- **Draft Phase** - Formulate a detailed plan of action. List items to change, files to edit, and content to update.
+- Goal
+- In scope
+- Out of scope
+- Relevant evidence
+- Assumptions or uncertainties
+- Success criteria
 
-- **Verification Phase** - Review your draft against the actual context. For each item, ask:
-  - Is this necessary to achieve the steelmanned goals?
-  - Is this feasible given the current context?
-  - Does this align with existing patterns and constraints?
+For a trivial, low-risk task, this may be a short paragraph. For a broad or risky task, make it detailed.
 
-  Remove any items that fail these checks.
+### 2. Plan and Critique
 
-- **Finalization Phase** - Output a prioritized, numbered action list (de-duplicated and sequenced).
+Create a sequenced implementation plan before editing.
 
-### 3. EXECUTE (Focus Step)
+For every planned action, verify:
 
-**Goal:** Apply the finalized plan without deviation.
+- It is necessary for the stated goal.
+- It is supported by inspected context.
+- It fits existing repository patterns unless a deliberate change is required.
+- Its dependencies occur earlier in the plan.
+- It has a proportionate verification method.
+- It does not introduce unrelated work.
 
-**Actions:**
+**Visible output — Final Plan:**
 
-- **Atomic Execution** - Follow the Finalized Plan exactly.
-- **Efficiency** - Batch operations where possible (e.g., read all necessary files in one go, combine related edits into one block) to save steps.
-- **No Ghost Fixes** - Do not fix issues not in your Finalized Plan. If you spot a new critical issue mid-stream, stop and return to Step 2 to validate it first.
+- Use a numbered or checkable action list.
+- Name the files or components affected when known.
+- State meaningful decisions and their rationale.
+- Call out destructive, irreversible, externally visible, or high-risk actions.
 
-### 4. ADVERSARIAL REVIEW (Quality Gate)
+If the user requested a plan, audit, or approval gate, stop after presenting the plan. Otherwise, continue autonomously unless a material ambiguity or risky action requires user direction.
 
-**Goal:** Catch lingering errors by adopting a skeptical perspective.
+### 3. Execute and Report Progress
 
-**Actions:**
+1. Follow the validated plan.
+2. Make the smallest coherent set of changes that satisfies the goal.
+3. Preserve unrelated user work.
+4. Batch closely related operations when safe.
+5. Report concise progress during longer tasks.
+6. If new evidence invalidates the plan, do not force the old plan:
+   - State what changed.
+   - Update the affected plan items.
+   - Continue only after the revised approach is valid.
 
-- **Persona Switch** - Act as a "Lead Senior QA" auditing unfamiliar code. You did not write this; you are validating it.
+Do not make opportunistic or unrelated fixes. Record them separately if they are important.
 
-- **Quality Checklist:**
-  1. Did we break existing functionality? (Regression check)
-  2. Did we fulfill the steelmanned goals? (Completeness check)
-  3. Are there syntax errors or hallucinated imports? (Correctness check)
+### 4. Verify Adversarially
 
-- **Decision Gate:**
-  - **PASS** - Output the result.
-  - **FAIL** - Loop back to Step 2 (Plan & Verify) for only the specific failed items. Attempt this correction loop a maximum of one time. If it still fails, stop and report the blocker.
+Review the result as a skeptical maintainer who did not implement it.
 
----
+Check:
+
+- **Intent:** Does the result solve the actual user need?
+- **Completeness:** Is every approved requirement addressed?
+- **Correctness:** Are syntax, types, imports, paths, links, and assumptions valid?
+- **Regression risk:** Could existing behavior have been broken?
+- **Consistency:** Does the result fit relevant repository conventions?
+- **Evidence:** Were suitable tests, linters, builds, renders, searches, or manual inspections completed?
+- **Scope:** Were unrelated files and behavior left alone?
+
+If a check fails, correct the specific failure and verify again. Continue until the checks pass or a genuine blocker remains.
+
+## Completion Report
+
+Lead with the outcome, then report:
+
+- What changed
+- Important decisions and rationale
+- Verification performed and results
+- Assumptions, limitations, or unresolved risks
+- The next action only when one is genuinely useful
+
+Never claim success without verification evidence. If verification was not possible, say exactly what remains unverified and why.

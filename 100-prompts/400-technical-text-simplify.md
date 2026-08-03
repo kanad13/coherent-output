@@ -1,0 +1,146 @@
+# Technical Text Simplification
+
+## Purpose
+
+Transform complex technical material into a self-contained explanation the user can understand without losing any fact, concept, condition, example, qualification, relationship, or technical detail from the source.
+
+The goal is not summarization. The goal is complete comprehension with full content preservation.
+
+## Audience and Accessibility Requirements
+
+The user is the sole audience. Assume general education but no reliable prior knowledge of the topic.
+
+- Explain from first principles.
+- Use short, direct sentences.
+- Keep one main idea per sentence or bullet.
+- Define unfamiliar terms where they first become necessary.
+- Make dependencies and causal relationships explicit only when supported by the source.
+- Use focused visuals for every major concept.
+- Preserve precise names, numbers, formulas, commands, examples, exceptions, warnings, and uncertainty.
+- Prefer completeness and navigability over brevity.
+
+## Visible Analysis Standard
+
+Show the artifacts of careful analysis so the user can review whether the source was understood correctly. Do not provide hidden private chain-of-thought. Provide inventories, mappings, assumptions, evidence, decisions, and verification results.
+
+## Workflow and Required Outputs
+
+### Phase 1: Source Analysis
+
+Read the complete source before rewriting any part.
+
+Create a **Preservation Ledger** containing:
+
+- Main message
+- Every distinct concept or claim
+- Definitions and terminology
+- Rules, conditions, exceptions, and edge cases
+- Steps and dependencies
+- Numbers, dates, formulas, commands, and named entities
+- Examples, scenarios, analogies, and counterexamples
+- Warnings, caveats, uncertainty, and disputed statements
+- Relationships that are explicit in the source
+- Ambiguities or contradictions that must remain visible
+
+Assign stable identifiers such as `P001`, `P002`, and `P003` to ledger items. Combine exact repetitions, but record where the repeated idea appeared and preserve any meaningful variation.
+
+**Required output 1:** The document-level analysis and Preservation Ledger.
+
+### Phase 2: Comprehension and Visualization Map
+
+Plan how the explanation will become easier to understand without changing its substance.
+
+For each major concept, determine:
+
+- Which prerequisites must be introduced first
+- Which terms need inline definitions
+- Which relationships need explicit connecting language
+- Which examples need additional explanation
+- Which visual form best exposes the concept
+
+Select among:
+
+- ASCII diagrams
+- Mermaid flowcharts, sequence diagrams, state diagrams, or mind maps
+- Markdown tables, decision tables, and matrices
+- Graphviz, D2, or PlantUML diagrams
+- Matplotlib, Seaborn, Plotly, or Vega-Lite charts
+- Timelines, annotated equations, trees, maps, or spatial sketches
+
+If a preferred format cannot render, provide an ASCII or Markdown fallback.
+
+**Required output 2:** A concise section and visualization plan that maps every major concept to its intended explanation and visual.
+
+### Phase 3: Rewrite for Understanding
+
+Rewrite the source using these rules:
+
+#### Preserve the Substance
+
+- Preserve every item in the ledger.
+- Do not silently correct factual claims in the source. Flag suspected errors separately.
+- Do not invent causes, intentions, dependencies, or examples.
+- Preserve uncertainty and modality: `may`, `should`, and `must` are not interchangeable.
+- Keep code, formulas, commands, identifiers, measurements, and technical names exact unless the source itself is incorrect and the correction is clearly labeled.
+
+#### Make the Language Accessible
+
+- Lead each section with its main point.
+- Use short, active sentences.
+- Replace unnecessary jargon with common words.
+- Retain necessary technical terms and define them.
+- Split dense sentences into focused units.
+- Use connecting words such as `because`, `therefore`, `requires`, and `enables` only when the relationship is supported.
+- Explain what each example demonstrates.
+- Use comparisons and counterexamples to distinguish easily confused concepts.
+
+#### Define Terms Without Creating Clutter
+
+- Define a term immediately when the reader needs it.
+- Use a short parenthetical definition for simple terms.
+- Use an indented definition bullet when the explanation needs more space.
+- Use a small glossary only when repeated inline definitions would make the text harder to follow.
+
+#### Visualize Every Major Concept
+
+- Place each visual immediately after the concept it explains.
+- Use one visual for one primary insight.
+- Label the visual and explain how to read it.
+- Use several progressive visuals for a complex concept.
+- Do not substitute a visual for the written explanation; provide both.
+
+#### Preserve Structure Intelligently
+
+- Preserve the source's useful headings, sequence, and formatting.
+- Add headings when necessary to make a long unstructured source navigable.
+- Support plain text, a single section, or a complete Markdown document; do not assume H2 headings exist.
+
+**Required output 3:** The complete simplified document.
+
+### Phase 4: Preservation Audit
+
+Compare the rewritten document against the Preservation Ledger.
+
+Use this traceability table:
+
+| Ledger ID | Source content | Target location | Treatment | Preserved? |
+| --- | --- | --- | --- | --- |
+| `P001` | [Concept or detail] | [Section] | Exact / Simplified wording / Defined / Visualized | Yes / No |
+
+Then verify:
+
+- Every ledger item has a target location.
+- No technical detail or qualifier was weakened.
+- No unsupported fact or causal relationship was introduced.
+- Every major concept has both an explanation and a visual.
+- Every visual matches the written explanation.
+- The output can stand alone for a beginner.
+
+If anything is missing or distorted, correct the document and repeat the affected audit rows.
+
+## Delivery Rules
+
+- If the user supplied text in chat, show all required outputs in sequence.
+- If the user asked for a file edit, place only the simplified document in the target file unless they request the analysis artifacts there. Show the analysis, plan, and audit in the conversation.
+- Do not overwrite a source file unless the user explicitly asked for in-place editing.
+- End with any suspected source errors or irreducible ambiguities; do not silently resolve them.
