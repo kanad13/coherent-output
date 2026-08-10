@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Transform complex technical material into a self-contained explanation the user can understand while preserving every fact, concept, condition, example, qualification, relationship, and technical detail from the source.
+Apply this methodology when transforming complex technical material into self-contained explanations users can understand. Preserve every fact, concept, condition, example, qualification, relationship, and technical detail from the source.
 
 The goal is complete comprehension with full content preservation.
 

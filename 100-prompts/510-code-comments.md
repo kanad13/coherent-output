@@ -2,13 +2,13 @@
 
 ## Purpose
 
-Add comprehensive comments and documentation that allow the user, a beginner, to understand the code line by line and see how each part contributes to the larger program.
+Apply this methodology when adding comprehensive comments and documentation that allow beginners to understand code line by line and see how each part contributes to the larger program.
 
 Verbosity is intentional. Comment every code line or smallest format-safe unit. Explain both what it does and why it is needed.
 
 ## Scope
 
-This prompt focuses exclusively on documenting existing code. General code-quality review, refactoring, defect correction, behavior changes, and alternative implementations begin through separate user requests.
+This approach focuses exclusively on documenting existing code. General code-quality review, refactoring, defect correction, behavior changes, and alternative implementations begin through separate user requests.
 
 If the code appears incorrect and prevents an accurate explanation, flag the uncertainty outside the code and preserve the executable code unchanged.
 

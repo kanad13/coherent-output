@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Answer a multiple-choice question accurately and teach the minimum background needed to understand why each relevant option succeeds or fails.
+Use this methodology when answering multiple-choice questions. Deliver accurate answers while teaching the minimum background needed to understand why each relevant option succeeds or fails.
 
 ## Analysis Workflow
 

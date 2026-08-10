@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Audit a Markdown-focused repository or documentation folder against the user's preferred structure, naming, navigation, formatting, asset, and linking standards. Produce a detailed correction plan. Apply the plan after the user explicitly requests implementation.
+Apply this methodology when auditing Markdown-focused repositories or documentation folders against preferred structure, naming, navigation, formatting, asset, and linking standards. Produce detailed correction plans. Apply plans after the user explicitly requests implementation.
 
 ## Scope
 

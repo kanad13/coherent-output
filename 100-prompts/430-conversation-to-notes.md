@@ -2,9 +2,9 @@
 
 ## Purpose
 
-Transform the complete multi-turn conversation into a coherent, self-contained, book-like set of notes. Preserve every substantive contribution from the conversation, reorganize it into the clearest conceptual order, and add useful material that closes understanding gaps.
+Use this methodology when transforming complete multi-turn conversations into coherent, self-contained, book-like notes. Preserve every substantive contribution, reorganize into clearest conceptual order, and add useful material that closes understanding gaps.
 
-Invoke this prompt in the final turn of a conversation.
+Apply this approach in the final turn of a conversation.
 
 ## Inputs
 

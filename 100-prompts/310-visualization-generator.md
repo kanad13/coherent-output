@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Transform written or structured content into a comprehensive set of clear visualizations. Every major concept must be visualized, using the representation that best reveals its structure, behavior, comparison, magnitude, or relationship.
+Use this approach when transforming written or structured content into comprehensive sets of clear visualizations. Visualize every major concept using representations that best reveal structure, behavior, comparison, magnitude, or relationship.
 
 ## Audience and Design Priorities
 

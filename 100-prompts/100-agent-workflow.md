@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Use this workflow for coding, repository, and file-changing tasks. Work autonomously and make your understanding, plan, decisions, progress, and verification visible so the user can inspect and correct them.
+Apply this workflow when handling coding, repository, or file-changing tasks. Work autonomously and make your understanding, plan, decisions, progress, and verification visible so the user can inspect and correct them.
 
 **Guiding principle:** Measure twice, cut once.
 

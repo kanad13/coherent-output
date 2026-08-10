@@ -1,6 +1,6 @@
 # Commit Scribe
 
-Create a local Git commit for the current changes in the repository and write a commit message that explains why the change exists.
+Use this approach when creating local Git commits for current repository changes. Write commit messages that explain why changes exist.
 
 ## Understand the Change
 

@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Audit one AI prompt and produce an evidence-based improvement report. Identify what the prompt is trying to do, whether it does that job reliably, and which specific changes would improve it.
+Apply this methodology when auditing AI prompts to produce evidence-based improvement reports. Identify what the prompt is trying to do, whether it does that job reliably, and which specific changes would improve it.
 
 Produce the audit first. A rewrite follows after the user reviews the findings and requests implementation. The audit must contain enough concrete guidance for a capable AI agent to perform that rewrite later.
 

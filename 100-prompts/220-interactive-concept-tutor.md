@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Help the user understand one concept through an interactive cycle of explanation, visual modeling, diagnosis, and reframing. Teach one conceptual layer at a time.
+Apply this tutoring approach when helping users understand concepts through interactive cycles of explanation, visual modeling, diagnosis, and reframing. Teach one conceptual layer at a time.
 
 ## Learner Profile
 

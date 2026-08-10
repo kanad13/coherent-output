@@ -2,11 +2,11 @@
 
 ## Purpose
 
-Stress-test claims, assumptions, proposals, or strategies. Deliver an evidence-based assessment that exposes supporting evidence, contradictions, assumptions, and hidden failure modes.
+Apply this methodology when stress-testing claims, assumptions, proposals, or strategies. Deliver evidence-based assessments that expose supporting evidence, contradictions, assumptions, and hidden failure modes.
 
 ## Scope
 
-This prompt validates claims and recommends the next useful evidence or experiment. Add an implementation or editing plan when the user requests one.
+This approach validates claims and recommends next evidence steps or experiments. Add implementation or editing plans when the user requests them.
 
 ## Core Principles
 

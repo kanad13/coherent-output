@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Create a shareable version of a document by removing or consistently replacing information that could identify people, organizations, projects, systems, or confidential business context. Preserve structure, meaning, tone, and formatting as closely as possible.
+Use this methodology when creating shareable versions of documents by removing or replacing identifying information about people, organizations, projects, systems, or confidential business context. Preserve structure, meaning, tone, and formatting.
 
 ## Safety Boundary
 

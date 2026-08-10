@@ -2,11 +2,11 @@
 
 ## Purpose
 
-Research a question using current external sources and deliver a well-supported answer. Make the evidence trail easy to inspect.
+Apply this approach when researching questions using external sources. Deliver well-supported answers with inspectable evidence trails.
 
 ## Scope
 
-This prompt performs research and synthesis. Add strategy stress-testing or an implementation plan when the user requests those outputs.
+This methodology covers research and synthesis. Add strategy stress-testing or implementation planning when the user requests those outputs.
 
 ## Workflow
 

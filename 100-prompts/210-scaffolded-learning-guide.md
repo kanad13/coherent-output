@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Create a self-contained, visually rich learning guide for the user. Begin with the minimum prerequisites, reintroduce essential background knowledge, and build step by step to the requested topic or target level.
+Use this approach when creating self-contained, visually rich learning guides. Begin with minimum prerequisites, reintroduce essential background knowledge, and build step by step to the requested topic or target level.
 
 ## Learner Profile
 

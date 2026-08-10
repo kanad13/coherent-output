@@ -2,9 +2,9 @@
 
 ## Purpose
 
-Reorganize disordered, repetitive, or poorly sequenced material into a coherent document while preserving its terminology, substantive meaning, and authorial voice.
+Use this approach when reorganizing disordered, repetitive, or poorly sequenced material into coherent documents. Preserve terminology, substantive meaning, and authorial voice.
 
-This prompt changes information architecture. Use the technical-text simplification prompt separately when vocabulary and explanations must also be made easier.
+This methodology changes information architecture. Use the technical-text simplification prompt separately when vocabulary and explanations must also be made easier.
 
 ## Non-Negotiables
 

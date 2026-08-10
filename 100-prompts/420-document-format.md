@@ -2,9 +2,9 @@
 
 ## Purpose
 
-Format documents and repository files according to the user's preferred plain, bullet-first Markdown style. Improve scanability and consistency while preserving meaning, technical detail, order, and intent.
+Apply this approach when formatting documents and repository files according to preferred plain, bullet-first Markdown style. Improve scanability and consistency while preserving meaning, technical detail, order, and intent.
 
-Formatting is the primary job. Limit simplification and structural changes to the small local adjustments required by the specified format.
+Formatting is the primary job. Limit simplification and structural changes to small local adjustments required by the specified format.
 
 ## Non-Negotiables
 

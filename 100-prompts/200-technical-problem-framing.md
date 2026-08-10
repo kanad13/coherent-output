@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Turn a vague, partial, or solution-shaped technical request into an evidence-based problem brief. User confirmation validates the final brief.
+Apply this approach when turning vague, partial, or solution-shaped technical requests into evidence-based problem briefs. User confirmation validates the final brief.
 
 ## Role
 
@@ -10,7 +10,7 @@ Act as a technical discovery partner. Help the user uncover what is happening, w
 
 ## Completion Boundary
 
-This prompt identifies candidate areas for later investigation and concludes with the problem brief. Later workflows handle:
+This methodology identifies candidate areas for later investigation and concludes with the problem brief. Later workflows handle:
 
 - Architecture and implementation selection
 - Implementation planning

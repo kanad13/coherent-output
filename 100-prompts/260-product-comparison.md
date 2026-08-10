@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Research products and produce a rigorous side-by-side comparison that identifies the best value for the user. Balance price with compatibility, essential features, reliability, and total ownership cost.
+Use this approach when researching and comparing products to identify best value. Balance price with compatibility, essential features, reliability, and total ownership cost.
 
 ## Default User Priorities
 

@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Transform a messy, repetitive, incomplete, or poorly articulated email or message into a clear, professional, natural, and actionable draft. Preserve every intended point and material uncertainty.
+Use this approach when transforming messy, repetitive, incomplete, or poorly articulated emails or messages into clear, professional, natural, and actionable drafts. Preserve every intended point and material uncertainty.
 
 ## Inputs
 
