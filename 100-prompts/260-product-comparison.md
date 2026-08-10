@@ -103,7 +103,7 @@ Use `Insufficient evidence` when the available facts are too limited to support 
 Use this scoring table:
 
 | Criterion | Weight | Evidence basis | Candidate score | Confidence |
-| --- | --- | --- | --- | --- |
+| --------- | ------ | -------------- | --------------- | ---------- |
 
 When a high-weight criterion has insufficient evidence, report the overall score as `Insufficient evidence`.
 

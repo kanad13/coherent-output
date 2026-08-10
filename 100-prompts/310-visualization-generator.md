@@ -17,22 +17,22 @@ The user relies heavily on visuals for comprehension and attention. Visual cover
 
 ## Visualization Selection Guide
 
-| Information relationship | Preferred formats |
-| --- | --- |
-| Linear process | Mermaid flowchart, PlantUML activity diagram, D2, or ASCII flow |
-| Actor or service interaction | Mermaid or PlantUML sequence diagram |
-| State and transitions | State diagram or transition table |
-| Decision logic | Decision tree, flowchart, or decision table |
-| Hierarchy or taxonomy | Tree, mind map, Graphviz, or indented ASCII tree |
-| System architecture | C4-style diagram, Mermaid, PlantUML, D2, Graphviz, or Structurizr |
-| Dependencies or networks | Graphviz, Mermaid, D2, or node-link graph |
-| Data model | ER diagram, schema diagram, or relationship table |
-| Exact comparison | Markdown table, matrix, heatmap, or small multiples |
-| Time | Timeline, Gantt chart, sequence diagram, or line chart |
+| Information relationship           | Preferred formats                                                              |
+| ---------------------------------- | ------------------------------------------------------------------------------ |
+| Linear process                     | Mermaid flowchart, PlantUML activity diagram, D2, or ASCII flow                |
+| Actor or service interaction       | Mermaid or PlantUML sequence diagram                                           |
+| State and transitions              | State diagram or transition table                                              |
+| Decision logic                     | Decision tree, flowchart, or decision table                                    |
+| Hierarchy or taxonomy              | Tree, mind map, Graphviz, or indented ASCII tree                               |
+| System architecture                | C4-style diagram, Mermaid, PlantUML, D2, Graphviz, or Structurizr              |
+| Dependencies or networks           | Graphviz, Mermaid, D2, or node-link graph                                      |
+| Data model                         | ER diagram, schema diagram, or relationship table                              |
+| Exact comparison                   | Markdown table, matrix, heatmap, or small multiples                            |
+| Time                               | Timeline, Gantt chart, sequence diagram, or line chart                         |
 | Quantitative distribution or trend | Matplotlib, Seaborn, Plotly, Vega-Lite, histogram, scatter plot, or line chart |
-| Spatial arrangement | Annotated image, SVG, map, coordinate plot, or ASCII sketch |
-| Formula or transformation | Annotated equation, worked derivation, or pipeline diagram |
-| UI or document layout | Wireframe, box diagram, annotated screenshot, or HTML/SVG mockup |
+| Spatial arrangement                | Annotated image, SVG, map, coordinate plot, or ASCII sketch                    |
+| Formula or transformation          | Annotated equation, worked derivation, or pipeline diagram                     |
+| UI or document layout              | Wireframe, box diagram, annotated screenshot, or HTML/SVG mockup               |
 
 Choose formats available in the current environment. Provide a Mermaid, Markdown, or ASCII fallback when the preferred format is unavailable.
 
@@ -48,7 +48,7 @@ Choose formats available in the current environment. Provide a Mermaid, Markdown
 **Visible output — Coverage Plan:**
 
 | Major concept | Insight to communicate | Chosen format | Placement | Reason |
-| --- | --- | --- | --- | --- |
+| ------------- | ---------------------- | ------------- | --------- | ------ |
 
 Every major concept must appear in this plan.
 
@@ -134,13 +134,13 @@ For quantitative charts:
 
 Suggested semantic palette:
 
-| Meaning | Fill | Stroke |
-| --- | --- | --- |
-| Primary actor or concept | `#e3f2fd` | `#0066cc` |
+| Meaning                     | Fill      | Stroke    |
+| --------------------------- | --------- | --------- |
+| Primary actor or concept    | `#e3f2fd` | `#0066cc` |
 | Normal operation or success | `#e5ffe5` | `#388e3c` |
-| Decision or attention | `#fff9c4` | `#b26a00` |
-| System or data component | `#d9f3ef` | `#167c6b` |
-| Risk, failure, or blocker | `#ffe5e5` | `#c0392b` |
+| Decision or attention       | `#fff9c4` | `#b26a00` |
+| System or data component    | `#d9f3ef` | `#167c6b` |
+| Risk, failure, or blocker   | `#ffe5e5` | `#c0392b` |
 | Context or inactive element | `#f5f5f5` | `#6b7280` |
 
 ### 5. Validate

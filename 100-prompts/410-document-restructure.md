@@ -84,7 +84,7 @@ Preserve the original language level during this step. Use the technical-text si
 Build a traceability matrix:
 
 | Content ID | Source location(s) | New location | Preserved? | Deduplication or move notes |
-| --- | --- | --- | --- | --- |
+| ---------- | ------------------ | ------------ | ---------- | --------------------------- |
 
 Verify:
 

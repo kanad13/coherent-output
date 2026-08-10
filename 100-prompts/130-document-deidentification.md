@@ -63,7 +63,7 @@ Default to typed placeholders such as `PERSON_01`, `ORG_01`, and `PROJECT_01` fo
 Create a manifest containing:
 
 | Original or Pattern | Variants | Category | Treatment | Replacement | Reason |
-| --- | --- | --- | --- | --- | --- |
+| ------------------- | -------- | -------- | --------- | ----------- | ------ |
 
 - Order literal replacements from longest to shortest.
 - Flag uncertain entities and indirect identifiers separately.

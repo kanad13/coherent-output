@@ -123,9 +123,9 @@ Compare the rewritten document against the Preservation Ledger.
 
 Use this traceability table:
 
-| Ledger ID | Source content | Target location | Treatment | Preserved? |
-| --- | --- | --- | --- | --- |
-| `P001` | [Concept or detail] | [Section] | Exact / Simplified wording / Defined / Visualized | Preserved / Gap |
+| Ledger ID | Source content      | Target location | Treatment                                         | Preserved?      |
+| --------- | ------------------- | --------------- | ------------------------------------------------- | --------------- |
+| `P001`    | [Concept or detail] | [Section]       | Exact / Simplified wording / Defined / Visualized | Preserved / Gap |
 
 Then verify:
 

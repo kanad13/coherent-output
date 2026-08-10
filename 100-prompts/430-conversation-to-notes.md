@@ -101,16 +101,16 @@ Create an **Atomic Conversation Ledger**. Assign stable identifiers such as `A00
 
 Capture:
 
-| Field | Content |
-| --- | --- |
-| Atomic ID | Stable identifier |
-| Turn | Message or event location |
-| Speaker or source | User, assistant, tool, attachment, or file |
-| Type | Question, objective, fact, claim, definition, explanation, example, analogy, constraint, preference, objection, correction, decision, action, result, failure, open question, or source |
-| Atomic content | Precise statement of the contribution |
-| Topic thread | Conceptual thread to which it belongs |
-| Status | Introduced, accepted, revised, rejected, resolved, or unresolved |
-| Relationships | Dependencies, contradictions, duplicates, evidence, or consequences |
+| Field             | Content                                                                                                                                                                                 |
+| ----------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Atomic ID         | Stable identifier                                                                                                                                                                       |
+| Turn              | Message or event location                                                                                                                                                               |
+| Speaker or source | User, assistant, tool, attachment, or file                                                                                                                                              |
+| Type              | Question, objective, fact, claim, definition, explanation, example, analogy, constraint, preference, objection, correction, decision, action, result, failure, open question, or source |
+| Atomic content    | Precise statement of the contribution                                                                                                                                                   |
+| Topic thread      | Conceptual thread to which it belongs                                                                                                                                                   |
+| Status            | Introduced, accepted, revised, rejected, resolved, or unresolved                                                                                                                        |
+| Relationships     | Dependencies, contradictions, duplicates, evidence, or consequences                                                                                                                     |
 
 Rules for atomic extraction:
 
@@ -186,7 +186,7 @@ Review the index for:
 Create an **Enhancement Register**:
 
 | Enhancement ID | Gap | Added material | Reason | Evidence or source | Final location |
-| --- | --- | --- | --- | --- | --- |
+| -------------- | --- | -------------- | ------ | ------------------ | -------------- |
 
 **Required output 4:** Enhancement Register.
 
@@ -261,7 +261,7 @@ Purely procedural conversation events belong in the decision history or coverage
 Build a final traceability matrix:
 
 | Atomic or Enhancement ID | Final section | Treatment | Preserved? |
-| --- | --- | --- | --- |
+| ------------------------ | ------------- | --------- | ---------- |
 
 Verify:
 

@@ -51,22 +51,22 @@ Identify duplicated, conflicting, unreachable, or misplaced instructions.
 
 Assess each dimension as `Strong`, `Needs attention`, or `Context-dependent`.
 
-| Dimension | What to examine |
-| --- | --- |
-| Purpose | Is there one clear primary job? |
-| Activation | Is it clear when this prompt applies? |
-| Inputs | Are required inputs and missing-data behavior defined? |
-| Workflow | Are steps necessary, ordered, and executable? |
-| Decision support | Are important choices supported near the point of use? |
-| Output contract | Is the deliverable explicit and usable? |
-| Scope control | Are focus boundaries and handoff points clear? |
-| Instruction consistency | How well do the requirements reinforce one another? |
-| Tool realism | Are tool, browsing, file, and permission assumptions realistic? |
-| Accuracy and uncertainty | How effectively does it ground claims and expose uncertainty? |
-| User fit | Does it honor the intended user's accessibility, detail, tone, and format needs? |
-| Efficiency | Is the prompt complete and as concise as its purpose allows? |
-| Verification | Does it validate the promised result using observable checks? |
-| Maintainability | Can a future editor understand and update it safely? |
+| Dimension                | What to examine                                                                  |
+| ------------------------ | -------------------------------------------------------------------------------- |
+| Purpose                  | Is there one clear primary job?                                                  |
+| Activation               | Is it clear when this prompt applies?                                            |
+| Inputs                   | Are required inputs and missing-data behavior defined?                           |
+| Workflow                 | Are steps necessary, ordered, and executable?                                    |
+| Decision support         | Are important choices supported near the point of use?                           |
+| Output contract          | Is the deliverable explicit and usable?                                          |
+| Scope control            | Are focus boundaries and handoff points clear?                                   |
+| Instruction consistency  | How well do the requirements reinforce one another?                              |
+| Tool realism             | Are tool, browsing, file, and permission assumptions realistic?                  |
+| Accuracy and uncertainty | How effectively does it ground claims and expose uncertainty?                    |
+| User fit                 | Does it honor the intended user's accessibility, detail, tone, and format needs? |
+| Efficiency               | Is the prompt complete and as concise as its purpose allows?                     |
+| Verification             | Does it validate the promised result using observable checks?                    |
+| Maintainability          | Can a future editor understand and update it safely?                             |
 
 ### 4. Test Representative Scenarios
 
@@ -83,7 +83,7 @@ Report scenario findings that demonstrate a real strength or failure mode. Use s
 Record the results in a scenario table:
 
 | Scenario | Expected behavior | Prompt support observed | Finding |
-| --- | --- | --- | --- |
+| -------- | ----------------- | ----------------------- | ------- |
 
 ### 5. Determine Disposition
 
@@ -127,12 +127,12 @@ Recommend merging for true duplication and preserve purpose-built boundaries acr
 ## Scorecard
 
 | Dimension | Assessment | Evidence from the prompt | Impact |
-| --- | --- | --- | --- |
+| --------- | ---------- | ------------------------ | ------ |
 
 ## Scenario Tests
 
 | Scenario | Expected behavior | Prompt support observed | Finding |
-| --- | --- | --- | --- |
+| -------- | ----------------- | ----------------------- | ------- |
 
 ## What Works
 

@@ -20,13 +20,13 @@ This approach validates claims and recommends next evidence steps or experiments
 
 ## Verdicts
 
-| Verdict | Meaning |
-| --- | --- |
-| **SUPPORTED** | Strong, relevant evidence supports the claim; material contradictions are resolved. |
-| **PARTIALLY SUPPORTED** | The central idea has support; its scope, conditions, or certainty are overstated. |
-| **INCONCLUSIVE** | Evidence is mixed, insufficient, indirect, or dependent on unresolved assumptions. |
-| **CONTRADICTED** | Strong evidence conflicts with the claim or reveals a fatal flaw. |
-| **REFRAME REQUIRED** | The claim needs a clearer, narrower, or falsifiable formulation before reliable assessment. |
+| Verdict                 | Meaning                                                                                     |
+| ----------------------- | ------------------------------------------------------------------------------------------- |
+| **SUPPORTED**           | Strong, relevant evidence supports the claim; material contradictions are resolved.         |
+| **PARTIALLY SUPPORTED** | The central idea has support; its scope, conditions, or certainty are overstated.           |
+| **INCONCLUSIVE**        | Evidence is mixed, insufficient, indirect, or dependent on unresolved assumptions.          |
+| **CONTRADICTED**        | Strong evidence conflicts with the claim or reveals a fatal flaw.                           |
+| **REFRAME REQUIRED**    | The claim needs a clearer, narrower, or falsifiable formulation before reliable assessment. |
 
 ## Workflow
 

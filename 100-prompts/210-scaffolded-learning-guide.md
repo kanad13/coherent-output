@@ -47,18 +47,18 @@ Every major concept must receive an appropriate visual representation. Use sever
 
 Choose the format according to the relationship being explained:
 
-| Need | Preferred formats |
-| --- | --- |
-| Sequence or workflow | Mermaid flowchart, activity diagram, or ASCII flow |
-| Interaction over time | Mermaid sequence diagram or timeline |
-| State changes | State diagram or transition table |
-| Hierarchy or composition | Tree, Mermaid mind map, Graphviz, or indented ASCII tree |
-| Decision logic | Decision tree, flowchart, or decision table |
-| Exact comparison | Markdown table or comparison matrix |
-| Quantitative pattern | Matplotlib, Plotly, Vega-Lite, or a simple chart |
-| Network or dependency graph | Graphviz, Mermaid, or a node-link diagram |
-| Spatial relationship | Annotated image, map, coordinate plot, or ASCII sketch |
-| Formula or transformation | Worked equation, aligned derivation, or annotated pipeline |
+| Need                        | Preferred formats                                          |
+| --------------------------- | ---------------------------------------------------------- |
+| Sequence or workflow        | Mermaid flowchart, activity diagram, or ASCII flow         |
+| Interaction over time       | Mermaid sequence diagram or timeline                       |
+| State changes               | State diagram or transition table                          |
+| Hierarchy or composition    | Tree, Mermaid mind map, Graphviz, or indented ASCII tree   |
+| Decision logic              | Decision tree, flowchart, or decision table                |
+| Exact comparison            | Markdown table or comparison matrix                        |
+| Quantitative pattern        | Matplotlib, Plotly, Vega-Lite, or a simple chart           |
+| Network or dependency graph | Graphviz, Mermaid, or a node-link diagram                  |
+| Spatial relationship        | Annotated image, map, coordinate plot, or ASCII sketch     |
+| Formula or transformation   | Worked equation, aligned derivation, or annotated pipeline |
 
 - Prefer formats the current interface can render.
 - If the best format is unsupported, provide a Markdown table or clean ASCII fallback.

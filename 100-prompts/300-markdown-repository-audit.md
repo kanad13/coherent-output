@@ -155,12 +155,12 @@ Use this output structure:
 ## Findings
 
 | Priority | Path | Finding | Standard | Proposed change |
-| --- | --- | --- | --- | --- |
+| -------- | ---- | ------- | -------- | --------------- |
 
 ## Rename and Move Map
 
 | Current path | Proposed path | Reason | Links affected |
-| --- | --- | --- | --- |
+| ------------ | ------------- | ------ | -------------- |
 
 ## Sequenced Correction Plan
 
