@@ -14,7 +14,7 @@ You reconcile drift, eliminate patch-note clutter and backward-looking archaeolo
 
 ## 2. Zero-Tolerance Anti-Pattern Ban Matrix
 
-You must actively enforce zero tolerance for the following 24 specific LLM drift failure modes:
+You must actively enforce zero tolerance for the following 25 specific LLM drift failure modes:
 
 ### A. Documentation Drift Anti-Patterns (Eliminate Completely)
 
@@ -61,25 +61,29 @@ You must actively enforce zero tolerance for the following 24 specific LLM drift
     - **Purge:** Remove leftover scratchpad planning comments (e.g., `# Step 1: parse input`, `# Check edge case`).
 17. **Inconsistent Docstring Standards:**
     - **Rule:** Enforce a single uniform docstring format matching the language and existing codebase convention (e.g., Google style for Python, JSDoc/TSDoc for JS/TS, Rustdoc for Rust, Go doc for Go).
+    - **Docstring Contract Completeness:** Every documented unit must specify purpose, verified parameters/types, return types, raised exceptions, and external side effects (I/O, network, mutation).
 18. **Lying & Inverted Docstrings:**
     - **Rule:** Docstring parameter types, return types, exceptions raised, and defaults must match actual code implementation with 100% precision.
     - **Type Synchronization:** Adding non-breaking type hint annotations in function signatures to match verified docstring types is permitted if runtime behavior and parameter names remain unchanged.
 19. **Rule of Intent ("Why, not What"):**
     - **Preserve & Clarify:** Always retain comments that explain non-obvious algorithms, OS/kernel quirks, protocol anomalies, hardware constraints, regex rules, or crash-prevention rationale.
+20. **Format-Unsafe Commenting & Header Corruption:**
+    - **Ban:** Never insert comments into non-commentable formats (e.g., standard JSON) or corrupt syntax-critical headers (shebangs `#!/...`, encoding lines, YAML frontmatter `---`, generated file markers `@generated`).
+    - **Rule:** For non-commentable formats, document schema and usage in adjacent markdown reference files.
 
 ### C. Code Smells & Architectural Anti-Patterns (Flag as Technical Debt)
 
 Record the following in the **Code Logic & Technical Debt Findings** section without altering runtime code logic:
 
-20. **Defensive Over-Engineering for Local Tools:**
+21. **Defensive Over-Engineering for Local Tools:**
     - Flag unnecessary abstract factory classes, complex dependency injectors, or multi-tiered exception hierarchies in single-user/local scripts where simple functions suffice.
-21. **Dependency & Utility Fragmentation:**
+22. **Dependency & Utility Fragmentation:**
     - Flag third-party library imports (e.g., `requests`, `pydantic`) when the rest of the project uses standard library primitives (`urllib`, `dataclasses`), or re-implementations of helpers that exist in sibling modules.
-22. **Shadow Logic & Wrapper Proliferation:**
+23. **Shadow Logic & Wrapper Proliferation:**
     - Flag duplicate wrapper layers or shadow functions created to bypass edge cases (e.g., `_v2`, `_safe_execute`, `clean_text_custom`).
-23. **Hardcoded System Paths:**
+24. **Hardcoded System Paths:**
     - Flag hardcoded local machine paths (e.g., `/Users/...`, `C:\...`) in source code that should be dynamic or configurable via environment variables.
-24. **Prior Collapse & Modal Defaulting:**
+25. **Prior Collapse & Modal Defaulting:**
     - Flag instances where project-native idioms or custom parsers were bypassed in favor of generic web-idioms.
 
 ---
@@ -123,7 +127,7 @@ The agent executes all three auditing lenses directly in a unified pass:
 1. **Lens A (Code & Docstring Sanitation):** Inspects code, purges comment smells, synchronizes docstrings, verifies syntax, logs technical debt.
 2. **Lens B (Documentation & Architecture Extraction):** Extracts Content Inventory (`C001...`), removes patch notes/archaeology/fluff/echoing.
 3. **Lens C (Contract Reconciliation):** Reconciles code reality with documentation claims, fixes asymmetric drift, generates blueprint.
-4. **Execution:** Applies in-place updates directly to disk, compiles/tests modified code, and generates the Audit & Traceability Report.
+4. **Execution:** Applies in-place updates directly to disk, compiles/tests modified code, creates phased atomic commits, and generates the Audit & Traceability Report.
 
 ### Mode B: Orchestrated Multi-Agent Swarm (Large Codebases / > 15 Files or Monorepos)
 
@@ -132,7 +136,7 @@ For large multi-module repositories, the orchestrating agent spawns read-only au
 1. **Lens A Auditor Subagent (Read-Only):** Scans code files, extracts real signatures/types/flags, identifies lying docstrings and comment smells.
 2. **Lens B Auditor Subagent (Read-Only):** Scans documentation, extracts Content Inventory (`C001...`), catalogs structural defects.
 3. **Lens C Auditor Subagent (Read-Only):** Compares code contracts against doc claims, identifies asymmetric drift and broken links.
-4. **Synthesis & Execution (Orchestrator — Write Access):** Merges findings, executes atomic in-place disk modifications, runs test suite, and outputs the Audit & Traceability Report.
+4. **Synthesis & Execution (Orchestrator — Write Access):** Merges findings, executes atomic in-place disk modifications, runs test suite, creates phased atomic commits, and outputs the Audit & Traceability Report.
 
 ---
 
@@ -174,7 +178,9 @@ Directly update source files on disk:
 - Redraft docstrings to 100% truth with code signatures, types, defaults, and raised exceptions.
 - Purge trivial echo comments, narrative comments, dead code, and session tags.
 - Retain and clarify comments explaining non-obvious intent (OS quirks, security rationale, edge cases).
-- Run syntax/compilation checks (`py_compile`, `tsc`, `cargo check`, etc.) to verify zero syntax errors.
+- Preserve syntax-critical headers (shebangs, frontmatter) and avoid editing non-commentable data formats.
+- Run syntax/compilation checks (`py_compile`, `tsc`, `cargo check`, etc.) and confirm zero executable AST logic changes.
+- **Phase 1 Local Commit (Code Sanitation):** Stage modified code files only. Create a local commit with type `docs(<scope>/code): sanitize docstrings and clarify intent comments` structured with Problem, Solution, Decisions, Implementation, and Verification notes.
 
 ### Step 5: Rebuild Documents in Evergreen Bullet-First Style (In-Place Modifications)
 
@@ -183,10 +189,14 @@ Reconstruct all documentation files on disk according to the Structural Blueprin
 - Apply active present tense describing current operational reality.
 - Enforce bullet-first micro-formatting with bold labels, shallow headings, tables, and portable relative links.
 - Eliminate all patch notes, historical archaeology, enterprise fluff, and prose echo.
+- Verify all relative markdown links and table formatting.
+- **Phase 2 Local Commit (Doc Reconciliation):** Stage modified documentation files only (`README.md`, `docs/*.md`). Create a local commit with type `docs(repo): reconcile repository documentation to evergreen standard` structured with Problem, Solution, Decisions, Implementation, and Verification notes.
 
 ### Step 6: Traceability & Quality Audit
 
 Generate the verification matrix mapping every Content ID to its canonical location and complete the quality checklist.
+
+- **Git Safety Constraint:** All commits must remain local. Never push, amend, rebase, reset, or rewrite history without explicit user instruction.
 
 ---
 
@@ -194,7 +204,7 @@ Generate the verification matrix mapping every Content ID to its canonical locat
 
 When executing this directive:
 
-1. **In-Place Disk Updates:** Apply all file modifications directly to the repository files on disk.
+1. **In-Place Disk Updates & Phased Commits:** Apply file modifications directly to disk and create separate, structured local git commits for code sanitation and documentation reconciliation.
 2. **Audit & Traceability Report:** Deliver a structured report in chat (or as an artifact `evergreen_audit_report.md` for large repos) containing:
    - **Content Inventory:** Full catalog of identified facts and code contracts (`C001...`).
    - **Defect & Structural Diagnosis:** Summary of purged comments, corrected docstrings, eliminated doc smells, and flagged technical debt.
@@ -210,8 +220,9 @@ When executing this directive:
 Before completing execution, verify that:
 
 - [ ] Every Content ID (`C001...`) appears in revised docs, docstrings, or the tech debt catalog.
-- [ ] Code runtime logic, algorithms, control flow, and variable names are 100% unmodified.
+- [ ] Code runtime logic, algorithms, control flow, and variable names are 100% unmodified with zero AST logic change.
 - [ ] All docstring signatures match actual parameters, types, defaults, and exceptions.
+- [ ] Shebangs, YAML frontmatter, encoding headers, and non-commentable formats remain valid and intact.
 - [ ] All patch notes, version deltas, and backward-looking archaeology are eliminated.
 - [ ] All enterprise bureaucracy, multi-tenant fluff, and conversational hedging are purged.
 - [ ] All heading/prose echoing and code block narrative paraphrasing are eliminated.
@@ -220,3 +231,5 @@ Before completing execution, verify that:
 - [ ] All ordinary body lines follow the bullet-first Markdown specification with bold labels.
 - [ ] All repository documentation links use portable relative paths and resolve correctly.
 - [ ] Syntax compilation and runtime tests on modified code files pass with 0 errors.
+- [ ] Code sanitation and documentation updates are committed as separate, structured local git commits.
+- [ ] No uncommitted modifications remain, and no unauthorized push or history rewrite occurred.
