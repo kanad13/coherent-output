@@ -13,15 +13,13 @@ Apply this approach in the final turn of a conversation.
 - Optional destination file or notes location
 - Optional title, sharing purpose, or subject-specific depth request
 
-Use the prompt-system user profile as the default reader profile.
-
 ## Primary Deliverable
 
 Produce one comprehensive document that a reader can understand independently from the original conversation. The document should capture the full intellectual content of the discussion, including its questions, explanations, examples, analogies, corrections, disagreements, decisions, unsuccessful approaches, and unresolved issues.
 
 ## Focus Boundaries
 
-The primary work is faithful conversation synthesis and educational expansion. Preserve the original conversation and source files. Apply publication, de-identification, or source-file editing workflows through explicit follow-up requests.
+The primary work is faithful conversation synthesis and educational expansion. Preserve the original conversation and source files.
 
 ## Completion Condition
 
@@ -72,7 +70,6 @@ Begin with a **Coverage Scope** that identifies the first and last available tur
 ### Useful Expansion
 
 - Add missing prerequisites, definitions, transitions, examples, counterexamples, edge cases, and related concepts that materially improve understanding.
-- Label every substantial addition as `Added for completeness` in the analysis artifacts.
 - Integrate additions naturally into the final document.
 - Research current, specialized, or uncertain additions when tools are available.
 - Cite externally researched factual claims close to their supporting sources.
@@ -193,66 +190,6 @@ Create an **Enhancement Register**:
 ### Phase 5: Write the Comprehensive Notes
 
 Write the complete document according to the completed index and articulation blueprint.
-
-Use this default structure, adapting section names to the subject:
-
-```markdown
-# [Descriptive Title]
-
-## Orientation
-
-[What the subject is, why it matters, and what the document covers.]
-
-## Concept Map
-
-[A visual overview of the major concepts and relationships.]
-
-## Table of Contents
-
-[Linked section index.]
-
-## Prerequisites
-
-[Foundational concepts introduced from first principles.]
-
-## [Core Topic Sections]
-
-[Complete explanations, visuals, examples, analogies, evidence, and cross-references.]
-
-## Decisions and Alternatives
-
-[Important conclusions, rejected approaches, objections, corrections, and rationale.]
-
-## Practical Applications
-
-[Procedures, examples, code, calculations, or use cases discussed.]
-
-## Edge Cases and Limitations
-
-[Qualifications, risks, exceptions, and boundaries.]
-
-## Unresolved Questions
-
-[Open threads and the evidence needed to resolve them.]
-
-## Visual Recap
-
-[Compact diagrams, tables, or checklists connecting the complete model.]
-
-## Glossary
-
-[Terms defined in plain language.]
-
-## Sources
-
-[Conversation sources and external research.]
-
-## Conversation Coverage Appendix
-
-[Atomic ID ranges mapped to their final sections.]
-```
-
-Purely procedural conversation events belong in the decision history or coverage appendix. Every substantive contribution belongs in the main document or an explicitly relevant appendix.
 
 **Required output 5:** Full Comprehensive Notes.
 
