@@ -1,146 +1,156 @@
-# Technical Text Simplification
+# Technical Text Simplification, Restructuring & Bullet-First Formatting Directive
 
-## Purpose
+## 1. Purpose & Non-Negotiable Invariants
 
-Apply this methodology when transforming complex technical material into self-contained explanations users can understand. Preserve every fact, concept, condition, example, qualification, relationship, and technical detail from the source.
+Transform complex, dense, or poorly structured technical material into clear, self-contained, and highly scannable **bullet-first Markdown documents** while maintaining **100% semantic fidelity, zero informational loss, and controlled technical articulation**.
 
-The goal is complete comprehension with full content preservation.
+### The Zero-Loss Invariant
 
-## Audience and Accessibility Requirements
+Preserve every piece of information from the source text without omission, dilution, or distortion:
 
-The user is the sole audience. Assume general education and limited prior knowledge of the topic.
+- Every factual assertion, concept, rule, condition, prerequisite, and edge case.
+- Every dependency and causal chain (`A causes B under condition C`).
+- Every number, unit, date, formula, metric, and named entity.
+- Every code block, CLI command, configuration snippet, schema, regex, and API signature (must remain verbatim, executable, and syntactically exact).
+- Modality and certainty level (`must`, `should`, `may`, `experimental`, `deprecated` — never weaken or strengthen modal force).
+- Every warning, caveat, error state, and unresolved ambiguity.
 
-- Explain from first principles.
-- Use short, direct sentences.
-- Keep one main idea per sentence or bullet.
-- Define unfamiliar terms where they first become necessary.
-- Make source-supported dependencies and causal relationships explicit.
-- Use focused visuals for every major concept.
-- Preserve precise names, numbers, formulas, commands, examples, exceptions, warnings, and uncertainty.
-- Prefer completeness and navigability over brevity.
+---
 
-## Visible Analysis Standard
+## 2. Protected Elements (Zero Conversion to Bullets)
 
-Show the artifacts of careful analysis so the user can review whether the source was understood correctly. Provide inventories, mappings, assumptions, evidence, decisions, and verification results.
+The internal formatting of the following elements is strictly protected. **Never convert protected elements into bullet lists**:
 
-## Workflow and Required Outputs
+- **Code Blocks & CLI Commands:** Fenced code blocks (```) retain native multi-line syntax.
+- **Tables:** Comparison matrices, tabular data, and mapping tables retain native Markdown table syntax.
+- **Mermaid Diagrams & LaTeX Equations:** Visual workflows and mathematical formulas retain native blocks.
+- **Frontmatter:** YAML, TOML, or JSON frontmatter blocks retain native delimiters.
+- **Literal Quotations:** Markdown blockquotes (`>`) retain native quote formatting.
 
-### Phase 1: Source Analysis
+---
 
-Read the complete source before rewriting any part.
+## 3. Structural, Layout & Articulation Standards
 
-Create a **Preservation Ledger** containing:
+Apply these structural layout and Controlled Technical Language (ASD-STE100) rules to all non-protected body text:
 
-- Main message
-- Every distinct concept or claim
-- Definitions and terminology
-- Rules, conditions, exceptions, and edge cases
-- Steps and dependencies
-- Numbers, dates, formulas, commands, and named entities
-- Examples, scenarios, analogies, and counterexamples
-- Warnings, caveats, uncertainty, and disputed statements
-- Relationships that are explicit in the source
-- Ambiguities or contradictions that must remain visible
+### 3.1 Bullet-First Layout & Typography
 
-Assign stable identifiers such as `P001`, `P002`, and `P003` to ledger items. Combine exact repetitions while recording every occurrence and preserving meaningful variations.
+1. **Bullet-First Body Text:**
+   - Every ordinary body sentence must begin with an unordered bullet marker (`- `).
+   - Paragraph walls of text are prohibited.
+   - Use numbered lists (`1.`, `2.`) **strictly** for ordered sequential procedures or chronological steps.
+2. **Bold Concept Leads:**
+   - Lead every top-level bullet with a concise bold anchor describing the concept, action, or term (e.g., `- **Deployment Architecture:** Clusters deploy into...`).
+3. **Nesting Hierarchy & Depth Cap:**
+   - Restrict list nesting to a maximum of **three levels** (`- `, ` -`, `   -`).
+   - Use child bullets exclusively to express:
+     - Conditions and prerequisites (`If X occurs...`)
+     - Causal outcomes and secondary effects (`Which enables Y...`)
+     - Concrete examples, parameters, and JIT definitions (`For example, ...`)
+     - Exceptions and edge cases (`Except when Z...`)
+4. **Descriptive Headings & Shallow Hierarchy:**
+   - Use descriptive Markdown headings ($H_2 / H_3$) that describe topic substance (never use generic headings like `## Overview` or `## Details`).
+   - Do **NOT** put bold formatting inside headings (use `## System Architecture`, never `## **System Architecture**`).
+5. **Single Primary Home (DRY Documentation):**
+   - Place the full explanation of each concept in exactly one primary section.
+   - Use internal Markdown links `([See Section X](#...))` rather than duplicating bullet trees elsewhere.
 
-**Required output 1:** The document-level analysis and Preservation Ledger.
+### 3.2 Controlled Technical Language (ASD-STE100 Invariants)
 
-### Phase 2: Comprehension and Visualization Map
+1. **Direct Affirmative Phrasing:**
+   - State what an item _is_, _has_, or _does_ directly.
+   - Do **NOT** use negative contrastive constructions ("not this, but that", "it is not merely X, but rather Y", "rather than doing X, the system does Y"). State the affirmative fact immediately.
+2. **Strict Sentence & Bullet Length Limits:**
+   - Maximum **25 words** per bullet item.
+   - Maximum **15 words** per procedural instruction or step.
+   - Restrict each bullet to **one primary idea or causal relationship**. Split compound clauses into nested child bullets.
+3. **Noun Cluster Restriction:**
+   - Restrict noun strings to a maximum of **three consecutive nouns** (e.g., replace _"cloud resource consumption optimization engine"_ with _"optimization engine for cloud resource consumption"_).
+4. **Active Voice & Explicit Agents:**
+   - Use active voice with clear subjects (`The scheduler assigns the worker`, not `The worker is assigned by the scheduler`).
+   - Avoid dangling participial openers (replace _"By executing the pipeline, data is ingested"_ with _"The pipeline ingests data"_).
+5. **One Term, One Meaning (Terminological Determinism):**
+   - **Zero Synonym Churn:** Never rotate synonyms for stylistic variety (e.g., do not alternate between `cluster`, `node group`, `instance pool`, and `compute farm` for the same entity). Choose the canonical technical term and use it consistently throughout the document.
+6. **Unambiguous Connectives:**
+   - Use `because` for causation (never use `since` or `as`).
+   - Use `while` only for concurrent time (never for contrast).
+   - Use `if` for conditional rules.
+7. **Anti-Pattern Blacklist (Prohibited Rhetoric & LLM Clichés):**
+   - **Prohibited Idioms & Metaphors:** _"under the hood"_, _"at its core"_, _"load-bearing"_, _"double-edged sword"_, _"in a nutshell"_, _"silver bullet"_, _"deep dive"_, _"unpacking this"_, _"secret sauce"_.
+   - **Prohibited Editorializing & Meta-Commentary:** _"It is worth noting that..."_, _"Crucially..."_, _"Importantly..."_, _"Let's explore..."_, _"As discussed earlier..."_.
+   - **Prohibited Vague Qualifiers:** _"basically"_, _"essentially"_, _"fairly"_, _"substantially"_, _"somewhat"_, _"relatively"_.
+   - **Prohibited Buzzwords:** _"delve"_, _"tapestry"_, _"beacon"_, _"paramount"_, _"leverage"_ (when meaning "use").
 
-Plan how the explanation will become easier to understand while preserving its substance.
+---
 
-For each major concept, determine:
+## 4. Deterministic 4-Phase Pipeline
 
-- Which prerequisites must be introduced first
-- Which terms need inline definitions
-- Which relationships need explicit connecting language
-- Which examples need additional explanation
-- Which visual form best exposes the concept
+When processing input text, execute the following four phases in sequence:
 
-Select among:
+### Phase 1: Atomic Invariant Ledger (`<preservation_ledger>`)
 
-- ASCII diagrams
-- Mermaid flowcharts, sequence diagrams, state diagrams, or mind maps
-- Markdown tables, decision tables, and matrices
-- Graphviz, D2, or PlantUML diagrams
-- Matplotlib, Seaborn, Plotly, or Vega-Lite charts
-- Timelines, annotated equations, trees, maps, or spatial sketches
+Deconstruct the source into an indexed ledger of atomic invariants. Deduplicate identical repetitions while recording multi-context variations.
 
-Provide an ASCII or Markdown fallback when a preferred format is unavailable.
+Schema:
 
-**Required output 2:** A concise section and visualization plan that maps every major concept to its intended explanation and visual.
+- **`[P001]`..`[Pnnn]` ID:** Unique stable identifier.
+- **Category:** `[CLAIM | RULE | ENTITY | PARAMETER | MODALITY | WARNING | CODE | ANOMALY]`
+- **Atomic Substance:** Concise statement of the exact fact, condition, value, or behavior.
+- **Modality:** `[MUST | SHOULD | MAY | UNVERIFIED | DISPUTED]`
 
-### Phase 3: Rewrite for Understanding
+_Special Rule (Source Anomalies):_ If the source contains broken logic, contradictory statements, or invalid syntax, record it as an `ANOMALY` with a `[SOURCE ANOMALY]` tag. Do not silently rewrite or sanitize source errors.
 
-Rewrite the source using these rules:
+### Phase 2: Structural Blueprint (`<structural_blueprint>`)
 
-#### Preserve the Substance
+Diagnose structural defects and plan the target architecture:
 
-- Preserve every item in the ledger.
-- Preserve source claims and flag suspected errors separately.
-- Use causes, intentions, dependencies, and examples grounded in the source.
-- Preserve uncertainty and modality exactly across `may`, `should`, and `must`.
-- Keep code, formulas, commands, identifiers, measurements, and technical names exact. Label every source correction explicitly.
+1. **Structural Defect Audit:** Eliminate circular passages, orphan details, mixed topics per section, buried conclusions, and separated examples.
+2. **Prerequisite Sequencing:** Order sections so foundations strictly precede dependent concepts.
+3. **Single Primary Home Mapping:** Map each ledger item to exactly one primary section.
+4. **JIT Definition Mapping:** Specify which domain terms will be defined in each section at first encounter.
 
-#### Make the Language Accessible
+### Phase 3: Simplified Bullet-First Synthesis (`<simplified_content>`)
 
-- Lead each section with its main point.
-- Use short, active sentences.
-- Replace unnecessary jargon with common words.
-- Retain necessary technical terms and define them.
-- Split dense sentences into focused units.
-- Use connecting words such as `because`, `therefore`, `requires`, and `enables` for source-supported relationships.
-- Explain what each example demonstrates.
-- Use comparisons and counterexamples to distinguish easily confused concepts.
+Generate the complete, fully articulated, simplified technical document matching all Bullet-First and Controlled Technical Language rules.
 
-#### Define Terms Clearly
+- Standalone, self-contained Markdown document.
+- All non-protected body text structured into bold-leaded, atomic, nested bullets.
+- All protected elements (fenced code, Markdown tables, LaTeX math, Mermaid diagrams) preserved verbatim.
+- Adhere strictly to the STE rules: active voice, maximum 25 words/bullet, direct affirmative phrasing, zero prohibited idioms.
+- Flag source anomalies inline using GitHub alerts: `> [!WARNING] Source Anomaly: [Description]`.
 
-- Define a term immediately when the reader needs it.
-- Use a short parenthetical definition for simple terms.
-- Use an indented definition bullet when the explanation needs more space.
-- Use a small glossary when it improves the flow more than repeated inline definitions.
+### Phase 4: Fidelity & Format Audit (`<fidelity_audit>`)
 
-#### Visualize Every Major Concept
+Reconcile the generated text against the Phase 1 Ledger and formatting invariants using a compact matrix:
 
-- Place each visual immediately after the concept it explains.
-- Use one visual for one primary insight.
-- Label the visual and explain how to read it.
-- Use several progressive visuals for a complex concept.
-- Pair every visual with a written explanation.
+| Ledger ID | Category | Target Section           | Treatment (`EXACT` / `BULLETED` / `JIT-DEFINED`) | Fidelity Status (`VERIFIED` / `GAP`) |
+| :-------- | :------- | :----------------------- | :----------------------------------------------- | :----------------------------------- |
+| `P001`    | `CLAIM`  | `## 1. Core Definitions` | `BULLETED`                                       | `VERIFIED`                           |
+| `P002`    | `CODE`   | `### 2.1 Serverless`     | `EXACT`                                          | `VERIFIED`                           |
 
-#### Preserve Structure Intelligently
+**Verification Checklist:**
 
-- Preserve the source's useful headings, sequence, and formatting.
-- Add headings when necessary to make a long unstructured source navigable.
-- Support plain text, a single section, or a complete Markdown document with any heading structure.
+- [ ] 100% of Ledger IDs map to a target section with `VERIFIED` status.
+- [ ] 100% of ordinary body lines begin with valid bullet (`- `) or numbered step (`1.`) markers.
+- [ ] All top-level bullets lead with bold concept anchors (`- **Label:**`).
+- [ ] Bullet nesting depth does not exceed 3 levels; sentence length is $\le 25$ words per bullet.
+- [ ] All code, commands, parameters, schemas, formulas, tables, and diagrams match the source character-for-character.
+- [ ] Modality strengths (`must`, `should`, `may`) are preserved without drift.
+- [ ] Zero prohibited idioms, meta-commentary, or contrastive preambles ("not X, but Y") exist.
+- [ ] Terminological determinism is maintained (zero synonym churn).
+- [ ] No external ungrounded facts were introduced.
 
-**Required output 3:** The complete simplified document.
+If any `GAP` or style violation is detected during audit, correct `<simplified_content>` immediately before finalizing delivery.
 
-### Phase 4: Preservation Audit
+---
 
-Compare the rewritten document against the Preservation Ledger.
+## 5. Output Delivery Modes
 
-Use this traceability table:
+Select the appropriate delivery mode based on execution context:
 
-| Ledger ID | Source content      | Target location | Treatment                                         | Preserved?      |
-| --------- | ------------------- | --------------- | ------------------------------------------------- | --------------- |
-| `P001`    | [Concept or detail] | [Section]       | Exact / Simplified wording / Defined / Visualized | Preserved / Gap |
+1. **Chat / Attachment Mode:**
+   - When text or an attached file is provided in chat without a workspace execution harness, output all four delimited blocks (`<preservation_ledger>`, `<structural_blueprint>`, `<simplified_content>`, `<fidelity_audit>`) sequentially in the conversational response.
 
-Then verify:
-
-- Every ledger item has a target location.
-- Every technical detail and qualifier retains its original strength.
-- Every added fact and causal relationship is supported by the source.
-- Every major concept has both an explanation and a visual.
-- Every visual matches the written explanation.
-- The output can stand alone for a beginner.
-
-If anything is missing or distorted, correct the document and repeat the affected audit rows.
-
-## Delivery Rules
-
-- If the user supplied text in chat, show all required outputs in sequence.
-- For file edits, place the simplified document in the target file and show the analysis, plan, and audit in the conversation. Store analysis artifacts in the file when the user requests them there.
-- Create a separate output file by default. Use in-place editing after the user explicitly requests it.
-- End with every suspected source error or irreducible ambiguity preserved for review.
+2. **Workspace / File Harness Mode:**
+   - When operating with direct access to a file in a workspace harness, **replace the target file contents directly with `<simplified_content>`** (clean, valid Markdown only—do not include wrapper XML tags or meta-artifacts in the file).
+   - Emit `<preservation_ledger>`, `<structural_blueprint>`, and `<fidelity_audit>` in the conversation output or execution summary for transparency and verification.
