@@ -36,22 +36,47 @@ Apply these structural layout and Controlled Technical Language (ASD-STE100) rul
 ### 3.1 Bullet-First Layout & Typography
 
 1. **Bullet-First Body Text:**
-   - Every ordinary body sentence must begin with an unordered bullet marker (`- `).
+   - Every ordinary body sentence must reside within an unordered bullet tree (`- `).
    - Paragraph walls of text are prohibited.
    - Use numbered lists (`1.`, `2.`) **strictly** for ordered sequential procedures or chronological steps.
-2. **Bold Concept Leads:**
-   - Lead every top-level bullet with a concise bold anchor describing the concept, action, or term (e.g., `- **Deployment Architecture:** Clusters deploy into...`).
-3. **Nesting Hierarchy & Depth Cap:**
+2. **Top-Level Bold Category Leads (Header Bullets):**
+   - Top-level bullets serve as structural concept/group anchors formatted as: `- **Concept Name / Category Label:**` with **NO** trailing sentence on the same line.
+   - Substantive explanations, definitions, and claims must reside in the nested child bullets below the anchor.
+3. **Child Bullets (Substantive Declarative Sentences):**
+   - Child bullets (` -`, `   -`) contain the actual content as clean, plain-text declarative sentences.
+   - **Negative Constraint (No Bold Child Labels):** Do **NOT** put bold labels on child bullets (never write `  - **Sub-topic:** Sentence`). Child bullets must remain un-bolded.
+4. **Nesting Hierarchy & Depth Cap:**
    - Restrict list nesting to a maximum of **three levels** (`- `, ` -`, `   -`).
-   - Use child bullets exclusively to express:
+   - Use child bullets to express:
+     - Core assertions and definitions
      - Conditions and prerequisites (`If X occurs...`)
-     - Causal outcomes and secondary effects (`Which enables Y...`)
-     - Concrete examples, parameters, and JIT definitions (`For example, ...`)
+     - Causal outcomes and dependencies (`Which enables Y...`)
+     - Parameters, metrics, and examples (`For example, ...`)
      - Exceptions and edge cases (`Except when Z...`)
-4. **Descriptive Headings & Shallow Hierarchy:**
+5. **Structural Calibration Examples:**
+
+```markdown
+<!-- CORRECT: Clean bold top-level anchor, un-bolded child sentences -->
+
+- **Service Architecture:**
+  - The message broker decouples producer clients from downstream consumers.
+  - Workers ingest messages asynchronously from partitioned queues.
+- **Retention Policy:**
+  - The broker retains unacknowledged messages for 72 hours.
+  - Expired messages move automatically to the dead-letter queue ([See Section 4.2](#42-dead-letter-queue-routing)).
+
+<!-- INCORRECT: Inline trailing text on top-level lead and bold labels on child bullets -->
+
+- **Service Architecture:** The message broker decouples producer clients from downstream consumers.
+  - **Ingestion Mode:** Workers ingest messages asynchronously from partitioned queues.
+- **Retention Policy:** The broker retains unacknowledged messages for 72 hours.
+  - **Dead-Letter Handling:** Expired messages move automatically to the dead-letter queue.
+```
+
+6. **Descriptive Headings & Shallow Hierarchy:**
    - Use descriptive Markdown headings ($H_2 / H_3$) that describe topic substance (never use generic headings like `## Overview` or `## Details`).
    - Do **NOT** put bold formatting inside headings (use `## System Architecture`, never `## **System Architecture**`).
-5. **Single Primary Home (DRY Documentation):**
+7. **Single Primary Home (DRY Documentation):**
    - Place the full explanation of each concept in exactly one primary section.
    - Use internal Markdown links `([See Section X](#...))` rather than duplicating bullet trees elsewhere.
 
@@ -59,27 +84,42 @@ Apply these structural layout and Controlled Technical Language (ASD-STE100) rul
 
 1. **Direct Affirmative Phrasing:**
    - State what an item _is_, _has_, or _does_ directly.
-   - Do **NOT** use negative contrastive constructions ("not this, but that", "it is not merely X, but rather Y", "rather than doing X, the system does Y"). State the affirmative fact immediately.
+   - Do **NOT** use negative contrastive constructions ("not this, but that", "it is not merely X, but rather Y", "rather than doing X, the system does Y").
+   - _Example:_
+     - `INCORRECT:` The proxy is not merely a router, but rather an active cache.
+     - `CORRECT:` The proxy routes requests and caches responses actively.
 2. **Strict Sentence & Bullet Length Limits:**
    - Maximum **25 words** per bullet item.
    - Maximum **15 words** per procedural instruction or step.
    - Restrict each bullet to **one primary idea or causal relationship**. Split compound clauses into nested child bullets.
 3. **Noun Cluster Restriction:**
-   - Restrict noun strings to a maximum of **three consecutive nouns** (e.g., replace _"cloud resource consumption optimization engine"_ with _"optimization engine for cloud resource consumption"_).
+   - Restrict noun strings to a maximum of **three consecutive nouns**.
+   - _Example:_
+     - `INCORRECT:` distributed database query execution timeout limit parameter
+     - `CORRECT:` timeout limit for distributed database query execution
 4. **Active Voice & Explicit Agents:**
    - Use active voice with clear subjects (`The scheduler assigns the worker`, not `The worker is assigned by the scheduler`).
-   - Avoid dangling participial openers (replace _"By executing the pipeline, data is ingested"_ with _"The pipeline ingests data"_).
+   - Avoid dangling participial openers.
+   - _Example:_
+     - `INCORRECT:` By parsing the configuration payload, the worker is initialized.
+     - `CORRECT:` The worker parses the configuration payload during startup.
 5. **One Term, One Meaning (Terminological Determinism):**
    - **Zero Synonym Churn:** Never rotate synonyms for stylistic variety (e.g., do not alternate between `cluster`, `node group`, `instance pool`, and `compute farm` for the same entity). Choose the canonical technical term and use it consistently throughout the document.
 6. **Unambiguous Connectives:**
    - Use `because` for causation (never use `since` or `as`).
    - Use `while` only for concurrent time (never for contrast).
    - Use `if` for conditional rules.
+   - _Example:_
+     - `INCORRECT:` Since the token expired, the request was rejected.
+     - `CORRECT:` The request failed because the token expired.
 7. **Anti-Pattern Blacklist (Prohibited Rhetoric & LLM Clichés):**
    - **Prohibited Idioms & Metaphors:** _"under the hood"_, _"at its core"_, _"load-bearing"_, _"double-edged sword"_, _"in a nutshell"_, _"silver bullet"_, _"deep dive"_, _"unpacking this"_, _"secret sauce"_.
    - **Prohibited Editorializing & Meta-Commentary:** _"It is worth noting that..."_, _"Crucially..."_, _"Importantly..."_, _"Let's explore..."_, _"As discussed earlier..."_.
    - **Prohibited Vague Qualifiers:** _"basically"_, _"essentially"_, _"fairly"_, _"substantially"_, _"somewhat"_, _"relatively"_.
    - **Prohibited Buzzwords:** _"delve"_, _"tapestry"_, _"beacon"_, _"paramount"_, _"leverage"_ (when meaning "use").
+   - _Example:_
+     - `INCORRECT:` Under the hood, this load-bearing check prevents deep dive failures.
+     - `CORRECT:` The validation service prevents downstream execution failures.
 
 ---
 
@@ -97,6 +137,10 @@ Schema:
 - **Category:** `[CLAIM | RULE | ENTITY | PARAMETER | MODALITY | WARNING | CODE | ANOMALY]`
 - **Atomic Substance:** Concise statement of the exact fact, condition, value, or behavior.
 - **Modality:** `[MUST | SHOULD | MAY | UNVERIFIED | DISPUTED]`
+
+_Example Entry:_
+
+- `[P001]` | `RULE` | The worker node terminates idle processes after 300 seconds. | `MUST`
 
 _Special Rule (Source Anomalies):_ If the source contains broken logic, contradictory statements, or invalid syntax, record it as an `ANOMALY` with a `[SOURCE ANOMALY]` tag. Do not silently rewrite or sanitize source errors.
 
@@ -125,14 +169,15 @@ Reconcile the generated text against the Phase 1 Ledger and formatting invariant
 
 | Ledger ID | Category | Target Section           | Treatment (`EXACT` / `BULLETED` / `JIT-DEFINED`) | Fidelity Status (`VERIFIED` / `GAP`) |
 | :-------- | :------- | :----------------------- | :----------------------------------------------- | :----------------------------------- |
-| `P001`    | `CLAIM`  | `## 1. Core Definitions` | `BULLETED`                                       | `VERIFIED`                           |
-| `P002`    | `CODE`   | `### 2.1 Serverless`     | `EXACT`                                          | `VERIFIED`                           |
+| `P001`    | `RULE`   | `## 2. Worker Lifecycle` | `BULLETED`                                       | `VERIFIED`                           |
+| `P002`    | `CODE`   | `### 2.1 Configuration`  | `EXACT`                                          | `VERIFIED`                           |
 
 **Verification Checklist:**
 
 - [ ] 100% of Ledger IDs map to a target section with `VERIFIED` status.
 - [ ] 100% of ordinary body lines begin with valid bullet (`- `) or numbered step (`1.`) markers.
-- [ ] All top-level bullets lead with bold concept anchors (`- **Label:**`).
+- [ ] All top-level bullets serve as bold category/concept anchors with **NO** trailing inline sentence (`- **Category:**`).
+- [ ] Child bullets are clean, plain-text declarative sentences with **ZERO** bold labels.
 - [ ] Bullet nesting depth does not exceed 3 levels; sentence length is $\le 25$ words per bullet.
 - [ ] All code, commands, parameters, schemas, formulas, tables, and diagrams match the source character-for-character.
 - [ ] Modality strengths (`must`, `should`, `may`) are preserved without drift.
