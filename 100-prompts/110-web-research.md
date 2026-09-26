@@ -62,12 +62,18 @@ Use this default structure, adapting it to the question:
 4. Practical implications or next steps, when relevant
 5. Sources
 
+Synthesis standards:
+
+- Apply Bullet-First micro-formatting: structure key findings with bold concept anchors followed by un-bolded declarative sentences.
+- Apply ASD-STE100 controlled language: write in active voice with clear subjects, direct affirmative phrasing, and one controlling idea per sentence.
+- Adopt a factual, understated register: state verified evidence, metrics, and mechanisms plainly without rhetorical preambles or hedging filler.
+- Define unfamiliar technical terms in plain language at first use.
+
 For a comparison or choice:
 
 - Include a compact decision table covering the user's stated criteria.
 - Identify the recommended option.
 - State the conditions that would change the recommendation.
-- Define unfamiliar technical terms at first use.
 
 Citation requirements:
 

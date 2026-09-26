@@ -78,12 +78,13 @@ Begin with a **Coverage Scope** that identifies the first and last available tur
 ### Reader Accessibility
 
 - Write from first principles for a beginner.
-- Use direct, simple, affirmative language.
+- Use direct, affirmative language conforming to ASD-STE100 principles with active voice and explicit subjects.
+- Apply Bullet-First micro-formatting: structure body text into bold category anchors followed by un-bolded declarative child sentences.
+- Apply cognitive chunking: restrict each sentence to one controlling idea, maintaining natural grammatical flow without artificial truncation or run-on sprawl.
+- Protect technical syntax: preserve code snippets, CLI commands, configuration blocks, and formulas character-exact.
 - Use short, focused sections with descriptive headings.
-- Define terminology at first use.
-- Give every major concept an appropriate visual representation.
-- Use diagrams, tables, charts, timelines, trees, matrices, annotated examples, or ASCII sketches according to the relationship being explained.
-- Explain how to read each visual.
+- Define terminology in plain language at first use.
+- Give every major concept an appropriate visual representation (diagram, table, or chart) and explain how to read it.
 - Support scanning, pausing, and easy resumption.
 
 ## Workflow

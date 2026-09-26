@@ -12,7 +12,9 @@ The user considers themselves a beginner when dealing with unfamiliar or special
 - Clear explanations of the relevant context, problem, requirements, assumptions, decisions, and reasons behind important choices.
 - Evidence and clear distinctions between facts, interpretations, assumptions, and uncertainty.
 - Focused prompts and outputs that do one useful thing well.
-- Enough structure to make complex information easy to follow and revisit.
+- Bullet-First micro-formatting: bold category anchors followed by un-bolded declarative sentences.
+- Cognitive chunking: one controlling idea per sentence, balancing concise clarity with natural grammatical flow.
+- Zero informational loss: full preservation of substantive facts, constraints, parameters, and operational reality.
 - Clear, practical, reliable, and cost-conscious solutions.
 - Code comments that explain what code does, why it exists, and how it fits into the larger program.
 

@@ -88,10 +88,11 @@ Apply these structural layout and Controlled Technical Language (ASD-STE100) rul
    - _Example:_
      - `INCORRECT:` The proxy is not merely a router, but rather an active cache.
      - `CORRECT:` The proxy routes requests and caches responses actively.
-2. **Strict Sentence & Bullet Length Limits:**
-   - Maximum **25 words** per bullet item.
-   - Maximum **15 words** per procedural instruction or step.
-   - Restrict each bullet to **one primary idea or causal relationship**. Split compound clauses into nested child bullets.
+2. **Cognitive Chunking & Syntactic Flow:**
+   - Restrict each bullet to **one primary assertion, action, or causal relationship**.
+   - Split compound multi-clause sentences into nested child bullets.
+   - Write lean, direct sentences while preserving natural articles (`a`, `the`), verbs, and logical connectives (`because`, `if`, `when`, `so that`) required to explain mechanisms without artificial truncation.
+   - Prohibit sprawling multi-clause run-ons.
 3. **Noun Cluster Restriction:**
    - Restrict noun strings to a maximum of **three consecutive nouns**.
    - _Example:_
@@ -105,6 +106,7 @@ Apply these structural layout and Controlled Technical Language (ASD-STE100) rul
      - `CORRECT:` The worker parses the configuration payload during startup.
 5. **One Term, One Meaning (Terminological Determinism):**
    - **Zero Synonym Churn:** Never rotate synonyms for stylistic variety (e.g., do not alternate between `cluster`, `node group`, `instance pool`, and `compute farm` for the same entity). Choose the canonical technical term and use it consistently throughout the document.
+   - **Technical Names Preservation:** Preserve defined technical terminology and product names verbatim. Define specialized terms in plain language at first encounter.
 6. **Unambiguous Connectives:**
    - Use `because` for causation (never use `since` or `as`).
    - Use `while` only for concurrent time (never for contrast).
@@ -112,14 +114,14 @@ Apply these structural layout and Controlled Technical Language (ASD-STE100) rul
    - _Example:_
      - `INCORRECT:` Since the token expired, the request was rejected.
      - `CORRECT:` The request failed because the token expired.
-7. **Anti-Pattern Blacklist (Prohibited Rhetoric & LLM Clichés):**
-   - **Prohibited Idioms & Metaphors:** _"under the hood"_, _"at its core"_, _"load-bearing"_, _"double-edged sword"_, _"in a nutshell"_, _"silver bullet"_, _"deep dive"_, _"unpacking this"_, _"secret sauce"_.
-   - **Prohibited Editorializing & Meta-Commentary:** _"It is worth noting that..."_, _"Crucially..."_, _"Importantly..."_, _"Let's explore..."_, _"As discussed earlier..."_.
-   - **Prohibited Vague Qualifiers:** _"basically"_, _"essentially"_, _"fairly"_, _"substantially"_, _"somewhat"_, _"relatively"_.
-   - **Prohibited Buzzwords:** _"delve"_, _"tapestry"_, _"beacon"_, _"paramount"_, _"leverage"_ (when meaning "use").
+7. **Affirmative Factual Register:**
+   - Adopt the literal, understated, and factual tone of an engineering reference manual.
+   - State mechanisms by their actual software components, data flows, and state changes.
+   - State operational limits, metrics, and parameters directly rather than using vague qualitative modifiers.
+   - Lead immediately with operational facts; omit introductory pleasantries, rhetorical preambles, and conversational filler.
    - _Example:_
-     - `INCORRECT:` Under the hood, this load-bearing check prevents deep dive failures.
-     - `CORRECT:` The validation service prevents downstream execution failures.
+     - `INCORRECT:` It is essentially crucial that the internal system logic handles requests seamlessly.
+     - `CORRECT:` The proxy routes requests and caches responses.
 
 ---
 
@@ -160,7 +162,7 @@ Generate the complete, fully articulated, simplified technical document matching
 - Standalone, self-contained Markdown document.
 - All non-protected body text structured into bold-leaded, atomic, nested bullets.
 - All protected elements (fenced code, Markdown tables, LaTeX math, Mermaid diagrams) preserved verbatim.
-- Adhere strictly to the STE rules: active voice, maximum 25 words/bullet, direct affirmative phrasing, zero prohibited idioms.
+- Adhere strictly to STE rules: active voice, one controlling idea per bullet, direct affirmative phrasing, and factual register.
 - Flag source anomalies inline using GitHub alerts: `> [!WARNING] Source Anomaly: [Description]`.
 
 ### Phase 4: Fidelity & Format Audit (`<fidelity_audit>`)
@@ -178,10 +180,10 @@ Reconcile the generated text against the Phase 1 Ledger and formatting invariant
 - [ ] 100% of ordinary body lines begin with valid bullet (`- `) or numbered step (`1.`) markers.
 - [ ] All top-level bullets serve as bold category/concept anchors with **NO** trailing inline sentence (`- **Category:**`).
 - [ ] Child bullets are clean, plain-text declarative sentences with **ZERO** bold labels.
-- [ ] Bullet nesting depth does not exceed 3 levels; sentence length is $\le 25$ words per bullet.
+- [ ] Bullet nesting depth does not exceed 3 levels; each sentence expresses one controlling idea with natural flow.
 - [ ] All code, commands, parameters, schemas, formulas, tables, and diagrams match the source character-for-character.
 - [ ] Modality strengths (`must`, `should`, `may`) are preserved without drift.
-- [ ] Zero prohibited idioms, meta-commentary, or contrastive preambles ("not X, but Y") exist.
+- [ ] All non-protected text adheres to the factual register and affirmative STE-100 phrasing rules.
 - [ ] Terminological determinism is maintained (zero synonym churn).
 - [ ] No external ungrounded facts were introduced.
 

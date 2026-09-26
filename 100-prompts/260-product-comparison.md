@@ -60,10 +60,12 @@ Place an inline Markdown link immediately after each researched claim. Use the f
 
 For every meaningful specification or category term:
 
-- Give a plain-language definition.
-- Explain its practical effect.
-- State when a higher or lower value is actually better.
-- Warn when the metric is incomplete or mainly marketing.
+- Structure explanations using bullet-first micro-formatting: bold category anchors followed by un-bolded declarative sentences.
+- Apply ASD-STE100 controlled language: write in active voice with explicit subjects and one controlling idea per sentence.
+- Give a plain-language definition at first encounter.
+- Explain its practical effect on daily use, cost, or performance.
+- State clearly whether a higher or lower numerical value is better.
+- State whether the metric reflects verified empirical performance or manufacturer marketing terminology.
 
 Include important category-standard features even when absent from a product; mark those cells `Unspecified` or `Absent`.
 

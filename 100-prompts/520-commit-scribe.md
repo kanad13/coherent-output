@@ -47,7 +47,7 @@ Select a commit type from the following list:
 Use this structure for the commit message:
 
 ```text
-<type>(<scope>): <concise summary of the complete change>
+<type>(<scope>): <single-line concise summary in the present imperative mood>
 
 Problem
 - What problem, need, or goal led to this change?
@@ -60,7 +60,7 @@ Decisions
 - Important non-obvious decisions, discoveries, constraints, or trade-offs.
 
 Implementation
-- Briefly describe the implementation, architecture, or approach.
+- Briefly describe the implementation, architecture, or approach using active voice.
 
 Notes
 - Any relevant notes not covered above.

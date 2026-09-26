@@ -32,6 +32,7 @@
   - Maintain the exact sentence structure of the original German text (word order, grammar).
 - **Normal English Translation:**
   - Provide a fluent, natural English translation on a new line or section after the word-to-word translation.
+  - Adhere to Plain English principles: write in active voice with natural Subject-Verb-Object word order and direct phrasing.
   - This translation should read naturally, even if word order differs from the German original.
 
 ### Output Format:

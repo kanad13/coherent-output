@@ -101,7 +101,7 @@ Structure your response as follows:
 
 **Why This Gender:**
 
-- [Brief explanation of the linguistic reason]
+- [State the primary suffix or semantic rule affirmatively in one clear sentence]
 
 **Exception?** [Yes/No - if yes, briefly note why it breaks the pattern]
 

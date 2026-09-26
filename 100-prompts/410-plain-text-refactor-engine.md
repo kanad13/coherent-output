@@ -30,23 +30,24 @@ The internal syntax of the following elements is strictly protected. Never conve
 - **Mermaid Diagrams & Math:** Visual workflows and LaTeX equations retain native blocks and delimiters.
 - **Frontmatter & Blockquotes:** YAML/TOML frontmatter and Markdown blockquotes (`>`) retain native formatting.
 
-### 2.3 Readable Plain English & Controlled Syntax (No Lobotomization)
-Enforce readability and cognitive ease without creating robotic, telegraphic fragments:
-- **One Controlling Idea Per Sentence:** Restrict each sentence to a single controlling idea or causal relationship.
-- **Natural Sentence Flow & Length Calibration:**
-  - Target a lean average of **15 to 22 words** per sentence.
-  - Allow natural elasticity (typically **10 to 30 words**) to preserve complete explanations, conditional rules, and causal connectives.
-  - **No Artificial Kneecapping:** Never strip natural articles (`a`, `the`), verbs, or essential conjunctions (`because`, `if`, `when`, `so that`) merely to satisfy an arbitrary word ceiling. Text must read as natural, professional English.
-  - **No Run-On Sprawl:** Prohibit sprawling compound sentences (>35 words) and convoluted multi-clause stacking. Split secondary claims into nested child bullets.
-- **Direct Affirmative Phrasing:** State what an item *is*, *has*, or *does* directly. Prohibit negative contrastive constructions (*"not merely X, but rather Y"* $\rightarrow$ *"X does Y"*).
-- **Active Voice & Explicit Subjects:** Use active voice with clear subjects (*"Catalyst engineers operate the platform"*, not *"The platform is operated"*).
-- **Noun Cluster Restriction:** Maximum of **three consecutive nouns** (*"system configuration parameter value"* $\rightarrow$ *"value of the system configuration parameter"*).
-- **Terminological Determinism:** One concept, one canonical term. Zero synonym churn (never rotate between *cluster*, *node pool*, and *compute farm* for the same entity).
-- **Banned Rhetoric Blacklist:**
-  - *Prohibited Idioms/Clichés:* "under the hood", "at its core", "load-bearing", "silver bullet", "deep dive", "in a nutshell", "secret sauce".
-  - *Prohibited Meta-Commentary:* "It is worth noting that...", "Crucially...", "Importantly...", "Let's explore...", "As discussed earlier...".
-  - *Prohibited Vague Qualifiers:* "basically", "essentially", "fairly", "somewhat", "relatively".
-  - *Prohibited Buzzwords:* "delve", "tapestry", "beacon", "paramount", "leverage" (use "use").
+### 2.3 Controlled Technical Language (ASD-STE100 Invariants) & Affirmative Articulation
+Enforce cognitive clarity, technical precision, and natural sentence flow:
+- **One Controlling Idea Per Sentence:** Restrict each sentence to a single controlling assertion, action, or causal relationship. Split compound multi-clause sentences into nested child bullets.
+- **Natural Syntactic Flow:** Write lean, direct sentences. Preserve natural articles (`a`, `the`), verbs, and logical connectives (`because`, `if`, `when`, `so that`) required to fully explain conditions, prerequisites, and mechanisms without artificial truncation.
+- **Prohibit Run-On Sprawl:** Avoid chaining multiple independent clauses or stacking parenthetical phrases.
+- **Direct Affirmative Phrasing:** State what an item is, has, or does directly using ordinary verbs (such as `use`, `run`, `build`, `send`, `check`, `store`). Express rules and specifications affirmatively.
+- **Active Voice & Explicit Subjects:** Ensure every sentence has a clear, named actor performing the action (*"Catalyst engineers operate the platform"*, not *"The platform is operated"*).
+- **Noun Cluster Restriction:** Restrict noun sequences to a maximum of three consecutive nouns.
+- **Terminological Determinism & Nomenclature (Technical Names):**
+  - Choose one canonical term for each system concept and use it consistently throughout.
+  - Preserve defined domain terminology and technical nomenclature character-for-character.
+  - Define unfamiliar or specialized technical terms in plain language at their point of first use.
+- **Unambiguous Connectives:** Use `because` for causation, `while` strictly for concurrent time, and `if` for conditional rules.
+- **Factual Register (Affirmative Tone):**
+  - Adopt the literal, understated, and factual tone of an engineering reference manual.
+  - State mechanisms by their actual software components, data flows, and state changes.
+  - State operational limits, metrics, and parameters directly rather than using vague qualitative modifiers.
+  - Lead immediately with operational facts; omit introductory pleasantries, rhetorical preambles, and conversational filler.
 
 ### 2.4 Bullet-First Micro-Formatting Standard
 Apply these layout standards to all non-protected body text:
@@ -85,7 +86,7 @@ Plan the target architecture to eliminate structural defects:
 ### Phase 3: Simplified Synthesis (`<refactored_content>`)
 Generate the complete, fully articulated, self-contained Markdown output matching all Bullet-First and Controlled Language rules:
 - Bold category leads with un-bolded child sentences.
-- Lean sentences averaging 15–22 words with natural flow.
+- Lean, direct sentences with one controlling idea and natural grammatical flow.
 - Protected blocks (tables, code, diagrams) preserved with 100% character exactness.
 - Zero conversational preambles, apologies, or sign-offs.
 
@@ -105,7 +106,7 @@ Audit the refactored output against this checklist:
 - [ ] 100% of non-protected body text is bullet-first with zero paragraph walls.
 - [ ] All top-level bullets are bold category anchors with NO trailing text on the same line.
 - [ ] All child bullets have ZERO bold labels and maintain natural, un-lobotomized flow.
-- [ ] Zero banned rhetoric, buzzwords, or conversational filler exist.
+- [ ] All non-protected text adheres strictly to the factual register and affirmative STE-100 phrasing rules.
 - [ ] Modality strengths (`must`, `should`, `may`, `target`) are preserved without drift.
 
 **Self-Correction Mandate:** If any check fails or any item is marked `GAP`, halt and re-synthesize `<refactored_content>` immediately before concluding your response.

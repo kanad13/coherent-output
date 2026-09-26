@@ -55,16 +55,15 @@ This is the inspectable product of the analysis.
 
 ### 3. Draft the Email
 
-- Provide a useful subject line for email input.
-- Lead with the message's purpose.
-- Use short, active sentences.
-- Keep one main idea per sentence.
-- Use specific language.
-- Remove filler, repetition, business jargon, and unnecessary apology.
-- Preserve hedging when it communicates real uncertainty, diplomacy, or a non-final commitment.
-- Use a professional, direct, and human tone.
-- Make the requested action and deadline unmistakable.
-- End naturally and concisely.
+- Provide a specific, informative subject line indicating the message's core topic or requested action.
+- Lead with the message's primary purpose or requested decision in the opening sentence.
+- Use active voice, explicit subjects, and direct affirmative phrasing.
+- Restrict each sentence to one main idea with natural grammatical flow.
+- Format multiple action items, dates, requirements, or dependencies into clean, scannable bullet points.
+- Adopt a direct, professional, and human tone: state requests, operational facts, and deadlines plainly.
+- Preserve diplomatic calibration and hedging only when communicating verified uncertainty, policy bounds, or non-final commitments.
+- Make requested actions, ownership, and target timelines unmistakable.
+- Conclude directly with the clear next step or desired outcome.
 
 Calibrate certainty, directness, apology, and commitment to the source.
 

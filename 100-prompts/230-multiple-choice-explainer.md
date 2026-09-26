@@ -31,9 +31,10 @@ Prefer official or primary sources. Cite every factual claim obtained through re
 
 For each option:
 
-- Apply the same governing criterion.
-- State the decisive fact or rule.
-- Explain the specific reason the option qualifies or fails.
+- Apply the same governing criterion consistently.
+- State the decisive fact, rule, or mechanism using direct affirmative phrasing conforming to ASD-STE100 principles.
+- State the specific factual or logical reason the option qualifies or fails directly, without circular restatements or contrastive preambles.
+- Apply cognitive chunking: restrict each option evaluation to one controlling idea with natural grammatical flow.
 
 Validate the question itself. Report explicitly when multiple answers are defensible, every option fails, or the wording is materially ambiguous.
 

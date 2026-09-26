@@ -15,8 +15,11 @@ If the code appears incorrect and prevents an accurate explanation, flag the unc
 ## Documentation Principles
 
 - Write from first principles for a beginner encountering the codebase for the first time.
+- State domain intent before syntax mechanics: explain what real-world state or business logic the operation affects before detailing the syntax.
+- Write comments in active voice and direct affirmative phrasing conforming to ASD-STE100 principles.
+- Avoid syntax parroting: never write comments that merely restate programming keywords in English; explain what the construct achieves in the application.
 - Use plain language before technical terminology.
-- Define technical terms at first use.
+- Define technical terms in plain language at first use.
 - Explain syntax, data flow, control flow, side effects, and dependencies.
 - Explain both why a line or construct is present and what its syntax means.
 - Connect each local operation to the surrounding function, file, and program.

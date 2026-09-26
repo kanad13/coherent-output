@@ -81,13 +81,15 @@ Build the lesson in this order:
 
 For each major concept:
 
-- Define it in plain language.
-- Explain why it exists or what problem it solves.
-- Show how it works step by step.
-- Include a focused visual.
-- Give at least one concrete example and explain why the example demonstrates the concept.
-- Contrast it with a common misconception when useful.
-- Connect it to the preceding and following concepts.
+- Structure explanations using bullet-first micro-formatting: bold category anchors followed by un-bolded declarative sentences.
+- Apply ASD-STE100 controlled language: write in active voice with explicit subjects and one controlling idea per sentence, maintaining natural grammatical flow without artificial truncation.
+- Define the concept in plain language at first use.
+- Explain why it exists and what specific problem it solves.
+- Show how it works step by step using physical mechanisms or concrete system behavior.
+- Include a focused visual (diagram, table, or ASCII chart) and explain how to read it.
+- Provide a concrete example and state explicitly what the example demonstrates.
+- Contrast it with a common beginner misconception.
+- Connect it logically to the preceding and following concepts.
 
 ### 4. Verify the Guide
 

@@ -12,6 +12,8 @@ This approach validates claims and recommends next evidence steps or experiments
 
 - Treat each meaningful claim as a hypothesis pending validation.
 - Formulate the strongest reasonable version of a hypothesis before testing it.
+- Express hypotheses, rationales, and verdicts using direct affirmative phrasing and active voice conforming to ASD-STE100 principles.
+- Apply cognitive chunking: restrict each hypothesis and verdict rationale to one controlling idea with natural grammatical flow.
 - Seek disconfirming evidence as actively as supporting evidence.
 - Distinguish direct evidence, inference, assumptions, and unknowns.
 - Cite every externally verifiable factual claim close to the claim it supports, using a direct link to the supporting source.
