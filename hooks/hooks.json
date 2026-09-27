@@ -1,0 +1,32 @@
+{
+  "destructive-command-safety-gate": {
+    "enabled": true,
+    "PreToolUse": [
+      {
+        "matcher": "run_command",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/kunal/Documents/all-my-repos/200-frequent/coherent-output/hooks/scripts/safety-gate.sh",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  },
+  "prettier-auto-format": {
+    "enabled": true,
+    "PostToolUse": [
+      {
+        "matcher": "write_to_file|replace_file_content",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/kunal/Documents/all-my-repos/200-frequent/coherent-output/hooks/scripts/prettier-format.sh",
+            "timeout": 15
+          }
+        ]
+      }
+    ]
+  }
+}
