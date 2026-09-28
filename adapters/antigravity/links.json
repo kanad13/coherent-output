@@ -2,7 +2,8 @@
   {
     "scope": "home",
     "destination": ".gemini/AGENTS.md",
-    "source": "AGENTS.md"
+    "source": "AGENTS.md",
+    "previous_sources": ["GLOBAL.md"]
   },
   {
     "scope": "home",
