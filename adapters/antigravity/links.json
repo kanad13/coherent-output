@@ -1,0 +1,23 @@
+[
+  {
+    "scope": "home",
+    "destination": ".gemini/AGENTS.md",
+    "source": "AGENTS.md"
+  },
+  {
+    "scope": "home",
+    "destination": ".gemini/config/rules",
+    "source": "rules"
+  },
+  {
+    "scope": "home",
+    "destination": ".gemini/config/skills",
+    "source": "skills"
+  },
+  {
+    "scope": "home",
+    "destination": ".gemini/config/hooks.json",
+    "source": ".generated/antigravity/hooks.json",
+    "previous_sources": ["hooks/hooks.json"]
+  }
+]

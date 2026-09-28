@@ -1,0 +1,13 @@
+[
+  {
+    "scope": "codex",
+    "destination": "AGENTS.md",
+    "source": ".generated/codex/AGENTS.md",
+    "previous_sources": ["AGENTS.md"]
+  },
+  {
+    "scope": "home",
+    "destination": ".agents/skills",
+    "source": "skills"
+  }
+]

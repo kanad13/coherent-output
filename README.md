@@ -1,82 +1,76 @@
 # Coherent Output
 
-A curated, version-controlled repository of **universal agent behaviors, capabilities, and invariants** — engineered for steerable, predictable, and high-integrity LLM outcomes.
+This repository holds one person's shared agent instructions and skills across multiple Macs. Git carries the source files between devices. Each Mac runs the installer to connect its local applications to its own checkout.
 
----
+## Start here
 
-## 1. Architectural Philosophy: Universal & Tool-Agnostic
+Run these commands from this checkout with Python 3 available:
 
-This repository serves as a **Single Source of Truth (SSOT)** for AI agent customization. The artifacts here are authored according to open standards and first principles rather than tied to any proprietary tool:
-
-- **Open Standard Agent Skills:** All procedural capabilities in `skills/` conform to the [Agent Skills standard](https://agentskills.io) (`SKILL.md` format), making them portable across modern agentic runtime environments.
-- **Universal Operating Rules:** Invariants in `rules/` and `AGENTS.md` enforce timeless engineering discipline: ASD-STE100 technical language, cognitive chunking, closed-world evidence grounding, and code documentation that explains *Why, not What*.
-- **Deterministic Lifecycle Hooks:** Automated event interception in `hooks/` providing safety gates and formatting without depending on model compliance.
-
----
-
-## 2. Repository Layout
-
-```
-coherent-output/
-├── AGENTS.md                  # Global persona, learner profile & baseline invariants
-├── .prettierrc                # Formatting standards (proseWrap: preserve, 120 print width)
-│
-├── rules/                     # Continuous operational rules & constraints
-│   ├── 01-autonomous-workflow.md      # trigger: always_on (Core mandate & 5-step loop)
-│   ├── 02-repo-integrity-drift.md     # trigger: always_on (Logic immunity & drift prevention)
-│   ├── 03-code-comment-invariants.md  # trigger: always_on (Intent imperative: "Why, not What")
-│   ├── 04-bullet-first-asd100.md      # trigger: always_on (ASD-STE100 & Bullet-First format)
-│   └── 05-markdown-standards.md       # trigger: glob (*.md) (Numbering & relative links)
-│
-├── skills/                    # Modular on-demand capabilities (Agent Skills open standard)
-│   ├── commit-scribe/         # /commit-scribe (Structured conventional commits)
-│   ├── markdown-audit/        # /markdown-audit (Doc numbering, READMEs & link audit)
-│   ├── repo-evergreen-sync/   # /repo-evergreen-sync (Delta-anchored repo reconciliation)
-│   ├── mermaid-architect/     # /mermaid-architect (Native Mermaid visual modeling)
-│   ├── bullet-first-refactor/ # /bullet-first-refactor (5-phase zero-loss text refactoring)
-│   ├── concise-answer/        # /concise-answer (Hyper-dense direct answer overlay)
-│   ├── web-research/          # /web-research (4-step research & primary source citation)
-│   ├── claim-validator/       # /claim-validator (Hypothesis stress-testing & 5 verdicts)
-│   ├── deidentify-document/   # /deidentify-document (PII & sensitive entity anonymization)
-│   ├── discovery-advisor/     # /discovery-advisor (Socratic sparring & hand-off brief)
-│   ├── concept-tutor/         # /concept-tutor (Scaffolded guides & interactive tutoring)
-│   ├── code-beginner-comments/# /code-beginner-comments (Educational line-by-line comments)
-│   ├── email-rewrite/         # /email-rewrite (Communication brief & professional email draft)
-│   ├── conversation-notes/    # /conversation-notes (Book-like synthesis of session history)
-│   ├── product-comparison/    # /product-comparison (Candidate normalization & TCO matrix)
-│   └── german-tutor/          # /german-tutor (German learning, B1 reader & gender analysis)
-│
-├── hooks/                     # Deterministic lifecycle gates & automated scripts
-│   ├── hooks.json             # Hook event configuration
-│   └── scripts/
-│       ├── safety-gate.sh     # PreToolUse gate for destructive bash commands
-│       └── prettier-format.sh # PostToolUse deterministic Prettier auto-formatter
-│
-├── tools/                     # Practical utilities and standalone applications
-│   ├── notepad.html           # Minimalist local notepad
-│   └── devcontainer/          # Universal and Node.js container environments
-│
-└── scripts/
-    └── deploy.sh              # Idempotent symlink deployment script
-```
-
----
-
-## 3. Tool Deployment & Symlink Mapping
-
-While this repository is tool-agnostic, deployment adapters link artifacts into tool-specific configuration directories:
-
-### Antigravity 2.0 Deployment
-Run the deployment script to establish symlinks into `~/.gemini/`:
 ```bash
+./scripts/deploy.sh --dry-run
 ./scripts/deploy.sh
+./scripts/deploy.sh --check
 ```
-Target mapping:
-- `AGENTS.md` → `~/.gemini/AGENTS.md`
-- `rules/` → `~/.gemini/config/rules/`
-- `skills/` → `~/.gemini/config/skills/`
-- `hooks/hooks.json` → `~/.gemini/config/hooks.json`
 
-### Multi-Tool Portability (Claude Code, Cursor, Copilot)
-- **Claude Code:** Symlink `skills/` to `~/.claude/skills/` and link or reference `AGENTS.md` in `~/.claude/CLAUDE.md`.
-- **Cursor / VS Code:** Point project settings or rules to `rules/` and `AGENTS.md`.
+The installer defaults to Codex and Antigravity 2.0 / IDE. Use `--tool codex` or `--tool antigravity` to select one. Start fresh chats after deployment. The installer checks filesystem configuration; the [Antigravity verification prompt](docs/030-antigravity-verification.md) checks what the application actually discovers.
+
+## Source layout
+
+| Location | Purpose |
+| --- | --- |
+| [AGENTS.md](AGENTS.md) | Shared persona, communication standards, and operating discipline |
+| [skills/](skills/) | Portable workflows in the Agent Skills format |
+| [rules/](rules/) | Shared written policies with Antigravity activation metadata |
+| [adapters/](adapters/README.md) | Tool-specific installation mappings and hook formats |
+| [scripts/](scripts/README.md) | Installer and isolated installation checks |
+| [docs/](docs/README.md) | Implementation plan, Mac setup guide, and verification prompt |
+| [tools/](tools/README.md) | Notepad and development containers |
+| [.prettierrc](.prettierrc) | Formatting defaults for this repository |
+
+The installer creates `.generated/` locally for composed Codex instructions and Antigravity hook commands containing this Mac's checkout path. Git ignores those generated files. Edit their sources and rerun deployment.
+
+## Installed mapping
+
+`<repo>` means the actual checkout on that Mac. `~` means that Mac's user home.
+
+| Tool reads | Source or generated target |
+| --- | --- |
+| `~/.agents/skills` | `<repo>/skills` |
+| `~/.codex/AGENTS.md` | `<repo>/.generated/codex/AGENTS.md` |
+| `~/.gemini/config/skills` | `<repo>/skills` |
+| `~/.gemini/AGENTS.md` | `<repo>/AGENTS.md` |
+| `~/.gemini/config/rules` | `<repo>/rules` |
+| `~/.gemini/config/hooks.json` | `<repo>/.generated/antigravity/hooks.json` |
+
+Codex instructions combine the shared `AGENTS.md` and all five written rules. The Markdown policy retains an explicit file condition in the instructions. Codex evaluates that condition as model guidance; Antigravity evaluates its native `glob` activation metadata. Codex's `.rules` files serve a different purpose: command approval policy.
+
+The skills are installed globally. This repository does not also install them through `.agents/skills`. App-owned system skills and plugin caches remain separate from this library.
+
+## Skills
+
+| Skill | Purpose |
+| --- | --- |
+| [bullet-first-refactor](skills/bullet-first-refactor/SKILL.md) | Refactor text into structured bullets without losing meaning |
+| [claim-validator](skills/claim-validator/SKILL.md) | Evaluate claims against evidence |
+| [code-beginner-comments](skills/code-beginner-comments/SKILL.md) | Explain code for learners |
+| [commit-scribe](skills/commit-scribe/SKILL.md) | Write structured Git commits |
+| [concept-tutor](skills/concept-tutor/SKILL.md) | Teach technical concepts |
+| [concise-answer](skills/concise-answer/SKILL.md) | Give concise technical answers |
+| [conversation-notes](skills/conversation-notes/SKILL.md) | Turn conversations into standalone notes |
+| [deidentify-document](skills/deidentify-document/SKILL.md) | Remove identifying information |
+| [discovery-advisor](skills/discovery-advisor/SKILL.md) | Clarify requirements and architecture choices |
+| [email-rewrite](skills/email-rewrite/SKILL.md) | Rewrite professional correspondence |
+| [german-tutor](skills/german-tutor/SKILL.md) | Support German language learning |
+| [markdown-audit](skills/markdown-audit/SKILL.md) | Inspect documentation structure and links |
+| [mermaid-architect](skills/mermaid-architect/SKILL.md) | Create Mermaid diagrams |
+| [product-comparison](skills/product-comparison/SKILL.md) | Compare products and ownership costs |
+| [repo-evergreen-sync](skills/repo-evergreen-sync/SKILL.md) | Reconcile repository documentation |
+| [web-research](skills/web-research/SKILL.md) | Research external questions using primary evidence |
+
+## Hooks and local settings
+
+Antigravity receives the [destructive-command gate and Prettier hook](adapters/antigravity/README.md). Their scripts retain their existing behavior. Prettier must be available on the hook process's `PATH` for formatting to occur.
+
+The [Codex adapter](adapters/codex/README.md) installs instructions and skills. It leaves the existing Codex approval policy in place. It does not install an equivalent of Antigravity's `force_ask` hook because the documented Codex hook contract does not support that decision. It does not enable automatic formatting in Codex.
+
+Authentication, histories, app databases, plugins, permissions, and app-specific model settings remain local to each Mac. Whole app configuration directories are not synchronized.

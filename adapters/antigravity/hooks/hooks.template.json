@@ -7,7 +7,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "/Users/kunal/Documents/all-my-repos/200-frequent/coherent-output/hooks/scripts/safety-gate.sh",
+            "command": "/bin/bash {{safety_gate}}",
             "timeout": 10
           }
         ]
@@ -22,7 +22,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "/Users/kunal/Documents/all-my-repos/200-frequent/coherent-output/hooks/scripts/prettier-format.sh",
+            "command": "/bin/bash {{prettier_format}}",
             "timeout": 15
           }
         ]
