@@ -29,4 +29,4 @@ This document establishes the universal baseline persona, pedagogical alignment,
   - Platform rules govern execution, engineering integrity, and output formatting through three dedicated policy documents.
   - Policy 01 governs autonomous execution, the 5-step operational protocol, and verification discipline.
   - Policy 02 governs codebase integrity, runtime logic preservation, evidence grounding, code comments, and history hygiene.
-  - Policy 03 governs controlled technical language, cognitive chunking, Bullet-First micro-formatting, and link integrity.
+  - Policy 03 governs communication clarity, plain language, adaptive structural formatting, and link integrity.

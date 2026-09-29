@@ -1,49 +1,44 @@
 ---
 trigger: always_on
-description: "ASD-STE100 Controlled Technical Language, Cognitive Chunking, Bullet-First micro-formatting, Zero-Loss invariant, Protected Elements, and relative link integrity."
+description: "Communication clarity, plain language, adaptive structural formatting, Zero-Loss invariant, Protected Elements, and relative link integrity."
 ---
 
-# Articulation, Controlled Language & Formatting Standards
+# Articulation, Communication & Formatting Standards
 
-These formatting and linguistic invariants apply across all agent responses, technical documents, and repository content.
+These standards govern communication clarity, structural presentation, and link integrity across all agent responses and repository documentation.
 
 ---
 
-## 1. Controlled Technical Language (ASD-STE100)
+## 1. Plain Language & Expressive Clarity
 
-- **Cognitive Chunking:**
-  - Restrict each sentence to a single controlling idea, action, or causal relationship.
-  - Split compound multi-clause thoughts into nested child bullets.
+- **First-Principles Plain Language:**
+  - Explain mechanisms, components, and workflows in direct, natural language.
+  - Avoid artificial jargon, academic posturing, buzzwords, and contrived taxonomic labels.
+  - Define unfamiliar or domain-specific terminology in plain language upon first use.
 - **Natural Syntactic Flow:**
   - Write direct, affirmative sentences.
-  - Preserve natural articles, verbs, and logical connectives without artificial truncation or run-on sprawl.
+  - Preserve natural grammatical flow, transitional phrases, and connective reasoning without artificial fragmentation or run-on sprawl.
 - **Active Voice & Explicit Actors:**
   - Ensure every sentence names a clear actor performing the action.
-- **Direct Affirmative Phrasing:**
-  - State what an item is, has, or does directly using ordinary verbs such as use, build, run, check, or store.
-- **Noun Cluster Restriction:**
-  - Limit consecutive nouns to a maximum of three.
+  - State what a component is, has, or does directly using ordinary verbs such as use, build, run, check, or store.
 - **Terminological Determinism:**
   - Use one canonical term for each system concept consistently throughout.
-  - Define unfamiliar or specialized terms in plain language upon first use.
 
 ---
 
-## 2. Bullet-First Micro-Formatting Standard
+## 2. Adaptive Structural Formatting
 
-Format all non-protected body text using structured bullet trees:
-
-- **Bullet-First Hierarchy:**
-  - Place every ordinary body line within an unordered bullet tree.
-  - Prohibit paragraph walls of text.
-- **Top-Level Bold Category Anchors:**
-  - Restrict top-level bullets strictly to conceptual category anchors formatted as `- **Anchor:**` with no trailing sentence on the same line.
-- **Un-bolded Child Bullets:**
-  - Place all substantive assertions, conditions, metrics, and explanations inside nested child bullets with zero bold labels.
-- **Nesting Depth Cap:**
-  - Restrict list hierarchies to a maximum of three levels.
-- **Sequential Ordered Lists:**
-  - Restrict numbered lists strictly to sequential workflows, chronological phases, or execution algorithms.
+- **Medium-Matched Layout:**
+  - Select the layout structure that optimizes scannability and comprehension for the specific task:
+    - Use clean, cohesive paragraphs for explanations, narrative context, and conceptual overviews.
+    - Use bulleted lists for discrete items, prerequisites, options, and non-sequential collections. Avoid nesting beyond three levels.
+    - Use numbered lists strictly for sequential steps, chronological phases, or execution algorithms.
+    - Use comparison tables for multi-attribute trade-offs, schemas, and evaluations.
+- **High-Signal Scannability:**
+  - Break up dense walls of prose with logical headings, code fences, and lists where helpful.
+  - Never force naturally cohesive thoughts into artificial bullet trees or invented category headers.
+- **Specialized Formatting Delegation:**
+  - Delegate rigid structural transformations (such as ASD-STE100 bullet-first refactoring) exclusively to dedicated procedural skills (e.g. `bullet-first-refactor`) upon explicit invocation, rather than enforcing them as universal defaults.
 
 ---
 
@@ -54,21 +49,11 @@ Format all non-protected body text using structured bullet trees:
   - Preserve exact modal certainty without weakening or strengthening modal force.
 - **Protected Elements:**
   - Retain native syntax and formatting for tables, fenced code blocks, Mermaid diagrams, LaTeX math blocks, frontmatter, and blockquotes.
-  - Never convert protected elements into bullet items.
+  - Never convert protected elements into list items.
 
 ---
 
-## 4. Medium-Specific Format Scoping
-
-- **Mandatory Technical Contexts:**
-  - Apply Bullet-First micro-formatting as the mandatory default for all agent session turns, explanations, technical responses, specifications, architectural guides, notes, and audit reports.
-- **Human Correspondence Exception:**
-  - Apply native prose layout exclusively when drafting external human correspondence on behalf of the user, such as emails or chat messages to colleagues.
-  - Apply native prose layout to language learning reading texts.
-
----
-
-## 5. Link Integrity & Markdown Navigation
+## 4. Link Integrity & Markdown Navigation
 
 - **Portable Relative Links:**
   - Use portable relative Markdown links exclusively inside repository documentation files (e.g., `[Auth Service](../services/auth.md)`).

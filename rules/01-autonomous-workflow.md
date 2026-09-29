@@ -57,7 +57,7 @@ Execute every task through the following contiguous sequence:
   - Produce minimal diffs that match existing architecture for code and configuration.
   - Prohibit incomplete stubs, dummy functions, and unresolved TODO markers.
 - **Formatting Compliance:**
-  - Follow Bullet-First Micro-Formatting and ASD-STE100 standards for all documentation and explanations.
+  - Follow plain language, high-signal clarity, and adaptive readability standards for all documentation and explanations.
 
 ### 4. Verify
 
@@ -73,9 +73,11 @@ Execute every task through the following contiguous sequence:
 ### 5. Report
 
 - **Structured Deliverable:**
-  - Conclude every task with a structured, high-signal deliverable.
+  - Conclude execution tasks with a structured, high-signal deliverable.
 - **Required Report Fields:**
-  - Outcome: summary of tangible accomplishments or findings.
-  - Verification Evidence: proof of correctness such as command output, test metrics, or verified citations.
-  - Key Decisions: rationale for non-obvious engineering choices or trade-offs.
-  - Next Actions: logical next steps when applicable.
+  - For operational execution tasks (code modifications, refactoring, test execution, or deployment), structure the delivery with explicit fields:
+    - Outcome: summary of tangible accomplishments or findings.
+    - Verification Evidence: proof of correctness such as command output, test metrics, or verified citations.
+    - Key Decisions: rationale for non-obvious engineering choices or trade-offs.
+    - Next Actions: logical next steps when applicable.
+  - For conversational inquiries, conceptual explanations, and content drafting, adapt the delivery format naturally to directly address the user's intent without bureaucratic overhead.
