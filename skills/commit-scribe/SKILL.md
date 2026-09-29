@@ -1,11 +1,11 @@
 ---
 name: commit-scribe
-description: Creates structured, high-context git commits for repository changes with problem, solution, decisions, and notes. Use when staging changes, writing commit messages, or finalizing git commits.
+description: Creates structured, high-context git commits for repository changes with problem, solution, decisions, and notes, and pushes them to the upstream remote. Use when staging changes, writing commit messages, finalizing git commits, or pushing commits to remote.
 ---
 
 # Commit Scribe
 
-Follow this protocol when creating local Git commits for repository changes.
+Follow this protocol when creating Git commits and pushing changes for repository updates.
 
 ---
 
@@ -62,5 +62,6 @@ Notes
 1. **Stage Changes:** Stage all intended changes, including additions, modifications, and deletions.
 2. **Verify Staged Diff:** Check `git diff --cached` to verify that only intentional modifications are staged.
 3. **Commit Locally:** Create exactly one local commit with the structured message.
-4. **Safety Gate:** Do **not** push to remote, amend previous commits, rebase, or reset history unless explicitly requested by the user.
-5. **Report Result:** Output the commit hash, subject line, included files, and final working tree status.
+4. **Push to Remote:** Push committed changes to the tracking upstream remote branch (`git push`). If no upstream branch is configured, push with `-u origin <branch>` to establish tracking.
+5. **Safety Gate:** Do **not** force push (`--force` or `--force-with-lease`), amend previously pushed commits, rebase public history, or reset history unless explicitly requested by the user.
+6. **Report Result:** Output the commit hash, upstream tracking branch, subject line, included files, and final working tree status.

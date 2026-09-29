@@ -88,7 +88,7 @@ When any AI coding agent modifies rules, skills, or adapters in this repository,
 | [bullet-first-refactor](skills/bullet-first-refactor/SKILL.md)   | Refactor text into structured bullets without losing meaning |
 | [claim-validator](skills/claim-validator/SKILL.md)               | Evaluate claims against evidence                             |
 | [code-beginner-comments](skills/code-beginner-comments/SKILL.md) | Explain code for learners                                    |
-| [commit-scribe](skills/commit-scribe/SKILL.md)                   | Write structured Git commits                                 |
+| [commit-scribe](skills/commit-scribe/SKILL.md)                   | Write structured Git commits and push to remote              |
 | [concept-tutor](skills/concept-tutor/SKILL.md)                   | Teach technical concepts                                     |
 | [concise-answer](skills/concise-answer/SKILL.md)                 | Give concise technical answers                               |
 | [conversation-notes](skills/conversation-notes/SKILL.md)         | Turn conversations into standalone notes                     |
