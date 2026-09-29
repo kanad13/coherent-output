@@ -27,7 +27,6 @@ Run deployment from this checkout:
 | [rules/](rules/)                | Modular written policies with Antigravity activation metadata               |
 | [adapters/](adapters/README.md) | Tool-specific configuration blueprints, hook templates, and runtime bridges |
 | [scripts/](scripts/README.md)   | Deployment, synchronization, and automated verification scripts             |
-| [tools/](tools/README.md)       | Standalone utilities and development container definitions                  |
 | [.prettierrc](.prettierrc)      | Repository formatting standards                                             |
 
 Local templates are generated into `.generated/` during installation and are excluded from Git.

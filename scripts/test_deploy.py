@@ -120,6 +120,22 @@ class DeploymentTests(unittest.TestCase):
             self.assertEqual(result.returncode, 0, result.stderr)
             self.assertEqual(json.loads(result.stdout)["decision"], expected)
 
+    def test_prettier_hook_handles_quoted_paths_and_keeps_antigravity_contract(self):
+        self.run_deploy()
+        config = json.loads((self.target / ".gemini/config/hooks.json").read_text())
+        command = config["prettier-auto-format"]["PostToolUse"][0]["hooks"][0]["command"]
+        sample_file = self.target / "sample.md"
+        sample_file.write_text("#  Header\n\n-  item\n")
+        for target in (str(sample_file), f'"{sample_file}"'):
+            result = subprocess.run(
+                ["/bin/bash", "-c", command],
+                input=json.dumps({"toolCall": {"name": "write_to_file", "args": {"TargetFile": target}}}),
+                text=True, capture_output=True,
+            )
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertEqual(json.loads(result.stdout), {})
+
 
 if __name__ == "__main__":
     unittest.main()
+

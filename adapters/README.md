@@ -25,7 +25,7 @@ Antigravity lifecycle hooks are configured via `adapters/antigravity/hooks/hooks
   - Output: Returns `{"decision": "force_ask"}` for destructive patterns, `{"decision": "allow"}` otherwise.
 - **Prettier Auto-Formatter (`prettier-format.sh`):**
   - Event: `PostToolUse` on `write_to_file` and `replace_file_content`.
-  - Behavior: Automatically runs Prettier on formatted code and Markdown files if `prettier` is available on `PATH`.
+  - Behavior: Sanitizes file paths (stripping quotes and expanding home paths), checks for project-level Prettier configs, falls back to the repository `.prettierrc` for unconfigured files, and automatically formats Markdown and code files.
 
 The installer renders local absolute script paths dynamically into `.generated/antigravity/hooks.json`, ensuring hook paths work on any Mac regardless of checkout location.
 
