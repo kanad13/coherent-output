@@ -38,14 +38,14 @@ Local templates are generated into `.generated/` during installation and are exc
 
 `<repo>` represents the absolute path to this checkout on the active Mac. `~` represents the user home directory.
 
-| Application     | Tool Configuration Path       | Target Source or Generated File            | Mechanics                                                     |
-| :-------------- | :---------------------------- | :----------------------------------------- | :------------------------------------------------------------ |
-| **Codex**       | `~/.agents/skills`            | `<repo>/skills`                            | Direct directory symlink                                      |
-| **Codex**       | `~/.codex/AGENTS.md`          | `<repo>/.generated/codex/AGENTS.md`        | Composed instruction file merging `AGENTS.md` and all 5 rules |
-| **Antigravity** | `~/.gemini/AGENTS.md`         | `<repo>/AGENTS.md`                         | Direct file symlink                                           |
-| **Antigravity** | `~/.gemini/config/rules`      | `<repo>/rules`                             | Direct directory symlink                                      |
-| **Antigravity** | `~/.gemini/config/skills`     | `<repo>/skills`                            | Direct directory symlink                                      |
-| **Antigravity** | `~/.gemini/config/hooks.json` | `<repo>/.generated/antigravity/hooks.json` | Rendered JSON template inserting local checkout paths         |
+| Application     | Tool Configuration Path       | Target Source or Generated File            | Mechanics                                                           |
+| :-------------- | :---------------------------- | :----------------------------------------- | :------------------------------------------------------------------ |
+| **Codex**       | `~/.agents/skills`            | `<repo>/skills`                            | Direct directory symlink                                            |
+| **Codex**       | `~/.codex/AGENTS.md`          | `<repo>/.generated/codex/AGENTS.md`        | Composed instruction file merging `AGENTS.md` and all modular rules |
+| **Antigravity** | `~/.gemini/AGENTS.md`         | `<repo>/AGENTS.md`                         | Direct file symlink                                                 |
+| **Antigravity** | `~/.gemini/config/rules`      | `<repo>/rules`                             | Direct directory symlink                                            |
+| **Antigravity** | `~/.gemini/config/skills`     | `<repo>/skills`                            | Direct directory symlink                                            |
+| **Antigravity** | `~/.gemini/config/hooks.json` | `<repo>/.generated/antigravity/hooks.json` | Rendered JSON template inserting local checkout paths               |
 
 ---
 

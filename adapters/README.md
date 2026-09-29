@@ -8,10 +8,10 @@ This directory defines tool-specific installation blueprints and runtime bridges
 
 Each adapter folder contains a `links.json` file specifying how shared sources map into tool-specific target locations:
 
-| Adapter                         | Target Directory            | Key Mappings                                                                                                                                                 | Runtime Mechanics                                                                                                                                                                   |
-| :------------------------------ | :-------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **[Antigravity](antigravity/)** | `~/.gemini/`                | `AGENTS.md` → `~/.gemini/AGENTS.md`<br>`rules/` → `~/.gemini/config/rules`<br>`skills/` → `~/.gemini/config/skills`<br>Hooks → `~/.gemini/config/hooks.json` | Loads rules dynamically based on YAML trigger frontmatter (`always_on`, `glob`). Renders local hook commands dynamically from template.                                             |
-| **[Codex](codex/)**             | `~/.codex/`<br>`~/.agents/` | `AGENTS.md` → `~/.codex/AGENTS.md`<br>`skills/` → `~/.agents/skills`                                                                                         | Merges `AGENTS.md` and all five written rules into `.generated/codex/AGENTS.md`. Preserves file condition around `*.md` rule. Leaves native Codex command approval policy in place. |
+| Adapter                         | Target Directory            | Key Mappings                                                                                                                                                 | Runtime Mechanics                                                                                                                                                                      |
+| :------------------------------ | :-------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **[Antigravity](antigravity/)** | `~/.gemini/`                | `AGENTS.md` → `~/.gemini/AGENTS.md`<br>`rules/` → `~/.gemini/config/rules`<br>`skills/` → `~/.gemini/config/skills`<br>Hooks → `~/.gemini/config/hooks.json` | Loads rules dynamically based on YAML trigger frontmatter (`always_on`, `glob`). Renders local hook commands dynamically from template.                                                |
+| **[Codex](codex/)**             | `~/.codex/`<br>`~/.agents/` | `AGENTS.md` → `~/.codex/AGENTS.md`<br>`skills/` → `~/.agents/skills`                                                                                         | Merges `AGENTS.md` and all modular written rules into `.generated/codex/AGENTS.md`. Preserves file condition around `*.md` rule. Leaves native Codex command approval policy in place. |
 
 ---
 
@@ -37,8 +37,8 @@ Codex CLI does not use a directory for Markdown prompt rules (Codex's `.rules` f
 
 To ensure complete policy enforcement in Codex:
 
-- The installer concatenates `AGENTS.md` with all five rule bodies from `rules/*.md`.
-- Glob-triggered policies (`05-markdown-standards.md`) are wrapped in natural-language boundary markers (`Apply the following policy only when working on files matching *.md`).
+- The installer concatenates `AGENTS.md` with all modular rule bodies from `rules/*.md`.
+- Glob-triggered policies (`04-markdown-standards.md`) are wrapped in natural-language boundary markers (`Apply the following policy only when working on files matching *.md`).
 - Output is written to `.generated/codex/AGENTS.md` (well under the 32 KiB instruction limit) and symlinked to `~/.codex/AGENTS.md`.
 
 Return to the [repository overview](../README.md).
