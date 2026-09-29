@@ -99,7 +99,7 @@ When any AI coding agent modifies rules, skills, or adapters in this repository,
 | [markdown-audit](skills/markdown-audit/SKILL.md)                 | Inspect documentation structure and links                    |
 | [mermaid-architect](skills/mermaid-architect/SKILL.md)           | Create Mermaid diagrams                                      |
 | [product-comparison](skills/product-comparison/SKILL.md)         | Compare products and ownership costs                         |
-| [repo-evergreen-sync](skills/repo-evergreen-sync/SKILL.md)       | Reconcile repository documentation                           |
+| [repo-evergreen-sync](skills/repo-evergreen-sync/SKILL.md)       | Synchronize repository and resolve cascading drift           |
 | [web-research](skills/web-research/SKILL.md)                     | Research external questions using primary evidence           |
 
 ---
