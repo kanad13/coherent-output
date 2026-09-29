@@ -50,7 +50,7 @@ These standards govern code runtime preservation, workspace coherence, evidence 
 
 - **The Intent Imperative:**
   - Document the underlying business rationale, algorithm invariants, safety constraints, and non-obvious engineering choices that make the code necessary.
-  - Explain why the code exists rather than what the syntax executes.
+  - Explain why the code exists.
 - **Syntax Echo Elimination:**
   - Never write comments that merely narrate what the programming syntax mechanically executes.
   - Delete comments that mirror mechanical code operations.

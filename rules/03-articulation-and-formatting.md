@@ -35,10 +35,8 @@ These standards govern communication clarity, structural presentation, and link 
     - Use numbered lists strictly for sequential steps, chronological phases, or execution algorithms.
     - Use comparison tables for multi-attribute trade-offs, schemas, and evaluations.
 - **High-Signal Scannability:**
-  - Break up dense walls of prose with logical headings, code fences, and lists where helpful.
-  - Never force naturally cohesive thoughts into artificial bullet trees or invented category headers.
-- **Specialized Formatting Delegation:**
-  - Delegate rigid structural transformations (such as ASD-STE100 bullet-first refactoring) exclusively to dedicated procedural skills (e.g. `bullet-first-refactor`) upon explicit invocation, rather than enforcing them as universal defaults.
+  - Structure prose and lists according to the natural cohesion of the content.
+  - Break up dense sections with logical headings, code fences, and lists to maximize clarity.
 
 ---
 

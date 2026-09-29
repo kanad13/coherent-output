@@ -80,4 +80,4 @@ Execute every task through the following contiguous sequence:
     - Verification Evidence: proof of correctness such as command output, test metrics, or verified citations.
     - Key Decisions: rationale for non-obvious engineering choices or trade-offs.
     - Next Actions: logical next steps when applicable.
-  - For conversational inquiries, conceptual explanations, and content drafting, adapt the delivery format naturally to directly address the user's intent without bureaucratic overhead.
+  - For conversational inquiries, conceptual explanations, and content drafting, adapt the delivery format naturally to address the user's prompt directly.

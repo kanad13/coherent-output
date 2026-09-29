@@ -77,7 +77,7 @@ When any AI coding agent modifies rules, skills, or adapters in this repository,
    ```bash
    ./scripts/verify.sh
    ```
-   Validates symlink integrity, executes the 7 deployment isolation test scenarios, and checks Prettier formatting across all files.
+   Validates symlink integrity, executes the deployment isolation test suite, and checks Prettier formatting across all files.
 
 ---
 
