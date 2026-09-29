@@ -1,6 +1,6 @@
 ---
 trigger: always_on
-description: "Repository integrity guardrails, task-scoped logic immunity, blast radius scoping, evidence grounding, code comment invariants, docstrings, and evergreen history hygiene."
+description: "Repository integrity guardrails, task-scoped logic immunity, blast radius scoping, evidence grounding, code comment invariants, docstrings, and history hygiene."
 ---
 
 # Engineering Integrity & Codebase Standards
@@ -14,9 +14,9 @@ These standards govern code runtime preservation, workspace coherence, evidence 
 - **Documentation Pass Scope:**
   - Keep runtime code logic, algorithm behavior, data structures, public symbol names, and execution semantics 100% intact when editing documentation, specifications, docstrings, type annotations, or inline comments.
   - Restrict modifications strictly to documentation files, specifications, docstrings, non-breaking type hints, and rationale comments during documentation tasks.
-- **Technical Debt Cataloging:**
-  - Record discovered code defects, dead functions, wrapper proliferation, or architectural anti-patterns in an explicit Technical Debt catalog during a documentation pass.
-  - Do not silently alter runtime code during documentation or review tasks.
+- **Defect Reporting Without Silent Alteration:**
+  - Do not silently alter runtime code when discovering defects, dead functions, wrapper proliferation, or architectural anti-patterns during a documentation or review pass.
+  - Record discovered defects in the task deliverable or technical debt notes for an independent refactoring pass.
 - **Implementation Pass Authorization:**
   - Modify implementation code surgically when the explicit task is a feature implementation, bugfix, or test failure remediation.
 
@@ -37,12 +37,12 @@ These standards govern code runtime preservation, workspace coherence, evidence 
 ## 3. Closed-World Evidence Grounding
 
 - **Mandatory Evidence Sources:**
-  - Cite concrete evidence from one of four verified sources for every technical assertion, rationale comment, docstring note, and architectural explanation.
+  - Ground every technical assertion, rationale comment, docstring note, and architectural explanation in concrete evidence from verified sources.
 - **Source Taxonomy:**
-  - Source 1: Active Session Context, consisting of direct instructions, user requirements, and code changes made during the active session.
+  - Source 1: Active Session Context, consisting of direct instructions, user requirements, and verified changes made during the active session.
   - Source 2: Repository Commit History, consisting of commit messages, PR descriptions, and architectural notes in the local Git log.
-  - Source 3: Executable Test Assertions, consisting of test suites, assertion statements, and mocks demonstrating the invariant or failure mode being prevented.
-  - Source 4: Verifiable System Constants, consisting of operating system constraints, protocol standards, hardware limits, and official vendor API contracts.
+  - Source 3: Executable Test Assertions, consisting of test suites, assertion statements, and mocks demonstrating behavior or preventing failure modes.
+  - Source 4: Verifiable System Constants & Specifications, consisting of operating system constraints, protocol standards, RFCs, hardware limits, and official vendor or language documentation.
 
 ---
 
@@ -53,7 +53,7 @@ These standards govern code runtime preservation, workspace coherence, evidence 
   - Explain why the code exists rather than what the syntax executes.
 - **Syntax Echo Elimination:**
   - Never write comments that merely narrate what the programming syntax mechanically executes.
-  - Delete comments that mirror code operations.
+  - Delete comments that mirror mechanical code operations.
 - **Tutorial Narrative Purge:**
   - Eradicate stream-of-consciousness narration in source comments.
   - Use direct, concise affirmative statements.
@@ -69,17 +69,13 @@ These standards govern code runtime preservation, workspace coherence, evidence 
 
 ## 5. Evergreen State & History Hygiene
 
-- **Relative Temporal Purge:**
+- **Documentation Temporal Hygiene:**
   - Eliminate relative temporal references such as "recently added", "in sprint 12", "new in version 2.1", "work in progress", or "to be implemented soon".
-  - Maintain all documentation in an evergreen, perpetual-present state using active present-tense verbs.
-- **Archaeology & Tombstone Removal:**
-  - Eradicate changelog clutter, deprecated sunset warnings, and historic patch notes embedded inside guides and documentation.
-  - Rely on Git history for historical evolution, keeping documentation focused on present operational truth.
-- **Dead Code Elimination:**
+  - Eradicate changelog clutter, deprecated sunset warnings, and historic patch notes from documentation.
+  - Describe present system behavior using active present-tense verbs.
+  - Rely on Git history for chronological evolution.
+- **Code Artifact & Residue Purge:**
   - Delete commented-out code blocks completely.
   - Rely entirely on Git version control for historical code retrieval.
-- **Scratchpad Residue Removal:**
-  - Remove preliminary planning notes, task lists, and scratchpad markers before concluding the task.
-- **Attribution & Tag Purge:**
+  - Remove preliminary planning notes, task lists, and scratchpad markers before concluding tasks.
   - Remove assistant attribution stamps, author tags, and ticket annotations from source code.
-  - Retain attribution strictly in Git commit history.

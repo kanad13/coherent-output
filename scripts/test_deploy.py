@@ -51,10 +51,19 @@ class DeploymentTests(unittest.TestCase):
         text = instructions.read_text()
         for rule in sorted((self.repo / "rules").glob("*.md")):
             self.assertIn(rule.read_text().split("---", 2)[2].strip(), text)
-        self.assertIn("only when working on files matching `*.md`", text)
         before = (instructions.lstat().st_ino, instructions.stat().st_mtime_ns)
         self.run_deploy()
         self.assertEqual(before, (instructions.lstat().st_ino, instructions.stat().st_mtime_ns))
+
+    def test_glob_triggered_rule_is_conditionally_wrapped(self):
+        glob_rule = self.repo / "rules/99-test-glob.md"
+        glob_rule.write_text(
+            '---\ntrigger: glob\nglobs: "*.py"\ndescription: "Python policy."\n---\n# Python Policy\n\n- Scope\n'
+        )
+        self.run_deploy()
+        text = (self.target / ".codex/AGENTS.md").read_text()
+        self.assertIn("Apply the following policy only when working on files matching `*.py`.", text)
+        self.assertIn("<!-- END CONDITIONAL POLICY -->", text)
 
     def test_conflict_aborts_before_writes_and_backup_preserves_content(self):
         conflict = self.target / ".gemini/config/hooks.json"

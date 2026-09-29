@@ -5,19 +5,61 @@ description: Audits Markdown repositories and documentation folders against numb
 
 # Markdown Repository Audit
 
-Follow this protocol to audit documentation folders and produce sequenced correction plans.
+Follow this protocol to audit documentation folders, verify structural standards, and produce sequenced correction plans.
 
 ---
 
 ## 1. Audit Scope & Exclusions
 
-- **Target Scope:** Human-maintained documentation and notes folders (`*.md`).
+- **Target Scope:** Human-maintained documentation, knowledge bases, and notes folders (`*.md`).
 - **Excluded Paths:** Source code files, generated artifacts, dependency directories (`node_modules`), vendor folders, and tool-owned directories (`.git`).
 - **Precedence:** Repository-specific instructions in project documentation take precedence over defaults.
 
 ---
 
-## 2. Four-Phase Audit Protocol
+## 2. Structural Standards Reference
+
+Evaluate target repositories against these structural standards:
+
+### 1. Predictable Numbering & Naming
+
+- **Curated Documentation Guides:**
+  - Content files in curated documentation libraries use a three-digit numeric prefix followed by lowercase kebab-case (e.g., `010-introduction.md`, `020-architecture.md`).
+- **Standard Increments:**
+  - Use primary sequence increments of ten (`010`, `020`, `030`) to reserve intermediate numbers (`015-prerequisites.md`) for future insertions without renumbering.
+- **Index File Naming:**
+  - Directory index files and root documentation hubs use the exact name `README.md` as the standard exception to numeric prefixes.
+- **Justified Exceptions:**
+  - Standard development directories, code packages, tools, adapters, and skill bundles follow standard unnumbered naming conventions.
+  - System configuration rules inside `rules/` follow a standard two-digit convention (`01-`, `02-`).
+
+### 2. Directory & Root Index Standards
+
+- **Directory README Coverage:**
+  - Every content subdirectory must contain a `README.md` serving as its local index.
+- **Directory README Structure:**
+  - Purpose: declare the directory scope and intended usage.
+  - Start Here: identify the primary entry point when documents have a logical reading order.
+  - Contents: provide a linked list of every file and subfolder with a concise one-line summary.
+  - Navigation: provide links to parent, sibling, or downstream documents.
+- **Root README Requirements:**
+  - Provide overall repository purpose, target audience, onboarding instructions, and a linked map of top-level content directories.
+
+### 3. Link Integrity & Navigation
+
+- **Portable Relative Links:**
+  - Use portable relative Markdown links exclusively inside repository documentation files (e.g., `[Auth Service](../services/auth.md)`).
+  - Prohibit machine-local absolute paths (`file:///Users/...`) in committed repository markdown.
+- **Clickable Index Entries:**
+  - Ensure every filename referenced in an index or guide is a valid, clickable Markdown link.
+- **Target Verification:**
+  - Ensure all relative paths, file anchors, and image references resolve to existing targets.
+- **Asset Alt-Text:**
+  - Include meaningful descriptive alt text for every informative image or diagram.
+
+---
+
+## 3. Four-Phase Audit Protocol
 
 ### Phase 1: Establish Scope & Inventory
 
@@ -35,13 +77,8 @@ Follow this protocol to audit documentation folders and produce sequenced correc
 
 ### Phase 3: Audit Against Standards
 
-Evaluate every item against five core standards:
-
-1. **Predictable 3-Digit Numbering:** Are content files prefixed with `010-`, `020-`? Are standard sequence increments of 10 used? Is `README.md` used for index files?
-2. **Directory README Coverage:** Does every subfolder contain a local index `README.md` containing Purpose, Start Here, and Contents?
-3. **Document Skeletons:** Do substantive guides provide Title, Purpose, Table of Contents, Body, and Next Steps?
-4. **Asset Placement:** Are non-markdown assets stored in an `assets/` directory with clean naming and alt text?
-5. **Link & Anchor Health:** Are all internal links relative, clickable, and verified against real targets?
+- Audit discovered files against the three Structural Standards (Numbering, README Coverage, Link Integrity).
+- Document non-compliant paths, missing index files, broken links, and unjustified naming patterns.
 
 ### Phase 4: Present Audit & Correction Plan
 
@@ -81,7 +118,7 @@ Use this structured deliverable:
 
 ---
 
-## 3. Two-Phase Execution Gate
+## 4. Two-Phase Execution Gate
 
 - **Phase 1 Output:** Conclude with the audit report and correction plan.
 - **Phase 2 Implementation:** Perform actual file moves, renames, and link updates **only after the user explicitly approves** the correction plan.

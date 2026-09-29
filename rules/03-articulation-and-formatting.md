@@ -1,6 +1,6 @@
 ---
 trigger: always_on
-description: "ASD-STE100 Controlled Technical Language, Cognitive Chunking, Bullet-First micro-formatting, Zero-Loss invariant, and Protected Elements."
+description: "ASD-STE100 Controlled Technical Language, Cognitive Chunking, Bullet-First micro-formatting, Zero-Loss invariant, Protected Elements, and relative link integrity."
 ---
 
 # Articulation, Controlled Language & Formatting Standards
@@ -65,3 +65,17 @@ Format all non-protected body text using structured bullet trees:
 - **Human Correspondence Exception:**
   - Apply native prose layout exclusively when drafting external human correspondence on behalf of the user, such as emails or chat messages to colleagues.
   - Apply native prose layout to language learning reading texts.
+
+---
+
+## 5. Link Integrity & Markdown Navigation
+
+- **Portable Relative Links:**
+  - Use portable relative Markdown links exclusively inside repository documentation files (e.g., `[Auth Service](../services/auth.md)`).
+  - Prohibit machine-local absolute paths (`file:///Users/...`) in committed repository markdown.
+- **Clickable File References:**
+  - Ensure every document filename referenced in an index or guide is a valid, clickable Markdown link.
+- **Target Verification:**
+  - Verify that all relative paths, file anchors, and image references resolve to existing targets before completing tasks.
+- **Asset Alt-Text:**
+  - Include meaningful descriptive alt text for every informative image or diagram.
