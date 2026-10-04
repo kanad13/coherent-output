@@ -22,9 +22,9 @@ Run deployment from this checkout:
 
 | Location                        | Purpose                                                                     |
 | :------------------------------ | :-------------------------------------------------------------------------- |
-| [AGENTS.md](AGENTS.md)          | Universal agent persona, communication standards, and operating discipline  |
-| [skills/](skills/)              | Portable workflows formatted according to the Agent Skills open standard    |
-| [rules/](rules/)                | Modular written policies with Antigravity activation metadata               |
+| [AGENTS.md](AGENTS.md)          | Universal baseline parent directive: persona, workflow loop, and boundaries |
+| [skills/](skills/)              | Situational child playbooks formatted to the Agent Skills open standard     |
+| [rules/](rules/)                | Scoped file-pattern policies activated conditionally via glob triggers      |
 | [adapters/](adapters/README.md) | Tool-specific configuration blueprints, hook templates, and runtime bridges |
 | [scripts/](scripts/README.md)   | Deployment, synchronization, and automated verification scripts             |
 | [.prettierrc](.prettierrc)      | Repository formatting standards                                             |
@@ -33,22 +33,54 @@ Local templates are generated into `.generated/` during installation and are exc
 
 ---
 
-## 3. Installed Mapping
+## 3. Architecture: The Parent-Child Operating Pattern
 
-`<repo>` represents the absolute path to this checkout on the active Mac. `~` represents the user home directory.
+This repository organizes agent steering into a high-signal hierarchy that prevents instruction bloat and cognitive friction:
 
-| Application     | Tool Configuration Path       | Target Source or Generated File            | Mechanics                                                           |
-| :-------------- | :---------------------------- | :----------------------------------------- | :------------------------------------------------------------------ |
-| **Codex**       | `~/.agents/skills`            | `<repo>/skills`                            | Direct directory symlink                                            |
-| **Codex**       | `~/.codex/AGENTS.md`          | `<repo>/.generated/codex/AGENTS.md`        | Composed instruction file merging `AGENTS.md` and all modular rules |
-| **Antigravity** | `~/.gemini/AGENTS.md`         | `<repo>/AGENTS.md`                         | Direct file symlink                                                 |
-| **Antigravity** | `~/.gemini/config/rules`      | `<repo>/rules`                             | Direct directory symlink                                            |
-| **Antigravity** | `~/.gemini/config/skills`     | `<repo>/skills`                            | Direct directory symlink                                            |
-| **Antigravity** | `~/.gemini/config/hooks.json` | `<repo>/.generated/antigravity/hooks.json` | Rendered JSON template inserting local checkout paths               |
+```
+┌────────────────────────────────────────────────────────────────────────┐
+│ THE PARENT CONTRACT: AGENTS.md (Universal Baseline)                    │
+│ "Stay safe, communicate clearly, and follow the 4-step workflow."       │
+│ • Universal Communication Register (ASD-STE100, zero filler, visuals)   │
+│ • The 4-Step Workflow Progression (Ground ➔ Plan ➔ Execute ➔ Verify)   │
+│ • Escalation Boundaries (Autonomous by default; 3 explicit pause gates) │
+│ • Decision Rationale ("Why, Not What")                                 │
+│ • Situational-Agnostic: Governs coding, research, writing, and chat    │
+└───────────────────────────────────┬────────────────────────────────────┘
+                                    │ Activates on demand:
+         ┌──────────────────────────┼──────────────────────────┐
+         ▼                          ▼                          ▼
+┌─────────────────┐        ┌─────────────────┐        ┌─────────────────┐
+│ Situational     │        │ Situational     │        │ Scoped Rules    │
+│ Skills (Child)  │        │ Skills (Child)  │        │ (rules/*.md)    │
+│ • commit-scribe │        │• test-strategist│        │• Glob-triggered │
+│ • repo-evergreen│        │• bullet-first-  │        │  rules loaded   │
+│   -sync         │        │  refactor       │        │  only on match  │
+└─────────────────┘        └─────────────────┘        └─────────────────┘
+```
+
+1. **The Parent Baseline (`AGENTS.md`):** High-level, positive, and situational-agnostic. It sets the baseline posture independent of domain. It avoids micro-managing mechanical actions ("crossing the street") to prevent attention degradation and instruction straightjacketing.
+2. **The Situational Skills (`skills/*/SKILL.md`):** Deep, specialized playbooks equipped for specific scenarios ("when swimming, do this; when on a train, do this"). They contain step-by-step checklists, command sequences, and verification gates. Loaded strictly on demand, they never burn standing prompt tokens during everyday turns.
+3. **The Scoped Rules (`rules/*.md`):** Reserved exclusively for file-pattern adaptations (`trigger: glob`, e.g. `*.py` or `*.tsx`) that load only when the agent touches matching file paths.
 
 ---
 
-## 4. Multi-Mac Workflow
+## 4. Installed Mapping
+
+`<repo>` represents the absolute path to this checkout on the active Mac. `~` represents the user home directory.
+
+| Application     | Tool Configuration Path       | Target Source or Generated File            | Mechanics                                                          |
+| :-------------- | :---------------------------- | :----------------------------------------- | :----------------------------------------------------------------- |
+| **Codex**       | `~/.agents/skills`            | `<repo>/skills`                            | Direct directory symlink                                           |
+| **Codex**       | `~/.codex/AGENTS.md`          | `<repo>/.generated/codex/AGENTS.md`        | Composed instruction file merging `AGENTS.md` and any scoped rules |
+| **Antigravity** | `~/.gemini/AGENTS.md`         | `<repo>/AGENTS.md`                         | Direct file symlink                                                |
+| **Antigravity** | `~/.gemini/config/rules`      | `<repo>/rules`                             | Direct directory symlink                                           |
+| **Antigravity** | `~/.gemini/config/skills`     | `<repo>/skills`                            | Direct directory symlink                                           |
+| **Antigravity** | `~/.gemini/config/hooks.json` | `<repo>/.generated/antigravity/hooks.json` | Rendered JSON template inserting local checkout paths              |
+
+---
+
+## 5. Multi-Mac Workflow
 
 ```
 Primary Mac (Make Changes)                Secondary Mac (Receive Changes)
@@ -64,7 +96,7 @@ Primary Mac (Make Changes)                Secondary Mac (Receive Changes)
 
 ---
 
-## 5. AI Agent Operating Protocol
+## 6. AI Agent Operating Protocol
 
 When any AI coding agent modifies rules, skills, or adapters in this repository, the agent must adhere to the following two-step contract before concluding work:
 
@@ -81,7 +113,7 @@ When any AI coding agent modifies rules, skills, or adapters in this repository,
 
 ---
 
-## 6. Skills Inventory
+## 7. Skills Inventory
 
 | Skill                                                            | Purpose                                                      |
 | :--------------------------------------------------------------- | :----------------------------------------------------------- |
@@ -105,7 +137,7 @@ When any AI coding agent modifies rules, skills, or adapters in this repository,
 
 ---
 
-## 7. Lifecycle Hooks and Local Settings
+## 8. Lifecycle Hooks and Local Settings
 
 - **Antigravity Hooks:** Implements a destructive command gate (`safety-gate.sh` on `PreToolUse` for `run_command`) and a Prettier auto-formatter (`prettier-format.sh` on `PostToolUse` for file write operations). See [adapters/README.md](adapters/README.md) for contract details.
 - **Codex Approvals:** Codex retains its native command approval policies. Codex's hook contract does not support `force_ask`, so native prompts govern command execution.

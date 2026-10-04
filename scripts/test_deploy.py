@@ -82,7 +82,7 @@ class DeploymentTests(unittest.TestCase):
 
     def test_generated_content_drift_is_detected(self):
         self.run_deploy()
-        with (self.repo / "rules/01-autonomous-workflow.md").open("a") as stream:
+        with (self.repo / "AGENTS.md").open("a") as stream:
             stream.write("\nA new shared instruction.\n")
         self.run_deploy("--check", status=1)
         self.run_deploy()
