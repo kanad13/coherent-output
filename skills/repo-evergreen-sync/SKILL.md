@@ -9,14 +9,20 @@ Use this skill to propagate recent changes across the entire repository, resolve
 
 ---
 
-## 1. Operating Protocol & The Anchor Change
+## 1. Operating Protocol & Session Intent Audit
 
-Every evergreen synchronization pass is anchored to a specific delta:
+Every evergreen synchronization pass is anchored to a specific functional delta:
 
-1. **Anchor the Functional Change:**
-   - If uncommitted working tree changes exist, evaluate and commit the functional work first using [commit-scribe](../commit-scribe/SKILL.md).
+1. **Pre-Commit Session Diff Audit (Inline Intent & Comments):**
+   - Before finalizing or committing functional code, inspect the active session's git diff (`git diff HEAD` or unstaged changes).
+   - **Inline Intent Audit ("Why, Not What"):** For every non-obvious logic block, new algorithmic step, configuration branch, or error handling path introduced in this session, verify that comments explain the underlying business rationale, architectural invariant, or constraint.
+   - **Syntax Echo Purge:** Eradicate any comments that merely narrate what the programming syntax mechanically executes (e.g., `# loop over items`, `// return result`).
+   - **Residue Purge:** Delete commented-out code blocks completely, remove temporary debug statements (`print`, `console.log`), and purge scratchpad notes.
+   - **Scope Clarity:** While runtime code logic in untouched legacy files is immune from silent refactoring, _comments and docstrings on files touched in the active session must be made pristine before anchoring_.
+2. **Anchor the Functional Change:**
+   - Commit the verified functional work using [commit-scribe](../commit-scribe/SKILL.md).
    - The resulting commit (or `HEAD` if already committed) serves as the **Anchor Delta**.
-2. **Route Historical Context to Git:**
+3. **Route Historical Context to Git:**
    - Record why components were superseded, why migrations occurred, or what technical debt was addressed in the Git commit message body.
    - Keep living files (`*.md`, source code, configs, schemas, templates) strictly present-tense and operational.
 
@@ -32,7 +38,7 @@ Audit the repository using these investigative inquiries:
 
 - What fundamental mechanism, convention, or domain model did this change alter?
 - Did this change introduce a new paradigm or pattern? If so, does the repository now have split-brain syndrome where older files follow a conflicting pattern?
-- Did the change establish a new idiom that should be unified across sibling modules?
+- Synchronize architecture diagrams, sequence flows, and Architecture Decision Records (ADRs) to match the new reality.
 
 ### 2. Operational & Workflow Parity
 
@@ -48,7 +54,7 @@ Audit the repository using these investigative inquiries:
 ### 4. Redundancy, Shadowing & Supersession
 
 - Does this new addition make an existing utility, script, helper, or document obsolete?
-- **In Source Code:** Leave runtime code logic intact per [Policy 02 (Engineering Integrity)](../../rules/02-engineering-integrity.md). Record duplicate helpers, wrapper proliferation, or dead implementations in the **Technical Debt & Architectural Findings** catalog.
+- **In Source Code:** Leave runtime code logic intact per engineering integrity standards. Record duplicate helpers, wrapper proliferation, or dead implementations in the **Technical Debt & Architectural Findings** catalog.
 - **In Documentation & Assets:** Eliminate semantic duplication. Merge redundant materials into a single source of truth and delete superseded documentation files.
 
 ### 5. Truth Parity & Contradiction Audit
@@ -60,6 +66,12 @@ Audit the repository using these investigative inquiries:
 
 - Are newly created files, tools, rules, or skills registered in their parent directory index and the root `README.md`?
 - Ensure every index entry has an accurate, concise summary and a valid relative link.
+
+### 7. Test Contract Parity & Gap Detection
+
+- **Regression Check:** Run the repository test suite (`./scripts/verify.sh` or the repo's test runner) to ensure recent changes introduced no regressions.
+- **Contract Agreement:** Verify that modified function signatures, schemas, or CLI flags did not leave behind broken mocks, stale assertions, or skipped tests.
+- **Scope Boundary:** Do not attempt full test strategy redesign or test harness overhaul inside an evergreen pass. If a newly added feature or architectural tier lacks test coverage, log a **Test Coverage Gap** in the deliverables and invoke or recommend [test-strategist](../test-strategist/SKILL.md).
 
 ---
 
@@ -91,6 +103,7 @@ When code defects, architectural fragmentation, or legacy anti-patterns are unco
 4. **Hardcoded Machine-Specific Paths:** Local absolute paths (`/Users/...`, `C:\...`) that should be dynamic or relative.
 5. **Prior Collapse & Modal Defaulting:** Bypassing repository-native schemas or conventions in favor of generic patterns.
 6. **Unverified Legacy Intent:** Complex, non-obvious logic lacking tests or documentation where intent cannot be verified from evidence.
+7. **Test Coverage Gaps:** Untested public interfaces, missing edge-case assertions, or absent integration harnesses flagged for [test-strategist](../test-strategist/SKILL.md).
 
 ---
 

@@ -3,7 +3,7 @@
     "scope": "home",
     "destination": ".gemini/AGENTS.md",
     "source": "AGENTS.md",
-    "previous_sources": ["GLOBAL.md"]
+    "previous_sources": ["GLOBAL.md", ".generated/antigravity/AGENTS.md"]
   },
   {
     "scope": "home",

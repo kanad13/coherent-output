@@ -100,6 +100,7 @@ When any AI coding agent modifies rules, skills, or adapters in this repository,
 | [mermaid-architect](skills/mermaid-architect/SKILL.md)           | Create Mermaid diagrams                                      |
 | [product-comparison](skills/product-comparison/SKILL.md)         | Compare products and ownership costs                         |
 | [repo-evergreen-sync](skills/repo-evergreen-sync/SKILL.md)       | Synchronize repository and resolve cascading drift           |
+| [test-strategist](skills/test-strategist/SKILL.md)               | Strategize test coverage and adapt harnesses mid-development |
 | [web-research](skills/web-research/SKILL.md)                     | Research external questions using primary evidence           |
 
 ---
