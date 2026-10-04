@@ -15,7 +15,7 @@ Every evergreen synchronization pass is anchored to a specific functional delta:
 
 1. **Pre-Commit Session Diff Audit (Inline Intent & Comments):**
    - Before finalizing or committing functional code, inspect the active session's git diff (`git diff HEAD` or unstaged changes).
-   - **Inline Intent Audit ("Why, Not What"):** For every non-obvious logic block, new algorithmic step, configuration branch, or error handling path introduced in this session, verify that comments explain the underlying business rationale, architectural invariant, or constraint.
+   - **Inline Intent Audit ("Why, Not What"):** For every code file, logic block, new algorithmic step, configuration branch, or error handling path introduced in this session, verify that comments explain the underlying rationale, architectural invariant, or constraint.
    - **Syntax Echo Purge:** Eradicate any comments that merely narrate what the programming syntax mechanically executes (e.g., `# loop over items`, `// return result`).
    - **Residue Purge:** Delete commented-out code blocks completely, remove temporary debug statements (`print`, `console.log`), and purge scratchpad notes.
    - **Scope Clarity:** While runtime code logic in untouched legacy files is immune from silent refactoring, _comments and docstrings on files touched in the active session must be made pristine before anchoring_.
@@ -115,8 +115,10 @@ When code defects, architectural fragmentation, or legacy anti-patterns are unco
 2. **Commit Synchronization Pass:**
    - Stage all updated documentation, docstrings, indexes, and cross-references.
    - Commit and push using [commit-scribe](../commit-scribe/SKILL.md):
+
      ```text
      docs(repo): synchronize repository documentation and contracts to evergreen standard
      ```
+
 3. **Deliverable Summary:**
    - Summarize the synchronized files, resolved cascading impacts, and cataloged technical debt.

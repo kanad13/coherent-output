@@ -40,7 +40,7 @@ Sequence the information in optimal reader-first order:
 ### Step 3: Draft the Email
 
 - Write a specific, informative subject line indicating topic and action.
-- Use natural, professional correspondence prose (exempt from rigid bullet-tree formatting).
+- Use natural, professional correspondence prose that is compliant with ASD-STE100 plain-language standards.
 - Write in active voice with explicit actors and dates.
 
 ### Step 4: Audit & Deliver
