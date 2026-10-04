@@ -23,7 +23,7 @@ Run deployment from this checkout:
 | Location                        | Purpose                                                                     |
 | :------------------------------ | :-------------------------------------------------------------------------- |
 | [AGENTS.md](AGENTS.md)          | Universal baseline parent directive: persona, workflow loop, and boundaries |
-| [skills/](skills/)              | Situational child playbooks formatted to the Agent Skills open standard     |
+| [skills/](skills/README.md)     | Situational child playbooks formatted to the Agent Skills open standard     |
 | [rules/](rules/)                | Scoped file-pattern policies activated conditionally via glob triggers      |
 | [adapters/](adapters/README.md) | Tool-specific configuration blueprints, hook templates, and runtime bridges |
 | [scripts/](scripts/README.md)   | Deployment, synchronization, and automated verification scripts             |
@@ -41,7 +41,7 @@ This repository organizes agent steering into a high-signal hierarchy that preve
 ┌────────────────────────────────────────────────────────────────────────┐
 │ THE PARENT CONTRACT: AGENTS.md (Universal Baseline)                    │
 │ "Stay safe, communicate clearly, and follow the 4-step workflow."       │
-│ • Universal Communication Register (ASD-STE100, zero filler, visuals)   │
+│ • Universal Communication Register (ASD-STE100, zero filler)           │
 │ • The 4-Step Workflow Progression (Ground ➔ Plan ➔ Execute ➔ Verify)   │
 │ • Escalation Boundaries (Autonomous by default; 3 explicit pause gates) │
 │ • Decision Rationale ("Why, Not What")                                 │
@@ -59,8 +59,8 @@ This repository organizes agent steering into a high-signal hierarchy that preve
 └─────────────────┘        └─────────────────┘        └─────────────────┘
 ```
 
-1. **The Parent Baseline (`AGENTS.md`):** High-level, positive, and situational-agnostic. It sets the baseline posture independent of domain. It avoids micro-managing mechanical actions ("crossing the street") to prevent attention degradation and instruction straightjacketing.
-2. **The Situational Skills (`skills/*/SKILL.md`):** Deep, specialized playbooks equipped for specific scenarios ("when swimming, do this; when on a train, do this"). They contain step-by-step checklists, command sequences, and verification gates. Loaded strictly on demand, they never burn standing prompt tokens during everyday turns.
+1. **The Parent Baseline (`AGENTS.md`):** High-level, positive, and situational-agnostic. It sets the baseline posture independent of domain. It defines the universal 4-step workflow and acts as an autonomous policy router (Section 5) that directs agents toward specific skills when encountering complex procedures.
+2. **The Situational Skills (`skills/*/SKILL.md`):** Deep, specialized playbooks following the [Agent Skills standard](skills/README.md). They operate via **Progressive Disclosure**: harnesses pre-load lightweight metadata (`name` and `description`) into the system prompt, and the agent reads full procedural instructions only when activated. Skills are triggered either autonomously via `AGENTS.md` policy routing or deterministically via user slash commands (e.g., `/commit-scribe`).
 3. **The Scoped Rules (`rules/*.md`):** Reserved exclusively for file-pattern adaptations (`trigger: glob`, e.g. `*.py` or `*.tsx`) that load only when the agent touches matching file paths.
 
 ---
@@ -114,6 +114,8 @@ When any AI coding agent modifies rules, skills, or adapters in this repository,
 ---
 
 ## 7. Skills Inventory
+
+For authoring standards, frontmatter contracts, and progressive disclosure architecture, see [skills/README.md](skills/README.md).
 
 | Skill                                                            | Purpose                                                      |
 | :--------------------------------------------------------------- | :----------------------------------------------------------- |

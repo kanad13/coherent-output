@@ -41,4 +41,15 @@ To ensure complete policy enforcement in Codex:
 - Any glob-triggered policies are dynamically wrapped in natural-language boundary markers (e.g., `Apply the following policy only when working on files matching <pattern>`).
 - Output is written to `.generated/codex/AGENTS.md` (well under the 32 KiB instruction limit) and symlinked to `~/.codex/AGENTS.md`.
 
+---
+
+## 4. Skill Discovery Across Harnesses
+
+Both Antigravity and Codex implement the [Agent Skills open standard](../skills/README.md). Neither requires the model to traverse local directories:
+
+- **Antigravity Discovery:** Automatically scans `~/.gemini/config/skills/*/SKILL.md` (and workspace `.agents/skills/`), injects frontmatter (`name` and `description`) into an active `<skills>` system prompt block at startup, and loads the full `SKILL.md` instructions when activated.
+- **Codex Discovery:** Scans `~/.agents/skills/*/SKILL.md` and repository `.agents/skills/` walking up the directory tree, catalogs skill metadata into the model prompt, and loads bodies on demand.
+
+In both tools, Section 5 of `AGENTS.md` acts as an autonomous policy router that matches task intent to the harness-provided skill manifest.
+
 Return to the [repository overview](../README.md).

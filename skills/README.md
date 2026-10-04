@@ -1,0 +1,145 @@
+# Agent Skills Library
+
+This directory contains the situational skill library for AI coding agents. Every skill conforms to the open [Agent Skills specification](https://agentskills.io) and is shared across development environments (Google Antigravity and OpenAI Codex).
+
+---
+
+## 1. Architecture: The Progressive Disclosure Model
+
+AI agents do not search arbitrary directories to locate skills. Instead, runtime harnesses manage skills through a three-tier **Progressive Disclosure** pipeline:
+
+```
+┌────────────────────────────────────────────────────────────────────────┐
+│ TIER 1: HARNESS STARTUP CATALOG (~50-100 tokens per skill)             │
+│ Harness scans ~/.agents/skills or ~/.gemini/config/skills.             │
+│ Reads YAML frontmatter (name + description) and injects into prompt:   │
+│   <skills>                                                             │
+│   - commit-scribe (/path/to/commit-scribe/SKILL.md): Creates ...       │
+│   </skills>                                                            │
+└───────────────────────────────────┬────────────────────────────────────┘
+                                    │ Task matches skill description
+                                    ▼
+┌────────────────────────────────────────────────────────────────────────┐
+│ TIER 2: ON-DEMAND INSTRUCTION ACTIVATION                               │
+│ Agent reads SKILL.md via file view tool using harness-supplied path.   │
+│ Full procedural instructions enter context only when actively needed.  │
+└───────────────────────────────────┬────────────────────────────────────┘
+                                    │ Workflow requires scripts or data
+                                    ▼
+┌────────────────────────────────────────────────────────────────────────┐
+│ TIER 3: RESOURCE EXECUTION                                             │
+│ Agent inspects local scripts/, references/, or assets/ only if called. │
+└────────────────────────────────────────────────────────────────────────┘
+```
+
+### The Dual Ingestion Model
+
+Skills are activated through two complementary channels:
+
+1. **Autonomous Policy Routing (`AGENTS.md` Section 5):**
+   - The harness pre-loads skill names and paths in the system prompt.
+   - The parent policy in `AGENTS.md` tells the agent _when_ it must not improvise (e.g., `"When committing, use commit-scribe"`).
+   - The model matches the named policy to its pre-loaded skills catalog and reads the instructions without requiring user intervention.
+2. **Explicit User Invocations (Slash Commands):**
+   - The user explicitly calls a skill in chat (e.g., `/commit-scribe`, `/repo-evergreen-sync`, `/web-research`).
+   - This bypasses model autonomy and deterministically forces the harness and agent to execute the requested playbook.
+
+---
+
+## 2. Skill Authoring Contract
+
+When adding or updating a skill, adhere strictly to the following standards:
+
+### Directory Structure
+
+```text
+skills/<skill-name>/
+├── SKILL.md              # Required: Main instruction file with YAML frontmatter
+├── scripts/              # Optional: Helper shell or Python scripts
+├── references/           # Optional: Deep reference manuals, schemas, or docs
+└── resources/            # Optional: Templates, vocabularies, or static data
+```
+
+### Frontmatter Schema
+
+Every `SKILL.md` must start with valid YAML frontmatter containing exactly `name` and `description`:
+
+```yaml
+---
+name: example-skill
+description: Concise, third-person trigger criteria explaining WHAT the skill does and WHEN the agent must use it. Maximum 1024 characters.
+---
+```
+
+- **`name`:** Lowercase alphanumeric with hyphens (`kebab-case`). Must match the parent directory name.
+- **`description`:** High-signal trigger statement. Harnesses use this text for semantic matching during Tier 1 cataloging.
+
+### Portability & Linking Rules
+
+- **Sibling Skills:** Link to sibling skills using relative Markdown paths: `[commit-scribe](../commit-scribe/SKILL.md)`. Sibling links resolve identically in repository source and deployed application symlinks (`~/.agents/skills/` and `~/.gemini/config/skills/`).
+- **No External Relative Links:** Never use relative paths to files outside the `skills/` directory (e.g., `../AGENTS.md` or `../../README.md`). Deployed skills reside in separate configuration directories where those relative paths do not exist. Refer to external standards conceptually.
+
+### Style & Content Standards
+
+- **Understated Engineering Register:** Write affirmative, active-voice instructions compliant with ASD-STE100 plain language.
+- **Why, Not What:** Document invariants, safety constraints, and decision rationale.
+- **Zero Residue:** Ensure execution steps clean up scratchpads, temporary files, and debug logging.
+
+---
+
+## 3. Skills Inventory
+
+The library provides 17 situational skills organized by operational domain:
+
+### Repository Operations & Git Hygiene
+
+| Skill                                               | Description                                                                                     |
+| :-------------------------------------------------- | :---------------------------------------------------------------------------------------------- |
+| [commit-scribe](commit-scribe/SKILL.md)             | Structured Git commits (problem, solution, decisions, notes) and upstream pushing.              |
+| [repo-evergreen-sync](repo-evergreen-sync/SKILL.md) | Propagate recent changes across the repository to eliminate drift, split-brain, and stale docs. |
+| [markdown-audit](markdown-audit/SKILL.md)           | Audit documentation numbering, index coverage, and link integrity.                              |
+
+### Engineering Strategy & Quality Assurance
+
+| Skill                                       | Description                                                                         |
+| :------------------------------------------ | :---------------------------------------------------------------------------------- |
+| [test-strategist](test-strategist/SKILL.md) | Assess repository topology, evaluate harness deltas, and adapt test portfolios.     |
+| [claim-validator](claim-validator/SKILL.md) | Stress-test claims, proposals, and strategies against verified evidence.            |
+| [web-research](web-research/SKILL.md)       | Conduct multi-source web research with strict source hierarchy and citation trails. |
+
+### Content Refactoring & Writing
+
+| Skill                                                   | Description                                                                              |
+| :------------------------------------------------------ | :--------------------------------------------------------------------------------------- |
+| [bullet-first-refactor](bullet-first-refactor/SKILL.md) | Refactor text into ultra-clean, bullet-first Markdown with 100% semantic fidelity.       |
+| [concise-answer](concise-answer/SKILL.md)               | Produce hyper-dense, direct technical responses that eliminate conversational padding.   |
+| [conversation-notes](conversation-notes/SKILL.md)       | Synthesize multi-turn conversations into self-contained, book-like documentation.        |
+| [email-rewrite](email-rewrite/SKILL.md)                 | Transform rough notes into professional correspondence adhering to plain language.       |
+| [deidentify-document](deidentify-document/SKILL.md)     | Sanitize documents by redacting PII, credentials, internal IPs, and sensitive codenames. |
+
+### Architecture, Design & Discovery
+
+| Skill                                             | Description                                                                       |
+| :------------------------------------------------ | :-------------------------------------------------------------------------------- |
+| [discovery-advisor](discovery-advisor/SKILL.md)   | Sparring partner to clarify vague requirements and synthesize Hand-off Briefs.    |
+| [mermaid-architect](mermaid-architect/SKILL.md)   | Design and insert compilable native Mermaid architecture and workflow diagrams.   |
+| [product-comparison](product-comparison/SKILL.md) | Compare developer tools or hardware based on compatibility, TCO, and reliability. |
+
+### Learning & Pedagogy
+
+| Skill                                                     | Description                                                                       |
+| :-------------------------------------------------------- | :-------------------------------------------------------------------------------- |
+| [code-beginner-comments](code-beginner-comments/SKILL.md) | Add comprehensive educational line-by-line comments for learning engineers.       |
+| [concept-tutor](concept-tutor/SKILL.md)                   | Teach technical concepts through scaffolded learning guides and diagnostic loops. |
+| [german-tutor](german-tutor/SKILL.md)                     | German grammar analysis, gender diagnostics, B1 reading generation, and glosses.  |
+
+---
+
+## 4. Maintenance & Validation Checklist
+
+Before committing additions or modifications to skills:
+
+1. **Frontmatter Validation:** Verify `name` matches directory name and `description` is concise and actionable.
+2. **Link Audit:** Verify all internal relative links point to valid sibling files.
+3. **Format Check:** Run `npx prettier --check skills/<skill-name>/SKILL.md`.
+4. **Deploy & Test:** Execute `./scripts/deploy.sh` followed by `./scripts/verify.sh` to confirm deployment sync and test suite passage.
