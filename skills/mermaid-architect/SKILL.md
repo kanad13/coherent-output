@@ -45,7 +45,7 @@ Follow this protocol to design, verify, and insert native Mermaid diagrams into 
 
 ### Phase 2: Formulate Visual Coverage Plan
 
-- Consult the [Mermaid Grammar Selector Matrix](./references/grammar-matrix.md) to choose the authoritative grammar and fallback for each concept.
+- Consult the **Mermaid Grammar Selector Matrix (Appendix A)** to choose the authoritative grammar and fallback.
 - Apply the **Progressive Visual Hierarchy** when a topic has multi-layered complexity:
   1. _Level 1 (Simple Model):_ Core entry points and high-level routing.
   2. _Level 2 (Expanded Model):_ Surrounding components, trust boundaries, and data stores.
@@ -68,7 +68,7 @@ Follow this protocol to design, verify, and insert native Mermaid diagrams into 
   [`./scripts/verify-mmdc.sh`](./scripts/verify-mmdc.sh) `<diagram_file.mmd>`
 - For batch validation of Markdown documents containing embedded Mermaid blocks, run:
   `python3 ./skills/mermaid-architect/scripts/verify-markdown.py <target_document.md>`
-- If compilation fails, diagnose the exact syntax error, close unescaped quotes, or fall back to standard grammar per the matrix.
+- If compilation fails, diagnose the exact syntax error, close unescaped quotes, or fall back to standard grammar per Appendix A.
 
 ### Phase 5: Structured Delivery & File Application
 
@@ -77,3 +77,27 @@ Follow this protocol to design, verify, and insert native Mermaid diagrams into 
   - **Section A:** Visual Coverage Plan (including the plan table).
   - **Section B:** Updated source document.
   - **Section C:** Compilation verification report.
+
+---
+
+## Appendix A: Mermaid Grammar Selector Matrix & Fallbacks
+
+| Visual Question / Domain                   | Primary Mermaid Grammar | Keyword / Declaration             | Ideal Use Case                                                | Fallback Grammar              |
+| :----------------------------------------- | :---------------------- | :-------------------------------- | :------------------------------------------------------------ | :---------------------------- |
+| **Process / Decision / Pipeline**          | Flowchart               | `flowchart TD` / `flowchart LR`   | Algorithms, branching logic, CI/CD, execution pipelines       | `graph TD`                    |
+| **Actor Protocol / Time Sequence**         | Sequence Diagram        | `sequenceDiagram`                 | API interactions, RPC handshakes, auth flows, event messaging | Flowchart LR                  |
+| **Object Lifecycle / State Transitions**   | State Diagram           | `stateDiagram-v2`                 | FSMs, connection states, order status lifecycles, retries     | Flowchart TD                  |
+| **Database Schema / Entity Relationships** | ER Diagram              | `erDiagram`                       | SQL/NoSQL schemas, foreign keys, cardinality, data models     | Class Diagram                 |
+| **Class Hierarchy / Domain Types**         | Class Diagram           | `classDiagram`                    | OOP structures, interfaces, typing models, design patterns    | ER Diagram                    |
+| **Project Phases / Durations**             | Gantt Chart             | `gantt`                           | Project schedules, concurrent task execution, milestones      | Timeline                      |
+| **Category Proportions**                   | Pie Chart               | `pie`                             | Small number of non-negative parts of one whole               | Markdown Table                |
+| **System Architecture / Boundaries**       | C4 / Architecture       | `C4Context` / `architecture-beta` | Microservices topology, cloud infrastructure, trust zones     | Flowchart with Subgraphs      |
+| **Controlled Spatial Grid**                | Block Diagram           | `block-beta`                      | Deliberate spatial component layouts                          | Flowchart with Subgraphs      |
+| **Magnitude & Flow Transfers**             | Sankey Diagram          | `sankey-beta`                     | Energy, cost allocation, conversion funnels                   | Flowchart with labeled widths |
+| **Quantitative Trends / Comparisons**      | XY Chart                | `xychart-beta`                    | Time series metrics, bar charts, benchmarks, throughput       | Markdown Table                |
+| **Branching / Version Control**            | Git Graph               | `gitGraph`                        | Branch/merge strategies, trunk-based development              | Flowchart LR                  |
+| **Chronology / Milestones / Releases**     | Timeline                | `timeline`                        | Release history, incident timelines, migration phases         | Gantt Chart                   |
+| **Taxonomy / Concept Breakdown**           | Mindmap                 | `mindmap`                         | Category trees, feature breakdowns, mental models             | Flowchart TD                  |
+| **User Experience / Journey**              | User Journey            | `journey`                         | User onboarding, step-by-step UX flows with satisfaction      | Flowchart LR                  |
+| **Tradeoffs / 2x2 Matrix**                 | Quadrant Chart          | `quadrantChart`                   | Risk vs. Value, Priority matrix, Capability evaluation        | Flowchart with Grid Subgraphs |
+| **Binary Protocol / Header Layout**        | Packet Diagram          | `packet-beta`                     | Network headers (IP/TCP), binary file structures              | Markdown Table or Flowchart   |

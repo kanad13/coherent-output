@@ -72,8 +72,6 @@ Do not limit inspection to the files modified in the anchor delta. Reason about 
   - Map each unit to a single canonical home in the Structural Blueprint.
   - Complete a Traceability Matrix verifying that 100% of units survive into revised docs or the Technical Debt catalog.
 
-Consult the [Zero-Tolerance Anti-Pattern Catalog](./references/anti-patterns.md) for the 24 explicit drift modes banned during synchronization.
-
 ---
 
 ## 5. Technical Debt Taxonomy
@@ -90,27 +88,43 @@ When code defects, architectural fragmentation, or legacy anti-patterns are unco
 
 ---
 
-## 6. Verification & Reconciliation Commit
+## 6. Verification & Final Checklist
 
-1. **Execute Verification:**
-   - Run the project test suite, linters, and verification scripts (`./scripts/verify.sh`).
-   - Confirm runtime code logic is unmodified.
-2. **Commit Synchronization Pass:**
-   - Stage all updated documentation, docstrings, indexes, and cross-references.
-   - Commit and push using [commit-scribe](../commit-scribe/SKILL.md):
-     ```text
-     docs(repo): synchronize repository documentation and contracts to evergreen standard
-     ```
-3. **Deliverable Summary & Checklist Audit:**
-   - Summarize synchronized files, resolved cascading impacts, and cataloged technical debt.
-   - Confirm the Final Verification Checklist:
-     - [ ] Code runtime logic, algorithms, control flow, and variable names are 100% unmodified.
-     - [ ] All docstring signatures match actual parameters, types, defaults, and exceptions.
-     - [ ] All patch notes, version deltas, and backward-looking archaeology are eliminated.
-     - [ ] All enterprise bureaucracy and multi-tenant fluff are purged from single-developer repos.
-     - [ ] All heading/prose echoing and code block narrative paraphrasing are eliminated.
-     - [ ] All ghost references, deleted flags, and phantom capability claims are removed.
-     - [ ] Intermediate documentation sections maintain uniform depth without middle-loss thinning.
-     - [ ] All ordinary body lines follow the bullet-first Markdown specification with bold labels.
-     - [ ] All repository documentation links use portable relative paths and resolve correctly.
-     - [ ] Syntax compilation and runtime tests on modified code files pass with 0 errors.
+Before completing execution, verify that:
+
+- [ ] Code runtime logic, algorithms, control flow, and variable names are 100% unmodified.
+- [ ] All docstring signatures match actual parameters, types, defaults, and exceptions.
+- [ ] All patch notes, version deltas, and backward-looking archaeology are eliminated.
+- [ ] All enterprise bureaucracy and multi-tenant fluff are purged from single-developer repos.
+- [ ] All heading/prose echoing and code block narrative paraphrasing are eliminated.
+- [ ] All ghost references, deleted flags, and phantom capability claims are removed.
+- [ ] Intermediate documentation sections maintain uniform depth without middle-loss thinning.
+- [ ] All ordinary body lines follow the bullet-first Markdown specification with bold labels.
+- [ ] All repository documentation links use portable relative paths and resolve correctly.
+- [ ] Syntax compilation and runtime tests on modified code files pass with 0 errors.
+
+---
+
+## Appendix A: Zero-Tolerance Anti-Pattern Catalog
+
+Enforce zero tolerance for these specific drift modes during reconciliation passes:
+
+### 1. Documentation Drift Anti-Patterns
+
+- **Patch-Note Infiltration:** Never append inline changelog notes or version deltas into living reference docs (e.g., `*Note: Updated in v2 to use DuckDB*`). Write exclusively in active present tense.
+- **Backward-Looking Code Archaeology:** Never explain superseded architectures or dead frameworks in reference docs. Route historical context to Git commit messages.
+- **Enterprise & Multi-Tenant Bureaucracy:** Omit multi-stage production tiers (`staging/prod`), PR contributor guidelines, SLA disclaimers, SOC2 checklists, or multi-tenant permission models from single-developer repos.
+- **Hedging & Conversational Padding:** Purge weak modals (`You might want to consider...`), filler, apologies, and closing pleasantries. Use direct operational modality (`must`, `should`, `may`).
+- **Echoing & Redundant Stating:** Never restate heading titles in the first sentence beneath them. Never write prose paragraphs before or after a code block that merely narrate what the code demonstrates.
+- **Ghost & Orphan References:** Eliminate markdown links, CLI flag descriptions, environment variables, or imports referencing deleted files, removed flags, or dead functions.
+- **Attention Thinning & "Middle-Loss":** Maintain identical rigor, tabular detail, and constraint completeness across every section; never allow intermediate reference sections to collapse into generic prose.
+- **Semantic Duplication across Files (DRY Violation):** Establish a Single Source of Truth in one canonical file and link to it using portable relative Markdown links.
+
+### 2. Code & Comment Drift Anti-Patterns
+
+- **Trivial Echo Comments:** Purge comments that merely restate visible syntax mechanics (e.g., `i += 1  # increment i`, `// return result`).
+- **Tutorial & Narrative Comments:** Purge stream-of-consciousness narrative comments (e.g., `# Here we loop over items to check if...`).
+- **Session & Attribution Tags:** Purge assistant attribution markers, turn tags, author stamps, and bugfix tickets (e.g., `# Fixed by Assistant on Turn 4`).
+- **Dead Code Graveyards:** Purge commented-out legacy code blocks completely (`# def old_impl(): ...`). Rely entirely on Git for version history.
+- **Inconsistent Docstrings:** Enforce uniform docstrings matching host language: Google style (Python), JSDoc/TSDoc (JS/TS), Rustdoc (Rust), Go doc (Go).
+- **Lying Docstrings:** Parameter types, return types, exceptions, and defaults must match actual runtime code with 100% precision.

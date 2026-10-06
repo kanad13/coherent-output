@@ -30,7 +30,7 @@ Use when conducting a multi-turn teaching session:
 4. **Diagnostic Check:** Ask one focused question requiring the learner to apply the concept.
 5. **Evaluate & Reframe:** When the learner responds:
    - _If correct:_ Validate the reasoning, highlight why it succeeds, and introduce the next layer.
-   - _If incorrect:_ Isolate the specific misconception, provide an alternative analogy, and re-test with a simplified micro-case.
+   - _If incorrect:_ Isolate the specific misconception, provide an alternative analogy, and re-test with a simplified micro-case before progressing.
 
 ### Mode B: Self-Contained Scaffolded Guide
 
@@ -43,8 +43,29 @@ Use when asked to generate a complete, stand-alone reference guide:
 
 ### Mode C: Multiple-Choice Explainer
 
-Use when analyzing multiple-choice questions or certification exams (referencing [Multiple-Choice Exam Analysis Reference](./references/exam-analysis.md)):
+Use when analyzing multiple-choice questions or certification exams:
 
 1. **Parse Question Stem:** Identify domain, governing invariant, and qualifiers (`NOT`, `EXCEPT`, `SELECT ALL`).
 2. **Essential Background:** State the core invariant needed to answer the question.
-3. **Exhaustive Option Breakdown:** Evaluate why _every_ incorrect distractor fails and why the correct answer succeeds.
+3. **Exhaustive Option Breakdown:** Evaluate why _every_ incorrect distractor fails and why the correct answer succeeds using the **Distractor Evaluation Matrix (Appendix A)**.
+
+---
+
+## Appendix A: Multiple-Choice Exam Analysis & Distractor Matrix
+
+Evaluate _every_ answer choice against the identical governing technical criterion:
+
+| Option       | Verdict                | Concrete Disqualification or Verification Rationale                            |
+| :----------- | :--------------------- | :----------------------------------------------------------------------------- |
+| **Option A** | Incorrect (Distractor) | Identifies the specific technical error, obsolete API, or invalid assumption.  |
+| **Option B** | **Correct**            | Explains why this option directly satisfies the governing technical invariant. |
+| **Option C** | Incorrect (Distractor) | Demonstrates why this approach fails under stated edge cases or constraints.   |
+| **Option D** | Incorrect (Trap)       | Explains why this plausible-sounding distracter is invalid in this context.    |
+
+### Misconception Diagnostics
+
+When a student selects an incorrect option:
+
+1. **Isolate the Misconception:** Identify what partially-true mental model led to the selection (e.g., confusing authorization with authentication).
+2. **Reframe with Minimal Analogy:** Provide a 1-sentence mechanical contrast.
+3. **Targeted Micro-Check:** Present a 1-sentence simplified scenario to confirm comprehension.

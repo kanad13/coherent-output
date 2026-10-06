@@ -27,7 +27,7 @@ Follow this 6-phase protocol to transform a multi-turn conversation into structu
 ### Phase 1: Atomic Conversation Audit
 
 - Review every turn, prompt, tool execution result, and file inspected in the session.
-- For deep syntheses, construct an atomic ledger using the [Atomic Conversation Ledger Schema](./references/ledger-schema.md) (`A001`, `A002`, ...), cataloging speaker, type, resolution status, and dependencies.
+- For deep syntheses, construct an atomic ledger using the **Atomic Conversation Ledger Schema (Appendix A)** (`A001`, `A002`, ...), cataloging speaker, type, resolution status, and dependencies.
 
 ### Phase 2: Canonical Conceptual Index
 
@@ -54,3 +54,20 @@ Follow this 6-phase protocol to transform a multi-turn conversation into structu
 ### Phase 6: Completeness & Traceability Audit
 
 - Verify that 100% of decisions, tool discoveries, code changes, and rationale from the chat history are accurately represented without silent omission.
+
+---
+
+## Appendix A: Atomic Conversation Ledger Schema
+
+When capturing atomic contributions before drafting:
+
+| Field              | Description                            | Allowed Values / Examples                                                                          |
+| :----------------- | :------------------------------------- | :------------------------------------------------------------------------------------------------- |
+| **Atomic ID**      | Stable unique identifier               | `A001`, `A002`, `A003`                                                                             |
+| **Turn**           | Message number or origin index         | `Turn 1`, `Turn 3`                                                                                 |
+| **Source**         | Originating speaker or tool            | `User`, `Assistant`, `Tool: run_command`, `File`                                                   |
+| **Type**           | Conceptual classification              | `Question`, `Fact`, `Definition`, `Explanation`, `Example`, `Decision`, `Failure`, `Open Question` |
+| **Atomic Content** | Exact substantive statement or finding | Concise statement of the contribution                                                              |
+| **Topic Thread**   | Conceptual category                    | `Architecture`, `Testing`, `Configuration`, `Debugging`                                            |
+| **Status**         | Resolution state                       | `Introduced`, `Accepted`, `Revised`, `Rejected`, `Resolved`, `Unresolved`                          |
+| **Relationships**  | Dependencies and causal links          | `Depends on A001`, `Contradicts A004`, `Alternative to A010`                                       |

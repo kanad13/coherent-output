@@ -28,7 +28,7 @@ Execute the following five phases sequentially:
 ### Phase 1: Atomic Inventory Ledger
 
 - Ingest the raw source and extract distinct assertions, constraints, definitions, metrics, and rules.
-- For dense or legally sensitive texts, use the [Preservation Ledger Schema](./references/preservation-ledger.md) (`P001`, `P002`, ...) to track entities systematically.
+- For dense or legally sensitive texts, use the **Preservation Ledger Categories (Appendix A)** (`P001`, `P002`, ...) to track entities systematically.
 
 ### Phase 2: Structural Blueprint & Re-Sequencing
 
@@ -57,3 +57,21 @@ Execute the following five phases sequentially:
   3. Fenced code blocks and tables preserved in native syntax.
   4. All links and technical terms preserved accurately.
 - Emit the final refactored document.
+
+---
+
+## Appendix A: Preservation Ledger Categories & Parity Check
+
+When refactoring critical technical documentation where information loss is prohibited, extract source elements into these categories:
+
+| Category Code | Domain              | What to Extract                                                       |
+| :------------ | :------------------ | :-------------------------------------------------------------------- |
+| **P-CORE**    | Core Thesis         | Primary message and architectural purpose                             |
+| **P-DEF**     | Definitions         | Domain terms, abbreviations, and system identities                    |
+| **P-RULE**    | Invariants & Rules  | Hard constraints, operational policies, and non-negotiables           |
+| **P-COND**    | Conditions & Limits | Prerequisites, branch triggers (`if A then B under C`), SLAs, metrics |
+| **P-EDGE**    | Exceptions          | Edge cases, failure modes, error codes, and fallback paths            |
+| **P-DATA**    | Technical Data      | Exact CLI flags, environment variables, formulas, and schema keys     |
+| **P-WARN**    | Warnings & Caveats  | Risks, security advisories, and unresolved uncertainties              |
+
+Before outputting, verify that all extracted rules, parameters, and exceptions appear in the revised document.
