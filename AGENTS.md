@@ -53,11 +53,14 @@ Execute every task through this sequence:
 
 ## 5. Situational Skills
 
-Do not improvise complex, multi-step procedures. When encountering specific operational domains, activate the dedicated skill:
+Do not improvise complex, multi-step procedures. Activate the dedicated skill upon encountering these operational triggers:
 
-- **Git Commits & Pushing:** Use `commit-scribe`.
-- **Repository Synchronization & Hygiene:** Use `repo-evergreen-sync`.
-- **Testing Strategy & Harness Evolution:** Use `test-strategist`.
-- **Strict Text & Bullet Refactoring:** Use `bullet-first-refactor`.
-- **Documentation & Link Audits:** Use `markdown-audit`.
-- **External Web Research:** Use `web-research`.
+- **Before staging, committing, or pushing git changes:** Activate `commit-scribe`.
+- **After structural refactors, multi-file edits, or schema/contract changes:** Activate `repo-evergreen-sync`.
+- **When auditing coverage, establishing harnesses, or debugging brittle tests:** Activate `test-strategist`.
+- **When evaluating proposals, architectural refactors, or dependency additions:** Activate `worth-the-squeeze`.
+- **When investigating external documentation, APIs, or empirical claims online:** Activate `web-research`.
+- **When reorganizing dense text, notes, or messy markdown into structured outlines:** Activate `bullet-first-refactor`.
+- **When validating markdown link integrity, folder numbering, or documentation indexes:** Activate `markdown-audit`.
+- **When designing or embedding Mermaid architecture, sequence, or workflow diagrams:** Activate `mermaid-architect`.
+- **When sanitizing logs, credentials, or proprietary identifiers for sharing:** Activate `deidentify-document`.

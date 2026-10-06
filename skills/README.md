@@ -89,7 +89,7 @@ description: Concise, third-person trigger criteria explaining WHAT the skill do
 
 ## 3. Skills Inventory
 
-The library provides 17 situational skills organized by operational domain:
+The library provides 18 situational skills organized by operational domain:
 
 ### Repository Operations & Git Hygiene
 
@@ -101,11 +101,12 @@ The library provides 17 situational skills organized by operational domain:
 
 ### Engineering Strategy & Quality Assurance
 
-| Skill                                       | Description                                                                         |
-| :------------------------------------------ | :---------------------------------------------------------------------------------- |
-| [test-strategist](test-strategist/SKILL.md) | Assess repository topology, evaluate harness deltas, and adapt test portfolios.     |
-| [claim-validator](claim-validator/SKILL.md) | Stress-test claims, proposals, and strategies against verified evidence.            |
-| [web-research](web-research/SKILL.md)       | Conduct multi-source web research with strict source hierarchy and citation trails. |
+| Skill                                           | Description                                                                                            |
+| :---------------------------------------------- | :----------------------------------------------------------------------------------------------------- |
+| [test-strategist](test-strategist/SKILL.md)     | Assess repository topology, evaluate harness deltas, and adapt test portfolios.                        |
+| [claim-validator](claim-validator/SKILL.md)     | Stress-test claims, proposals, and strategies against verified evidence.                               |
+| [worth-the-squeeze](worth-the-squeeze/SKILL.md) | Audit proposals, migrations, and refactors against empirical ROI and friction without compliance bias. |
+| [web-research](web-research/SKILL.md)           | Conduct multi-source web research with strict source hierarchy and citation trails.                    |
 
 ### Content Refactoring & Writing
 

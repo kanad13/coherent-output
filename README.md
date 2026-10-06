@@ -136,6 +136,7 @@ For authoring standards, frontmatter contracts, and progressive disclosure archi
 | [repo-evergreen-sync](skills/repo-evergreen-sync/SKILL.md)       | Synchronize repository and resolve cascading drift           |
 | [test-strategist](skills/test-strategist/SKILL.md)               | Strategize test coverage and adapt harnesses mid-development |
 | [web-research](skills/web-research/SKILL.md)                     | Research external questions using primary evidence           |
+| [worth-the-squeeze](skills/worth-the-squeeze/SKILL.md)           | Stress-test proposals against objective ROI and trade-offs   |
 
 ---
 

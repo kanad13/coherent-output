@@ -46,7 +46,10 @@ class DeploymentTests(unittest.TestCase):
         self.assertFalse(local.is_symlink())
         for root in (".agents/skills", ".gemini/config/skills"):
             self.assertEqual((self.target / root).resolve(), self.repo / "skills")
-            self.assertEqual(len(list((self.target / root).glob("*/SKILL.md"))), 17)
+            self.assertEqual(
+                len(list((self.target / root).glob("*/SKILL.md"))),
+                len(list((self.repo / "skills").glob("*/SKILL.md"))),
+            )
         instructions = self.target / ".codex/AGENTS.md"
         text = instructions.read_text()
         for rule in sorted((self.repo / "rules").glob("*.md")):
