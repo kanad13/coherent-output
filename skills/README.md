@@ -89,7 +89,7 @@ description: Concise, third-person trigger criteria explaining WHAT the skill do
 
 ## 3. Skills Inventory
 
-The library provides 18 situational skills organized by operational domain:
+The library provides 13 situational skills organized by operational domain:
 
 ### Repository Operations & Git Hygiene
 
@@ -110,29 +110,24 @@ The library provides 18 situational skills organized by operational domain:
 
 ### Content Refactoring & Writing
 
-| Skill                                                   | Description                                                                              |
-| :------------------------------------------------------ | :--------------------------------------------------------------------------------------- |
-| [bullet-first-refactor](bullet-first-refactor/SKILL.md) | Refactor text into ultra-clean, bullet-first Markdown with 100% semantic fidelity.       |
-| [concise-answer](concise-answer/SKILL.md)               | Produce hyper-dense, direct technical responses that eliminate conversational padding.   |
-| [conversation-notes](conversation-notes/SKILL.md)       | Synthesize multi-turn conversations into self-contained, book-like documentation.        |
-| [email-rewrite](email-rewrite/SKILL.md)                 | Transform rough notes into professional correspondence adhering to plain language.       |
-| [deidentify-document](deidentify-document/SKILL.md)     | Sanitize documents by redacting PII, credentials, internal IPs, and sensitive codenames. |
+| Skill                                                   | Description                                                                        |
+| :------------------------------------------------------ | :--------------------------------------------------------------------------------- |
+| [bullet-first-refactor](bullet-first-refactor/SKILL.md) | Refactor text into ultra-clean, bullet-first Markdown with 100% semantic fidelity. |
+| [conversation-notes](conversation-notes/SKILL.md)       | Synthesize multi-turn conversations into self-contained, book-like documentation.  |
+| [email-rewrite](email-rewrite/SKILL.md)                 | Transform rough notes into professional correspondence adhering to plain language. |
 
 ### Architecture, Design & Discovery
 
-| Skill                                             | Description                                                                       |
-| :------------------------------------------------ | :-------------------------------------------------------------------------------- |
-| [discovery-advisor](discovery-advisor/SKILL.md)   | Sparring partner to clarify vague requirements and synthesize Hand-off Briefs.    |
-| [mermaid-architect](mermaid-architect/SKILL.md)   | Design and insert compilable native Mermaid architecture and workflow diagrams.   |
-| [product-comparison](product-comparison/SKILL.md) | Compare developer tools or hardware based on compatibility, TCO, and reliability. |
+| Skill                                           | Description                                                                     |
+| :---------------------------------------------- | :------------------------------------------------------------------------------ |
+| [mermaid-architect](mermaid-architect/SKILL.md) | Design and insert compilable native Mermaid architecture and workflow diagrams. |
 
 ### Learning & Pedagogy
 
-| Skill                                                     | Description                                                                       |
-| :-------------------------------------------------------- | :-------------------------------------------------------------------------------- |
-| [code-beginner-comments](code-beginner-comments/SKILL.md) | Add comprehensive educational line-by-line comments for learning engineers.       |
-| [concept-tutor](concept-tutor/SKILL.md)                   | Teach technical concepts through scaffolded learning guides and diagnostic loops. |
-| [german-tutor](german-tutor/SKILL.md)                     | German grammar analysis, gender diagnostics, B1 reading generation, and glosses.  |
+| Skill                                   | Description                                                                       |
+| :-------------------------------------- | :-------------------------------------------------------------------------------- |
+| [concept-tutor](concept-tutor/SKILL.md) | Teach technical concepts through scaffolded learning guides and diagnostic loops. |
+| [german-tutor](german-tutor/SKILL.md)   | German grammar analysis, gender diagnostics, B1 reading generation, and glosses.  |
 
 ---
 

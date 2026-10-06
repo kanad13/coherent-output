@@ -117,26 +117,21 @@ When any AI coding agent modifies rules, skills, or adapters in this repository,
 
 For authoring standards, frontmatter contracts, and progressive disclosure architecture, see [skills/README.md](skills/README.md).
 
-| Skill                                                            | Purpose                                                      |
-| :--------------------------------------------------------------- | :----------------------------------------------------------- |
-| [bullet-first-refactor](skills/bullet-first-refactor/SKILL.md)   | Refactor text into structured bullets without losing meaning |
-| [claim-validator](skills/claim-validator/SKILL.md)               | Evaluate claims against evidence                             |
-| [code-beginner-comments](skills/code-beginner-comments/SKILL.md) | Explain code for learners                                    |
-| [commit-scribe](skills/commit-scribe/SKILL.md)                   | Write structured Git commits and push to remote              |
-| [concept-tutor](skills/concept-tutor/SKILL.md)                   | Teach technical concepts                                     |
-| [concise-answer](skills/concise-answer/SKILL.md)                 | Give concise technical answers                               |
-| [conversation-notes](skills/conversation-notes/SKILL.md)         | Turn conversations into standalone notes                     |
-| [deidentify-document](skills/deidentify-document/SKILL.md)       | Remove identifying information                               |
-| [discovery-advisor](skills/discovery-advisor/SKILL.md)           | Clarify requirements and architecture choices                |
-| [email-rewrite](skills/email-rewrite/SKILL.md)                   | Rewrite professional correspondence                          |
-| [german-tutor](skills/german-tutor/SKILL.md)                     | Support German language learning                             |
-| [markdown-audit](skills/markdown-audit/SKILL.md)                 | Inspect documentation structure and links                    |
-| [mermaid-architect](skills/mermaid-architect/SKILL.md)           | Create Mermaid diagrams                                      |
-| [product-comparison](skills/product-comparison/SKILL.md)         | Compare products and ownership costs                         |
-| [repo-evergreen-sync](skills/repo-evergreen-sync/SKILL.md)       | Synchronize repository and resolve cascading drift           |
-| [test-strategist](skills/test-strategist/SKILL.md)               | Strategize test coverage and adapt harnesses mid-development |
-| [web-research](skills/web-research/SKILL.md)                     | Research external questions using primary evidence           |
-| [worth-the-squeeze](skills/worth-the-squeeze/SKILL.md)           | Stress-test proposals against objective ROI and trade-offs   |
+| Skill                                                          | Purpose                                                      |
+| :------------------------------------------------------------- | :----------------------------------------------------------- |
+| [bullet-first-refactor](skills/bullet-first-refactor/SKILL.md) | Refactor text into structured bullets without losing meaning |
+| [claim-validator](skills/claim-validator/SKILL.md)             | Evaluate claims against evidence                             |
+| [commit-scribe](skills/commit-scribe/SKILL.md)                 | Write structured Git commits and push to remote              |
+| [concept-tutor](skills/concept-tutor/SKILL.md)                 | Teach technical concepts                                     |
+| [conversation-notes](skills/conversation-notes/SKILL.md)       | Turn conversations into standalone notes                     |
+| [email-rewrite](skills/email-rewrite/SKILL.md)                 | Rewrite professional correspondence                          |
+| [german-tutor](skills/german-tutor/SKILL.md)                   | Support German language learning                             |
+| [markdown-audit](skills/markdown-audit/SKILL.md)               | Inspect documentation structure and links                    |
+| [mermaid-architect](skills/mermaid-architect/SKILL.md)         | Create Mermaid diagrams                                      |
+| [repo-evergreen-sync](skills/repo-evergreen-sync/SKILL.md)     | Synchronize repository and resolve cascading drift           |
+| [test-strategist](skills/test-strategist/SKILL.md)             | Strategize test coverage and adapt harnesses mid-development |
+| [web-research](skills/web-research/SKILL.md)                   | Research external questions using primary evidence           |
+| [worth-the-squeeze](skills/worth-the-squeeze/SKILL.md)         | Stress-test proposals against objective ROI and trade-offs   |
 
 ---
 

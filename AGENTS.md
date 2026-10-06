@@ -63,4 +63,4 @@ Do not improvise complex, multi-step procedures. Activate the dedicated skill up
 - **When reorganizing dense text, notes, or messy markdown into structured outlines:** Activate `bullet-first-refactor`.
 - **When validating markdown link integrity, folder numbering, or documentation indexes:** Activate `markdown-audit`.
 - **When designing or embedding Mermaid architecture, sequence, or workflow diagrams:** Activate `mermaid-architect`.
-- **When sanitizing logs, credentials, or proprietary identifiers for sharing:** Activate `deidentify-document`.
+- **When drafting, editing, or rewriting emails, announcements, or communications:** Activate `email-rewrite`.
