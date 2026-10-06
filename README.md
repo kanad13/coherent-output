@@ -125,7 +125,6 @@ For authoring standards, frontmatter contracts, and progressive disclosure archi
 | [concept-tutor](skills/concept-tutor/SKILL.md)                 | Teach technical concepts                                     |
 | [conversation-notes](skills/conversation-notes/SKILL.md)       | Turn conversations into standalone notes                     |
 | [email-rewrite](skills/email-rewrite/SKILL.md)                 | Rewrite professional correspondence                          |
-| [german-tutor](skills/german-tutor/SKILL.md)                   | Support German language learning                             |
 | [markdown-audit](skills/markdown-audit/SKILL.md)               | Inspect documentation structure and links                    |
 | [mermaid-architect](skills/mermaid-architect/SKILL.md)         | Create Mermaid diagrams                                      |
 | [repo-evergreen-sync](skills/repo-evergreen-sync/SKILL.md)     | Synchronize repository and resolve cascading drift           |

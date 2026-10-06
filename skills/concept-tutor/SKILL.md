@@ -1,71 +1,50 @@
 ---
 name: concept-tutor
-description: Teaches complex technical concepts through scaffolded learning guides, interactive one-layer-at-a-time tutoring loops, and diagnostic check questions. Use when explaining unfamiliar technical concepts, tutoring a learner, or breaking down multiple-choice problems.
+description: Teaches technical concepts through self-contained explanations, baseline knowledge calibration, premise steelmanning, and structured learning trajectories. Use when explaining unfamiliar technical concepts, breaking down complex mechanisms, or validating technical mental models.
 ---
 
-# Interactive Concept Tutor & Scaffolded Learning Guide
+# Technical Concept Tutor & Pedagogical Workflow
 
-Follow this pedagogical protocol to teach technical concepts, build self-contained guides, or diagnose understanding.
-
----
-
-## 1. Core Pedagogical Disciplines
-
-- **First-Principles Framing:** Begin with minimum prerequisites; reintroduce foundational knowledge before building to the target concept.
-- **One Conceptual Layer at a Time:** In interactive mode, explain exactly one conceptual layer per turn. Never dump multiple advanced concepts simultaneously.
-- **Mandatory Visual Modeling:** Accompany explanations with structural diagrams (flowcharts, state machines, sequence diagrams) or physical analogies.
-- **Diagnostic Check Questions:** End each conceptual stage with a concrete check question to verify comprehension before progressing.
+Follow this end-to-end pedagogical workflow to explain complex technical concepts, bridge knowledge gaps, and validate architectural hypotheses in a single comprehensive response.
 
 ---
 
-## 2. Operating Modes
+## 1. Core Pedagogical Mandates
 
-### Mode A: Interactive Tutoring Loop
-
-Use when conducting a multi-turn teaching session:
-
-1. **Calibrate:** Assess the learner's current baseline knowledge and learning goal.
-2. **Explain One Layer:** Introduce the immediate next concept using plain language and concrete analogies.
-3. **Visualize:** Provide a compact Mermaid diagram or ASCII schematic illustrating the mechanism.
-4. **Diagnostic Check:** Ask one focused question requiring the learner to apply the concept.
-5. **Evaluate & Reframe:** When the learner responds:
-   - _If correct:_ Validate the reasoning, highlight why it succeeds, and introduce the next layer.
-   - _If incorrect:_ Isolate the specific misconception, provide an alternative analogy, and re-test with a simplified micro-case before progressing.
-
-### Mode B: Self-Contained Scaffolded Guide
-
-Use when asked to generate a complete, stand-alone reference guide:
-
-1. **Prerequisite Map:** Outline foundational concepts required before the main topic.
-2. **Step-by-Step Architecture:** Progress from simple fundamentals to real-world edge cases.
-3. **Visual Coverage:** Embed diagrams at each major architectural transition.
-4. **Summary & Practice:** Conclude with practical exercises or common failure modes.
-
-### Mode C: Multiple-Choice Explainer
-
-Use when analyzing multiple-choice questions or certification exams:
-
-1. **Parse Question Stem:** Identify domain, governing invariant, and qualifiers (`NOT`, `EXCEPT`, `SELECT ALL`).
-2. **Essential Background:** State the core invariant needed to answer the question.
-3. **Exhaustive Option Breakdown:** Evaluate why _every_ incorrect distractor fails and why the correct answer succeeds using the **Distractor Evaluation Matrix (Appendix A)**.
+- **ASD-STE100 Plain Language:** Write direct, affirmative sentences in active voice. Define technical terms on first use. Discard buzzwords, filler, and corporate jargon.
 
 ---
 
-## Appendix A: Multiple-Choice Exam Analysis & Distractor Matrix
+## 2. Six-Step Pedagogical Workflow
 
-Evaluate _every_ answer choice against the identical governing technical criterion:
+Execute the following six steps sequentially:
 
-| Option       | Verdict                | Concrete Disqualification or Verification Rationale                            |
-| :----------- | :--------------------- | :----------------------------------------------------------------------------- |
-| **Option A** | Incorrect (Distractor) | Identifies the specific technical error, obsolete API, or invalid assumption.  |
-| **Option B** | **Correct**            | Explains why this option directly satisfies the governing technical invariant. |
-| **Option C** | Incorrect (Distractor) | Demonstrates why this approach fails under stated edge cases or constraints.   |
-| **Option D** | Incorrect (Trap)       | Explains why this plausible-sounding distracter is invalid in this context.    |
+### Step 1: Infer Baseline Understanding & Target Goal
 
-### Misconception Diagnostics
+- Parse the user's prompt, terminology, mental model, and framing to infer their current level of understanding.
+- Establish the learning boundaries:
+  - **Baseline:** Where the user currently stands conceptually.
+  - **Target:** The exact operational mastery the user needs to achieve.
+  - **Prerequisite Delta:** Missing foundational concepts required to bridge the gap.
 
-When a student selects an incorrect option:
+### Step 2: Steelman User Premise & Test Hypotheses
 
-1. **Isolate the Misconception:** Identify what partially-true mental model led to the selection (e.g., confusing authorization with authentication).
-2. **Reframe with Minimal Analogy:** Provide a 1-sentence mechanical contrast.
-3. **Targeted Micro-Check:** Present a 1-sentence simplified scenario to confirm comprehension.
+When the user presents an argument, conjecture, mental model, or design to validate:
+
+- **Steelman the Premise:** Articulate the strongest, most rigorous, and charitable formulation of the user's argument before evaluating it.
+- **Test the Steelmanned Hypothesis:** Evaluate the hypothesis against first-principles physics, system invariants, and empirical edge cases.
+- **Calibrate the Finding:** Explicitly state where the premise holds true, where it breaks down, and the exact governing invariant responsible for any failure.
+- _(If the user asks an open-ended concept question without an initial premise, skip directly to Step 3)._
+
+### Step 3: Formulate the Pedagogical Plan
+
+Structure the explanation trajectory before drafting:
+
+- **Concept Dependency Sequence:** Order concepts so every prerequisite is grounded before introducing downstream abstractions.
+- **Explanatory Devices:** Select high-leverage physical analogies, mechanical metaphors, or concrete system models to make abstract mechanisms tangible.
+- **Concrete Scenarios:** Select minimal, real-world examples or code snippets demonstrating the concept in action.
+
+### Step 4: Scaffolded First-Principles Exposition
+
+- Progress methodically from foundational axioms to advanced mechanics and production edge cases.
+- Introduce chosen analogies to ground the concept, then immediately bridge the analogy to exact technical nomenclature and system contracts.

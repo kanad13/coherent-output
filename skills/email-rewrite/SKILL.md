@@ -1,70 +1,99 @@
 ---
 name: email-rewrite
-description: Transforms messy notes, bullet points, or rough drafts into clear, actionable, professional emails while preserving all facts and commitments. Use when drafting, editing, or rewriting emails and business messages.
+description: Transforms unstructured, disorganized, or poorly articulated drafts into professional correspondence by steelmanning intent, conducting an atomic information audit, radically reorganizing content, and generating three ASD-STE100 candidate drafts. Use when drafting, editing, rewriting, or restructuring business and technical emails.
 ---
 
-# Professional Email Rewrite
+# Professional Email Rewrite & Radical Information Architecture
 
-Follow this protocol to transform unstructured notes or rough drafts into clear, persuasive, and actionable correspondence.
-
----
-
-## 1. Input Analysis & Clarification Gate
-
-- **Inputs Required:** Source text/notes, recipient context, desired outcome, and sensitivity constraints.
-- **Clarification Gate:** If a missing fact materially changes a commitment, schedule, or core business decision, ask **exactly one focused question** and pause. In all other cases, proceed under stated reasonable assumptions.
+Follow this protocol to transform unstructured notes, messy thoughts, or poorly articulated drafts into clear, persuasive, and actionable correspondence.
 
 ---
 
-## 2. Four-Step Drafting Protocol
+## 1. Core Mandates & Operating Principles
 
-### Step 1: Build the Communication Brief
-
-Extract and inspect:
-
-- **Sender Purpose:** Core objective of sending the message.
-- **Recipient Context:** Reader's role, relationship, and decision authority.
-- **Requested Action:** Concrete next step or decision requested from the recipient.
-- **Commitments & Dates:** Deadlines, deliverables, dependencies, and owners.
-- **Tone Sensitivities:** Business urgency, commercial stakes, or interpersonal dynamics.
-
-### Step 2: Formulate the Message Plan
-
-Sequence the information in optimal reader-first order:
-
-1. **Opening:** Core purpose, decision required, or high-level risk in the opening passage.
-2. **Context & Facts:** Background details, data, constraints, and root causes.
-3. **Decisions & Options:** Concrete mitigation options, trade-offs, and proposed solutions.
-4. **Action & Next Steps:** Specific requests, owners, deadlines, or sync invitations.
-
-Structure decisions:
-
-- **Bullet vs. Prose Allocation:** Use prose for narrative context and causal links; use bullets for comparing discrete options, checklists, or action items side-by-side.
-- **Sequencing & Tone Rationale:** Document why the chosen structure best serves the recipient's decision process.
-
-### Step 3: Draft the Email
-
-- **Subject Line:** Specific and informative, stating topic and requested action.
-- **Direct & Active Prose:** Use short, active sentences conforming to ASD-STE100 plain language. Keep one main idea per sentence.
+- **Assume Disorganized Input:** Source drafts, notes, or messages are often fragmented, poorly sequenced, repetitive, or emotionally reactive.
+- **Prohibit Superficial Proofreading:** Never perform mere spell-checking, grammar polishing, or minor cosmetic edits. Radically restructure the information architecture to achieve the sender's true objective.
+- **Steelman the Intent:** Fundamentally look at what the sender is trying to convey. Articulate the strongest, most coherent, and strategic version of the message before rewriting.
+- **The Zero-Loss Invariant:** Preserve 100% of substantive data from the source input:
+  - Every factual assertion, date, number, metric, and stakeholder identity.
+  - Every hard commitment, deadline, dependency, and owner.
+  - Every operational warning, blocker, and unresolved uncertainty.
 - **Calibrated Modality Directive:**
-  - Remove conversational filler, subservient apologies (`"sorry for the curveball"`), and corporate clichés.
-  - **Preserve Epistemic & Diplomatic Hedging:** Strictly preserve hedging when it communicates real technical uncertainty, commercial contingency, or non-final exploratory options (e.g., `"we might be able to ship a preview"`). Never convert tentative options into unintended hard commitments.
+  - Purge subservient filler, hollow apologies (`"sorry for the curveball"`), and corporate buzzwords.
+  - **Preserve Epistemic & Diplomatic Hedging:** Strictly preserve hedging when it communicates genuine technical contingency, commercial flexibility, or non-final exploratory options (e.g., `"we could potentially pilot this in Q3"`). Never convert tentative options into unintended commitments or hard promises into vague suggestions.
 
-### Step 4: Audit & Verify
+---
+
+## 2. Five-Step Execution Pipeline
+
+Execute the following five steps sequentially:
+
+### Step 1: Steelman Intent & Build Communication Brief
+
+Extract and formulate:
+
+- **Steelmanned Sender Purpose:** The core strategic outcome the sender must achieve.
+- **Recipient Context & Authority:** The reader's role, decision authority, and perspective.
+- **Primary Action Request:** The specific decision, sign-off, or next step requested.
+- **Deadlines & Commitments:** Firm dates, deliverables, and dependencies.
+- **Interpersonal & Diplomatic Sensitivity:** Urgency, commercial stakes, or political dynamics.
+
+### Step 2: Atomic Inventory Ledger
+
+Borrowing the structural discipline of [bullet-first-refactor](../bullet-first-refactor/SKILL.md), extract every distinct piece of information from the raw draft into a numbered Atomic Inventory Ledger (`E001`, `E002`, ...):
+
+| ID Code  | Category            | Content Description                                                  |
+| :------- | :------------------ | :------------------------------------------------------------------- |
+| `E-OBJ`  | Strategic Purpose   | Core intent and desired business outcome                             |
+| `E-FACT` | Background & Data   | Technical metrics, observed root causes, project status, constraints |
+| `E-COMM` | Hard Commitments    | Deliverables, confirmed dates, assigned owners                       |
+| `E-OPT`  | Exploratory Options | Tentative proposals, flexible alternatives, negotiable terms         |
+| `E-REQ`  | Requested Actions   | Required approvals, replies, decision deadlines, calendar invites    |
+| `E-RISK` | Risks & Caveats     | Critical dependencies, technical blockers, commercial exposure       |
+
+### Step 3: Radical Information Reorganization
+
+Decouple completely from the raw draft's original disarrayed sentence order:
+
+- Split compound sentences into discrete single-idea propositions.
+- Combine related assertions scattered across disparate paragraphs into unified thematic blocks.
+- Re-sequence all elements into optimal reader-first order:
+  1. **Opening / BLUF (Bottom Line Up Front):** Immediate statement of purpose and primary requested action.
+  2. **Essential Context & Data:** Root causes, background constraints, and quantitative facts.
+  3. **Decisions, Trade-offs & Options:** Concrete mitigation options or architectural alternatives.
+  4. **Next Steps & Ownership:** Explicit action items, owners, and hard deadlines.
+
+### Step 4: Draft Three ASD-STE100 Candidate Variations
+
+Draft three distinct, copy-ready candidate emails using ASD-STE100 plain language principles:
+
+- Write short, active sentences.
+- Limit each sentence to one main idea.
+- Use explicit, defined terms rather than ambiguous pronouns (`it`, `this`).
+- Eliminate corporate clichés, passive evasions, and filler.
+
+Provide **three distinct tactical approaches** for the user to choose from based on your understanding of the context, and the appproroate variety of choices for user to choose from.
+
+### Step 5: Parity & Traceability Audit
 
 Verify that:
 
-- 100% of facts, names, dates, figures, and commitments are preserved.
-- Modality matches source intent: options remain options, commitments remain firm.
-- The recipient can identify the core purpose and requested action within seconds.
+- 100% of facts, metrics, dates, and names from the Step 2 Atomic Inventory Ledger appear across the candidate drafts.
+- Modality matches original intent: firm commitments stay firm; exploratory options remain flexible.
+- Every draft has a descriptive, action-oriented subject line.
 
 ---
 
 ## 3. Deliverable Output Contract
 
-Return the deliverable in this exact order:
+Return the deliverable in this exact structure:
 
-1. **Communication Brief:** Inspectable summary of purpose, recipient context, requested actions, commitments, and tone sensitivities.
-2. **Message Plan:** Ordered outline with explicit bullet-versus-prose and tone rationale.
-3. **Final Email Draft:** Copy-ready block with subject line and sign-off.
-4. **Preservation & Tone Audit:** Verification matrix confirming entity preservation, modality fidelity, and tone calibration.
+1. **Communication Brief & Steelmanned Intent:** Concise brief defining the strategic objective, recipient context, and diplomatic parameters.
+2. **Atomic Inventory Ledger:** Tabular catalog of extracted facts, commitments, options, and risks.
+3. **Candidate Drafts (Three Approaches):**
+
+- **Draft A (Executive & Bullet-First):** Subject line, body, and strategic rationale.
+- **Draft B (Contextual & Collaborative):** Subject line, body, and strategic rationale.
+- **Draft C (Operational & Decision-Focused):** Subject line, body, and strategic rationale.
+
+4. **Preservation & Traceability Audit:** Verification confirming zero informational loss and modality preservation.

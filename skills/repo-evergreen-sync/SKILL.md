@@ -1,107 +1,96 @@
 ---
 name: repo-evergreen-sync
-description: Synchronizes an entire repository against recent changes, resolving systemic ripple effects, obsolete conventions, contract drift, and temporal documentation clutter. Use when synchronizing docs with code changes, propagating modifications across dependent assets, or performing repository-wide evergreen audits.
+description: Synchronizes the entire repository after coding changes, resolving systemic drift across code, contracts, documentation, and tests. Analyzes the session diff and conversation intent, audits ripple impacts, formulates an atomic synchronization plan, adapts test suites via test-strategist, applies updates, verifies regressions, and commits via commit-scribe. Use immediately after implementing, editing, or refactoring code.
 ---
 
-# Evergreen Repository Synchronization
+# Evergreen Repository Synchronization Engine
 
-Use this skill to propagate recent changes across the entire repository, resolve cascading drift, eliminate architectural split-brain, and ensure living files describe current operational reality.
-
----
-
-## 1. Operating Protocol & Session Intent Audit
-
-Every evergreen synchronization pass is anchored to a specific functional delta:
-
-1. **Pre-Commit Session Diff Audit (Inline Intent & Comments):**
-   - Before finalizing or committing functional code, inspect the active session's git diff (`git diff HEAD` or unstaged changes).
-   - **Inline Intent Audit ("Why, Not What"):** For every code file, logic block, algorithmic step, or configuration branch touched in this session, verify that comments explain the underlying rationale, architectural invariant, or constraint.
-   - **Syntax Echo Purge:** Eradicate comments that merely narrate what programming syntax mechanically executes (e.g., `# loop over items`, `// return result`).
-   - **Residue Purge:** Delete commented-out code blocks completely, remove temporary debug statements (`print`, `console.log`), and purge scratchpad notes.
-   - **Scope Clarity:** While runtime code logic in untouched legacy files is immune from silent refactoring, _comments and docstrings on files touched in the active session must be made pristine before anchoring_.
-2. **Anchor the Functional Change:**
-   - Commit the verified functional work using [commit-scribe](../commit-scribe/SKILL.md).
-   - The resulting commit (or `HEAD` if already committed) serves as the **Anchor Delta**.
-3. **Route Historical Context to Git:**
-   - Record why components were superseded, why migrations occurred, or what technical debt was addressed in the Git commit message body.
-   - Keep living files (`*.md`, source code, configs, schemas, templates) strictly present-tense and operational.
+Follow this protocol immediately after a coding session to inspect recent functional changes, audit systemic ripple effects across the entire codebase, adapt tests, update documentation, and commit the reconciled state.
 
 ---
 
-## 2. Adaptive Execution Topologies: Mode A vs. Mode B
+## 1. Operating Mandates & Invariants
 
-Select execution topology based on repository scale:
-
-### Mode A: Direct Multi-Lens Execution (Small to Medium Codebases / 1–15 Files)
-
-The executing agent runs all reconciliation lenses directly in an atomic, unified pass:
-
-1. **Lens A (Code & Docstring Sanitation):** Inspects touched files, purges comment smells, synchronizes docstrings, and catalogs technical debt.
-2. **Lens B (Documentation & Index Sync):** Reconciles repository markdown, parent README indexes, and operational guides against runtime code.
-3. **Lens C (Contract Reconciliation):** Verifies CLI flags, schemas, error states, and relative link integrity.
-
-### Mode B: Orchestrated Multi-Agent Swarm (Large Codebases / >15 Files or Monorepos)
-
-For large multi-module repositories, the orchestrating agent spawns read-only auditor subagents before central synthesis:
-
-1. **Lens A Auditor Subagent (Read-Only):** Scans code files, extracts real signatures/types/flags, identifies lying docstrings and comment smells.
-2. **Lens B Auditor Subagent (Read-Only):** Scans documentation, catalogs structural defects, and flags middle-loss thinning.
-3. **Lens C Auditor Subagent (Read-Only):** Compares code contracts against doc claims, identifies asymmetric drift and broken links.
-4. **Synthesis & Execution (Orchestrator — Write Access):** Merges findings, executes atomic in-place disk modifications, runs test suite, and commits changes.
+- **Dual-Context Grounding:** Never audit in isolation from the coding session. Always ground ripple analysis in both the executable `git diff` and the conversational context (architectural rationale, trade-offs, and user preferences).
+- **The Zero-Loss Invariant:** When updating documentation, manifests, or interfaces, preserve 100% of substantive technical data, parameters, prerequisites, edge cases, and architectural constraints.
+- **Active Present-Tense Invariant:** Living files (`*.md`, source code, configs, schemas) must describe current operational state. Route historical changelogs, superseded frameworks, and version deltas exclusively to Git commit history.
+- **ASD-STE100 & Bullet-First Standard:** All updated documentation must adhere to ASD-STE100 plain language (short active sentences, direct verbs, defined terms) and bullet-first Markdown hierarchy (bold category anchors, declarative child bullets, zero walls of plain prose).
 
 ---
 
-## 3. Systemic Ripple Inquiries
+## 2. Six-Phase Synchronization Protocol
 
-Do not limit inspection to the files modified in the anchor delta. Reason about the entire repository as an interconnected graph using these inquiries:
+Execute the following six phases sequentially:
 
-1. **Conceptual & Architectural Coherence:** Did this change alter a fundamental mechanism, convention, or domain model? Resolve any architectural split-brain between old and new files.
-2. **Operational & Workflow Parity:** Do documented setup steps, onboarding runbooks, environment variables, dependencies, and CLI flags match executable reality?
-3. **Interface & Contract Surface:** Do consumers, imports, schemas, templates, and tests agree with modified parameter types, default values, and error modes?
-4. **Redundancy, Shadowing & Supersession:** Does this change make an existing helper, utility, or document obsolete? Merge redundant documentation and log dead code in the Technical Debt catalog.
-5. **Truth Parity & Contradiction Audit:** Eliminate diverging assertions across files so no two documents assert contradictory facts about system behavior.
-6. **Discoverability & Navigation:** Ensure newly created files, tools, rules, or skills are registered in parent directory indexes and root documentation with valid relative links.
-7. **Test Contract Parity & Gap Detection:** Run the test suite (`./scripts/verify.sh`). Log test coverage gaps and invoke or recommend [test-strategist](../test-strategist/SKILL.md).
+### Phase 1: Ingest Session Context & Git Diff
 
----
+Anchor the synchronization pass to the active session delta:
 
-## 4. Adaptive Information Accounting: Content Unit Tracking (`C001...`)
+- **Extract Session Intent:** Review conversation history to understand _why_ code was added, modified, or removed, what requirements were satisfied, and what design choices were approved.
+- **Inspect the Git Diff:** Run `git diff HEAD`, inspect unstaged/staged modifications, and identify all touched files, exported symbols, CLI arguments, and configuration keys.
+- **Inline Intent & Residue Audit:** On files touched in the coding session:
+  - Confirm non-obvious algorithms and invariants contain explanatory comments ("Why, Not What").
+  - Purge syntax echo comments (`# loop over items`), commented-out legacy code, temporary debug logs (`console.log`, `print`), and scratchpad notes.
 
-- **Routine Session Updates:** Apply lightweight diff-anchored updates directly.
-- **Deep Repository Reconciliations / Major Rewrites:** To guarantee zero loss of technical nuance, extract all distinct factual statements, parameters, exceptions, and rules into unique Content IDs (`C001`, `C002`, ...):
-  - Map each unit to a single canonical home in the Structural Blueprint.
-  - Complete a Traceability Matrix verifying that 100% of units survive into revised docs or the Technical Debt catalog.
+### Phase 2: Systemic Ripple & Test Audit
 
----
+Perform a deep, diligent audit pass across the entire repository to uncover cascading drift:
 
-## 5. Technical Debt Taxonomy
+- **Surface A: Code Consumers & Interface Contracts:**
+  - Trace all imports, call sites, exported types, parameter signatures, and return values affected by the change.
+  - Identify calling code, helper utilities, or sibling modules that require updates to maintain architectural parity.
+- **Surface B: Documentation, Manifests & Navigation:**
+  - Check root `README.md`, directory-level README indexes, operational runbooks, and architectural guides.
+  - Verify that newly added, renamed, or deleted files, tools, rules, or skills are registered in parent manifests and documentation navigation tables.
+  - Audit Markdown link integrity across touched documents using portable relative links.
+- **Surface C: Test Portfolio Audit via [test-strategist](../test-strategist/SKILL.md):**
+  - Evaluate existing test suites against modified functionality.
+  - Identify broken assertions, obsolete test cases that need pruning, and newly introduced code paths or edge cases that lack coverage.
+  - Determine the concrete testing actions required (new test cases, updated fixtures, or harness adaptations).
 
-When code defects, architectural fragmentation, or legacy anti-patterns are uncovered, do not alter runtime code logic. Record them in the **Technical Debt & Architectural Findings** catalog under these classifications:
+### Phase 3: Atomic Drift Ledger & Synchronization Plan
 
-1. **Shadow Logic & Wrapper Proliferation:** Redundant helper functions or wrappers bypassing existing implementations.
-2. **Defensive Over-Engineering:** Excessive abstraction, factories, or complex patterns in simple local tools.
-3. **Dependency Fragmentation:** Third-party imports used where standard library primitives or existing sibling utilities suffice.
-4. **Hardcoded Machine-Specific Paths:** Local absolute paths (`/Users/...`, `C:\...`) that should be dynamic or relative.
-5. **Prior Collapse & Modal Defaulting:** Bypassing repository-native schemas or conventions in favor of generic patterns.
-6. **Unverified Legacy Intent:** Complex, non-obvious logic lacking tests where intent cannot be verified from evidence.
-7. **Test Coverage Gaps:** Untested public interfaces, missing edge-case assertions, or absent integration harnesses flagged for [test-strategist](../test-strategist/SKILL.md).
+Construct a structured **Atomic Drift Ledger** (`D001`, `D002`, ...) detailing all identified discrepancies:
 
----
+| Drift ID | Surface | Affected Component  | Drift Description                                  | Required Resolution                       |
+| :------- | :------ | :------------------ | :------------------------------------------------- | :---------------------------------------- |
+| `D001`   | Docs    | `README.md`         | Skill table missing newly added command            | Add entry and update total skill count    |
+| `D002`   | Tests   | `tests/test_api.py` | Signature change breaks legacy parameter assertion | Adapt test fixture to new signature       |
+| `D003`   | Code    | `src/client.ts`     | Consumer calls removed optional argument           | Align client method call with updated API |
 
-## 6. Verification & Final Checklist
+Surface the synchronization plan clearly: outline what is currently drifting, which files need updates, and what tests will be adapted.
 
-Before completing execution, verify that:
+### Phase 4: Execute Synchronization Updates
 
-- [ ] Code runtime logic, algorithms, control flow, and variable names are 100% unmodified.
-- [ ] All docstring signatures match actual parameters, types, defaults, and exceptions.
-- [ ] All patch notes, version deltas, and backward-looking archaeology are eliminated.
-- [ ] All enterprise bureaucracy and multi-tenant fluff are purged from single-developer repos.
-- [ ] All heading/prose echoing and code block narrative paraphrasing are eliminated.
-- [ ] All ghost references, deleted flags, and phantom capability claims are removed.
-- [ ] Intermediate documentation sections maintain uniform depth without middle-loss thinning.
-- [ ] All ordinary body lines follow the bullet-first Markdown specification with bold labels.
-- [ ] All repository documentation links use portable relative paths and resolve correctly.
-- [ ] Syntax compilation and runtime tests on modified code files pass with 0 errors.
+Apply all required modifications across the repository:
+
+- **Code & Contract Updates:** Update affected consumers, wrappers, configuration schemas, and environment variable references.
+- **Test Suite Updates:** Implement, adapt, or prune test cases as strategized in Phase 2.
+- **Documentation Refactoring:** Update affected documentation, parent tables, and operational runbooks conforming strictly to ASD-STE100 plain language and bullet-first structure.
+
+### Phase 5: Regression Testing & Automated Verification
+
+Verify that the synchronization pass introduced zero regressions:
+
+- Execute the repository test suite and verification runners (`./scripts/verify.sh`).
+- Verify that:
+  - 100% of tests pass with 0 errors or unexpected skips.
+  - 0 broken relative Markdown links exist.
+  - 0 Prettier formatting errors remain.
+  - Output conforms to the **Zero-Tolerance Anti-Pattern Catalog (Appendix A)**.
+
+### Phase 6: Commit & Upstream Sync via [commit-scribe](../commit-scribe/SKILL.md)
+
+Package the synchronized state into a clean, atomic Git commit:
+
+- Activate [commit-scribe](../commit-scribe/SKILL.md) to stage all reconciled files (`git add <files>`).
+- Construct a high-context structured commit message documenting:
+  - **Problem:** Drift introduced by recent functional additions or refactors.
+  - **Solution:** Reconciled documentation, adapted test suites, and synchronized consumers.
+  - **Decisions:** Non-obvious trade-offs made during synchronization.
+  - **Implementation:** List of touched components and surfaces.
+- Push the commit to the upstream tracking remote (`git push`).
+- Report back to the user with the commit hash, modified files, test verification results, and upstream status.
 
 ---
 

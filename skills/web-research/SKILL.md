@@ -1,20 +1,32 @@
 ---
 name: web-research
-description: Conducts rigorous, multi-source web research with strict source hierarchy, fact/inference classification, and verifiable citation trails. Use when researching external topics, investigating technical questions online, or validating claims against authoritative documentation.
+description: Conducts rigorous, multi-source web research to validate internal model knowledge against authoritative online documentation, investigate external APIs, or verify empirical claims. Use at task inception or iteratively during execution when encountering unfamiliar external dependencies, APIs, or version-specific behaviors.
 ---
 
 # Web Research & Evidence Synthesis
 
-Follow this 5-step protocol when researching questions using external online sources.
+Follow this protocol when researching technical questions, validating model knowledge against primary documentation, or gathering external empirical evidence.
 
 ---
 
-## 1. Research Protocol
+## 1. Invocation Triggers & Operational Scope
 
-### Step 1: Frame the Research Scope
+- **Initial Grounding Trigger:** When user requests involve external frameworks, third-party APIs, SDK specifications, or empirical claims, steelman the query and search authoritative sources to validate internal model knowledge against current ground truth.
+- **Iterative In-Flight Trigger:** When executing tasks and encountering unfamiliar library methods, syntax deprecations, or unexpected tool/compiler errors, search immediately rather than guessing or hallucinating fixes.
+- **Exclusion Boundaries:** Do not invoke for trivial standard operations (e.g., standard language primitives, basic shell commands) or purely internal codebase refactors that do not cross system boundaries.
+- **Scope Discipline:** Avoid search rabbit holes. Limit in-flight queries to resolving the immediate blocking unknown before resuming the primary workflow.
+
+---
+
+## 2. Five-Step Research Protocol
+
+Execute the following five steps sequentially:
+
+### Step 1: Steelman & Frame the Research Scope
 
 - Identify the underlying decision or technical information requirement.
-- Extract the core topic, timeframe, constraints, and required depth.
+- Steelman the query: formulate the core technical inquiry into its most precise, falsifiable, and search-optimized terminology.
+- Extract timeframe constraints, version boundaries, and required depth.
 - **Clarification Gate:** If an unknown parameter materially changes the search direction, ask exactly one focused clarifying question. Otherwise, state reasonable assumptions explicitly and proceed.
 
 ### Step 2: Build & Execute Search Queries
@@ -28,7 +40,7 @@ Follow this 5-step protocol when researching questions using external online sou
 - For fast-moving technical domains, compare publication dates and event dates.
 - Actively execute queries to uncover both confirming and contradictory evidence.
 
-### Step 3: Evaluate Evidence & Separate Categories
+### Step 3: Evaluate Evidence & Classify Categories
 
 Classify all gathered information into four discrete categories:
 
