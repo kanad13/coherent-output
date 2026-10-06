@@ -1,6 +1,6 @@
 ---
 name: repo-evergreen-sync
-description: Synchronizes the entire repository after coding changes, resolving systemic drift across code, contracts, documentation, and tests. Analyzes the session diff and conversation intent, audits ripple impacts, formulates an atomic synchronization plan, adapts test suites via test-strategist, applies updates, verifies regressions, and commits via commit-scribe. Use immediately after implementing, editing, or refactoring code.
+description: Synchronizes the entire repository after coding changes, resolving systemic drift across code, contracts, documentation, and tests. Analyzes session diff and conversation intent, enforces Google-style module prefacing and "Why, Not What" comment standards, audits ripple impacts, adapts test suites via test-strategist, refactors docs with ASD-STE100, verifies regressions, and commits via commit-scribe. Use immediately after implementing, editing, or refactoring code.
 ---
 
 # Evergreen Repository Synchronization Engine
@@ -9,12 +9,34 @@ Follow this protocol immediately after a coding session to inspect recent functi
 
 ---
 
-## 1. Operating Mandates & Invariants
+## 1. Code Commenting & Documentation Standards
 
-- **Dual-Context Grounding:** Never audit in isolation from the coding session. Always ground ripple analysis in both the executable `git diff` and the conversational context (architectural rationale, trade-offs, and user preferences).
-- **The Zero-Loss Invariant:** When updating documentation, manifests, or interfaces, preserve 100% of substantive technical data, parameters, prerequisites, edge cases, and architectural constraints.
-- **Active Present-Tense Invariant:** Living files (`*.md`, source code, configs, schemas) must describe current operational state. Route historical changelogs, superseded frameworks, and version deltas exclusively to Git commit history.
-- **ASD-STE100 & Bullet-First Standard:** All updated documentation must adhere to ASD-STE100 plain language (short active sentences, direct verbs, defined terms) and bullet-first Markdown hierarchy (bold category anchors, declarative child bullets, zero walls of plain prose).
+Apply these standards across all code and documentation modified or created during synchronization:
+
+### Google-Style File Prefacing & Docstring Standards
+
+- **Top-Level Module Docstrings:** Every source code file (`*.py`, `*.ts`, `*.go`, `*.rs`, etc.) must begin with a top-level module docstring/header explaining:
+  - **Single-Line Summary:** Concise definition of the module's core responsibility.
+  - **Architectural Purpose ("Why It Exists"):** Why this file exists, what system role it fulfills, and how it collaborates with sibling components.
+  - **Approach & Invariants:** High-level algorithmic approach, key invariants, and domain constraints.
+- **Function & Class Docstrings (Google Style):**
+  - Imperative summary line describing the operational contract.
+  - Detail block describing non-obvious design assumptions, edge cases, or side effects.
+  - Structured sections: `Args:` / `@param`, `Returns:` / `@returns`, `Raises:` / `@throws`.
+  - **Zero Lying Docstrings:** Parameter names, types, defaults, and return signatures must match runtime code with 100% precision.
+
+### Strict "Why, Not What" Commenting Standard
+
+- **The Purpose & Approach Invariant:** Code syntax already demonstrates _what_ happens and _how_ it executes. Comments must exclusively capture the _why_—the underlying intent, business logic, algorithmic approach, performance trade-off, or architectural invariant.
+- **Trivial Syntax Echo Purge:** Eradicate comments that merely narrate visible syntax mechanics (e.g., `# loop over items`, `// return true`, `count += 1  # increment count`).
+- **Residue Purge:** Delete commented-out legacy code blocks completely, purge temporary debug statements (`console.log`, `print`, `debugger`), and delete scratchpad notes.
+
+### Living Documentation & ASD-STE100 Standards
+
+- **Active Present-Tense Invariant:** Living files (`*.md`, source code, configs, schemas) must describe current operational state. Never append changelog notes or version deltas into living reference docs (e.g., `*Note: Updated in v2 to use DuckDB*`). Route historical context exclusively to Git commit messages.
+- **ASD-STE100 Plain Language:** Write short, active sentences in affirmative voice (target under 20–25 words per sentence). Limit each sentence to one main idea. Define technical terms on first use. Maintain a single consistent term for each concept; never rotate synonyms.
+- **Bullet-First Hierarchy:** Structure lists using bold category anchors (`- **Anchor:**`) with un-bolded declarative child bullets. Eliminate walls of dense paragraph prose. Eliminate heading echoing (never restate heading titles in the first sentence beneath them).
+- **Single Source of Truth:** Establish canonical documentation in one location and link to it using portable relative Markdown links. Avoid duplicate assertions across disparate files.
 
 ---
 
@@ -28,9 +50,10 @@ Anchor the synchronization pass to the active session delta:
 
 - **Extract Session Intent:** Review conversation history to understand _why_ code was added, modified, or removed, what requirements were satisfied, and what design choices were approved.
 - **Inspect the Git Diff:** Run `git diff HEAD`, inspect unstaged/staged modifications, and identify all touched files, exported symbols, CLI arguments, and configuration keys.
-- **Inline Intent & Residue Audit:** On files touched in the coding session:
-  - Confirm non-obvious algorithms and invariants contain explanatory comments ("Why, Not What").
-  - Purge syntax echo comments (`# loop over items`), commented-out legacy code, temporary debug logs (`console.log`, `print`), and scratchpad notes.
+- **Audit Code Comments & Docstrings:** On all files touched in the coding session, enforce Section 1 standards:
+  - Add or verify Google-style module docstrings and class/function docstrings.
+  - Verify inline comments capture purpose, approach, and invariants ("Why, Not What").
+  - Purge syntax echo comments, commented-out dead code, and temporary debug logging.
 
 ### Phase 2: Systemic Ripple & Test Audit
 
@@ -58,26 +81,26 @@ Construct a structured **Atomic Drift Ledger** (`D001`, `D002`, ...) detailing a
 | `D002`   | Tests   | `tests/test_api.py` | Signature change breaks legacy parameter assertion | Adapt test fixture to new signature       |
 | `D003`   | Code    | `src/client.ts`     | Consumer calls removed optional argument           | Align client method call with updated API |
 
-Surface the synchronization plan clearly: outline what is currently drifting, which files need updates, and what tests will be adapted.
+Surface the synchronization plan clearly to the user before proceeding: outline what is currently drifting, which files need updates, and what tests will be adapted.
 
 ### Phase 4: Execute Synchronization Updates
 
 Apply all required modifications across the repository:
 
-- **Code & Contract Updates:** Update affected consumers, wrappers, configuration schemas, and environment variable references.
+- **Code & Contract Updates:** Update affected consumers, wrappers, configuration schemas, and environment variable references. Ensure all modified code adheres to Section 1 commenting standards.
 - **Test Suite Updates:** Implement, adapt, or prune test cases as strategized in Phase 2.
 - **Documentation Refactoring:** Update affected documentation, parent tables, and operational runbooks conforming strictly to ASD-STE100 plain language and bullet-first structure.
 
-### Phase 5: Regression Testing & Automated Verification
+### Phase 5: Automated Verification & Regression Testing
 
 Verify that the synchronization pass introduced zero regressions:
 
 - Execute the repository test suite and verification runners (`./scripts/verify.sh`).
-- Verify that:
+- Audit the change set against the **Pre-Commit Verification Checklist (Section 3)**.
+- Confirm:
   - 100% of tests pass with 0 errors or unexpected skips.
   - 0 broken relative Markdown links exist.
   - 0 Prettier formatting errors remain.
-  - Output conforms to the **Zero-Tolerance Anti-Pattern Catalog (Appendix A)**.
 
 ### Phase 6: Commit & Upstream Sync via [commit-scribe](../commit-scribe/SKILL.md)
 
@@ -94,26 +117,28 @@ Package the synchronized state into a clean, atomic Git commit:
 
 ---
 
-## Appendix A: Zero-Tolerance Anti-Pattern Catalog
+## 3. Pre-Commit Verification Checklist
 
-Enforce zero tolerance for these specific drift modes during reconciliation passes:
+Before completing execution, confirm that all items are satisfied:
 
-### 1. Documentation Drift Anti-Patterns
+### Code & Comments
 
-- **Patch-Note Infiltration:** Never append inline changelog notes or version deltas into living reference docs (e.g., `*Note: Updated in v2 to use DuckDB*`). Write exclusively in active present tense.
-- **Backward-Looking Code Archaeology:** Never explain superseded architectures or dead frameworks in reference docs. Route historical context to Git commit messages.
-- **Enterprise & Multi-Tenant Bureaucracy:** Omit multi-stage production tiers (`staging/prod`), PR contributor guidelines, SLA disclaimers, SOC2 checklists, or multi-tenant permission models from single-developer repos.
-- **Hedging & Conversational Padding:** Purge weak modals (`You might want to consider...`), filler, apologies, and closing pleasantries. Use direct operational modality (`must`, `should`, `may`).
-- **Echoing & Redundant Stating:** Never restate heading titles in the first sentence beneath them. Never write prose paragraphs before or after a code block that merely narrate what the code demonstrates.
-- **Ghost & Orphan References:** Eliminate markdown links, CLI flag descriptions, environment variables, or imports referencing deleted files, removed flags, or dead functions.
-- **Attention Thinning & "Middle-Loss":** Maintain identical rigor, tabular detail, and constraint completeness across every section; never allow intermediate reference sections to collapse into generic prose.
-- **Semantic Duplication across Files (DRY Violation):** Establish a Single Source of Truth in one canonical file and link to it using portable relative Markdown links.
+- [ ] Top-level Google-style module docstring present on every touched or created file, explaining architectural purpose, role, and design approach.
+- [ ] Class and function docstrings follow Google style with accurate parameter names, types, defaults, and raised exceptions.
+- [ ] All comments explain "Why, Not What" (rationale, invariants, approach); zero syntax echo comments exist.
+- [ ] Zero dead code blocks, zero temporary debug statements (`print`, `console.log`), and zero scratchpad files remain.
 
-### 2. Code & Comment Drift Anti-Patterns
+### Documentation & Navigation
 
-- **Trivial Echo Comments:** Purge comments that merely restate visible syntax mechanics (e.g., `i += 1  # increment i`, `// return result`).
-- **Tutorial & Narrative Comments:** Purge stream-of-consciousness narrative comments (e.g., `# Here we loop over items to check if...`).
-- **Session & Attribution Tags:** Purge assistant attribution markers, turn tags, author stamps, and bugfix tickets (e.g., `# Fixed by Assistant on Turn 4`).
-- **Dead Code Graveyards:** Purge commented-out legacy code blocks completely (`# def old_impl(): ...`). Rely entirely on Git for version history.
-- **Inconsistent Docstrings:** Enforce uniform docstrings matching host language: Google style (Python), JSDoc/TSDoc (JS/TS), Rustdoc (Rust), Go doc (Go).
-- **Lying Docstrings:** Parameter types, return types, exceptions, and defaults must match actual runtime code with 100% precision.
+- [ ] All updated docs written in active present tense (zero patch notes, zero backward-looking code archaeology).
+- [ ] All lists use Bullet-First hierarchy (bold category anchors, declarative child bullets, zero walls of dense prose).
+- [ ] Zero heading echoing (first sentence beneath a heading does not restate the heading title).
+- [ ] Parent README manifests and root documentation index newly created or modified files.
+- [ ] All relative Markdown links resolve to valid sibling files.
+
+### Contracts & Tests
+
+- [ ] CLI flags, schemas, configurations, and environment variables align across code, docs, and tests.
+- [ ] Test suites adapted and passing with 0 errors via project verification runners (`./scripts/verify.sh`).
+- [ ] Prettier formatting verified with 0 warnings or syntax errors.
+- [ ] Changes staged cleanly and committed via [commit-scribe](../commit-scribe/SKILL.md).

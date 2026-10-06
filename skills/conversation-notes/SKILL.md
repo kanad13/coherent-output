@@ -5,7 +5,7 @@ description: Synthesizes multi-turn conversations into comprehensive, self-conta
 
 # Conversation to Comprehensive Notes
 
-Follow this protocol to transform a multi-turn conversation into structured, book-like reference documentation that an independent reader can understand without the original chat transcript.
+Follow this protocol to transform a multi-turn conversation into structured, cohesive and coherent text, that an independent reader can understand without the original chat transcript.
 
 ---
 
