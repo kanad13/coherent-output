@@ -11,14 +11,14 @@ Follow this 6-phase protocol to transform a multi-turn conversation into structu
 
 ## 1. Scope & Primary Deliverable
 
-- **Timing:** Invoked during the final turn of a task or upon explicit request to summarize the conversation.
+- **Timing:** Invoked during the final turn of a task or upon explicit request to synthesize a discussion.
 - **Primary Deliverable:** One comprehensive, stand-alone reference document that an independent reader can understand completely without accessing the original chat transcript.
 - **Intellectual Content Captured:**
-  - Core questions and evolving requirements.
-  - Explanations, visual models, and architectural decisions.
-  - Rejected alternatives and why they were abandoned.
-  - Code snippets, commands, and verified tool findings.
-  - Remaining uncertainties and future roadmap items.
+  - Core questions, problem statements, and evolving requirements.
+  - Explanations, architectural decisions, and conceptual models.
+  - Discarded alternatives, failed experiments, and why they were abandoned.
+  - Commands, flags, code diffs, configuration keys, and verified tool findings.
+  - Unresolved issues, remaining uncertainties, and future roadmap items.
 
 ---
 
@@ -26,29 +26,31 @@ Follow this 6-phase protocol to transform a multi-turn conversation into structu
 
 ### Phase 1: Atomic Conversation Audit
 
-- Review every conversation turn, user prompt, and assistant response.
-- Create an atomic ledger of contributions: problems solved, discoveries, decisions, and checks.
+- Review every turn, prompt, tool execution result, and file inspected in the session.
+- For deep syntheses, construct an atomic ledger using the [Atomic Conversation Ledger Schema](./references/ledger-schema.md) (`A001`, `A002`, ...), cataloging speaker, type, resolution status, and dependencies.
 
 ### Phase 2: Canonical Conceptual Index
 
-- Reorganize the chronological discussion into a logical conceptual outline (e.g., Fundamentals → Architecture → Implementation → Operational Runbook).
-- Merge repeated discussions into single authoritative sections.
+- Reorganize chronological turns into an optimal conceptual learning dependency order (e.g., Fundamentals → Architecture → Implementation → Verification → Runbook).
+- Merge fragmented discussions from separate turns into authoritative, unified sections.
+- Position rejected alternatives and failure analyses directly beside the final chosen decisions.
 
-### Phase 3: Articulation Blueprint
+### Phase 3: Structural Blueprint & Micro-Formatting
 
-- Establish a consistent heading structure ($H_2 / H_3$).
-- Apply Bullet-First micro-formatting to technical specifications and analysis.
+- Establish a clean, shallow heading hierarchy ($H_2 / H_3$).
+- Apply Bullet-First micro-formatting to technical specifications, command parameters, and analysis.
 
 ### Phase 4: Autonomously Fill Understanding Gaps
 
-- Identify any minor logical leaps or unexplained background details that were assumed in conversation.
-- Expand explanations so the final notes stand completely self-contained.
+- Identify logical leaps, missing prerequisites, or unexplained background details assumed during conversation.
+- Close these gaps with concise, first-principles explanations so the document is completely self-contained.
+- Label substantial background additions with `[Added for completeness]` in analysis summaries.
 
 ### Phase 5: Draft the Comprehensive Notes
 
 - Draft the full documentation, preserving exact technical nomenclature, command flags, configuration keys, and code samples.
-- Structure with Title, Executive Purpose, Chapter Sections, and Next Steps.
+- Structure with Title, Executive Purpose, Chapter Sections, Decision History, and Next Steps.
 
-### Phase 6: Completeness Audit
+### Phase 6: Completeness & Traceability Audit
 
-- Verify that 100% of decisions, code changes, and rationale from the chat history are accurately represented.
+- Verify that 100% of decisions, tool discoveries, code changes, and rationale from the chat history are accurately represented without silent omission.

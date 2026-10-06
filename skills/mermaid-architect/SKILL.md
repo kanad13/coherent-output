@@ -5,23 +5,38 @@ description: Ingests technical documents or codebases, formulates a visual cover
 
 # Mermaid Visualization Architect & Inserter
 
-Follow this protocol to design, verify, and insert Mermaid diagrams into technical documents.
+Follow this protocol to design, verify, and insert native Mermaid diagrams into technical documents.
 
 ---
 
 ## 1. Non-Negotiable Directives
 
-- **Strict Insertion-Only Editing:** The pre-existing text of the source document is 100% immutable. Never modify, rephrase, delete, reorder, or reformat existing headings, paragraphs, tables, or code fences.
-- **Pre-Existing Diagram Immutability:** Never modify or delete pre-existing Mermaid diagrams in the document.
-- **Insertion Payload Structure:** Every inserted diagram block must consist strictly of:
+- **Strict Insertion-Only Editing:** Pre-existing text in the source document is 100% immutable. Never modify, rephrase, delete, reorder, or reformat existing headings, paragraphs, tables, or code fences.
+- **Pre-Existing Diagram Immutability:** Never edit or delete pre-existing Mermaid blocks in the source document.
+- **Insertion Payload Structure:** Every inserted diagram block must contain strictly:
   1. Exactly one bold, insight-driven caption: `**Diagram: <Actionable Insight>**`
-  2. Exactly one fenced Mermaid code block (` ```mermaid ` ... ` ``` `) placed immediately after the paragraph introducing the concept.
+  2. Exactly one fenced Mermaid code block (` ```mermaid ` ... ` ``` `) placed at a valid block boundary immediately following the passage introducing the concept.
+  - **No Headings for Captions:** Never use Markdown headings (`#`, `##`, `###`) for captions to protect document Table of Contents hierarchy.
+  - **No Prose Injections:** Never inject introductory summaries or transitions into the source document.
 - **Clean Native Styling:** Use standard Mermaid shapes, layout directions, and subgraphs. Avoid brittle inline CSS styling (`style`, `linkStyle`, `fill:`, `stroke:`).
-- **Absolute Factual Grounding:** Every entity, state, transition, and relationship must be directly grounded in the source text. Never invent components or causal connections. Label necessary bridging assumptions with `[Inferred]`.
+- **Flowchart Semantic Shape Grammar:** Use standard semantic shapes consistently:
+  - `([Stadium / Pill])`: Terminal endpoints, external callers, client applications, start/end states.
+  - `[Rectangle]`: Processing steps, computations, actions, microservice handlers.
+  - `{Diamond}`: Decision points, conditional branches, guard evaluations.
+  - `[(Cylinder)]`: Persistent databases, caches, session stores, disk storage.
+  - `((Circle))`: Event triggers, pub/sub messages, signals, event stream topics.
+  - `{{Hexagon}}`: Business rules, policy evaluations, cryptographic operations.
+  - `[/Parallelogram/]`: Input / Output payloads, external network data.
+  - `subgraph Name ["Display Title"] ... end`: System boundaries, namespaces, VPCs, trust zones.
+- **Layout & Anti-Noodle Rules:**
+  - Break single-axis linear flows (>12 nodes) into logical subgraphs, parallel branches, or phased grids.
+  - Default to `TD` for lifecycles, hierarchies, and decision trees; default to `LR` for pipelines and time sequences.
+  - Enclose all display labels containing spaces, parentheses, or punctuation in explicit double quotes: `id["Service (v2)"]`.
+- **Absolute Factual Grounding:** Ground every entity, state, transition, and relationship directly in the source text. Never invent components. Explicitly label necessary bridging assumptions with `[Inferred]`.
 
 ---
 
-## 2. End-to-End 5-Phase Pipeline
+## 2. Five-Phase Execution Pipeline
 
 ### Phase 1: Ingest & Model Source Content
 
@@ -30,31 +45,35 @@ Follow this protocol to design, verify, and insert Mermaid diagrams into technic
 
 ### Phase 2: Formulate Visual Coverage Plan
 
-- Select the authoritative Mermaid grammar for each concept:
-  - **Process / Decision Trees / Pipelines:** `flowchart TD` or `flowchart LR`
-  - **Inter-service Messages / API Protocols:** `sequenceDiagram`
-  - **Entity Lifecycles / Transitions:** `stateDiagram-v2`
-  - **Data Models / Schemas:** `erDiagram`
-  - **Object Architecture / Inheritance:** `classDiagram`
-  - **Quantitative Distributions:** `xychart-beta`
-- Determine optimal insertion points at valid block boundaries between sections.
+- Consult the [Mermaid Grammar Selector Matrix](./references/grammar-matrix.md) to choose the authoritative grammar and fallback for each concept.
+- Apply the **Progressive Visual Hierarchy** when a topic has multi-layered complexity:
+  1. _Level 1 (Simple Model):_ Core entry points and high-level routing.
+  2. _Level 2 (Expanded Model):_ Surrounding components, trust boundaries, and data stores.
+  3. _Level 3 (Behavioral Model):_ Sequences, state transitions, decisions, or data movement.
+  4. _Level 4 (Detail/Edge Cases):_ Constraints, failure branches, exceptions, or packet layouts.
+- Map planned diagrams into the structured Visual Coverage Plan table:
+
+| Target Section / Topic | Visual Question Addressed | Core Insight Delivered | Mermaid Grammar Selected | Placement Block Boundary | Design Rationale |
+| :--------------------- | :------------------------ | :--------------------- | :----------------------- | :----------------------- | :--------------- |
 
 ### Phase 3: Construct Native Mermaid Diagrams
 
-- Format node labels with clean syntax: quote labels containing parentheses or special characters (`id["Service (v2)"]`).
-- Keep diagrams compact and readable: limit flowcharts to 12–15 nodes per diagram; decompose larger flows into subgraphs or sequential diagrams.
+- Apply the semantic shape grammar and subgraphs.
+- Keep node labels concise (2–6 words) and enclose them in double quotes.
 
-### Phase 4: Syntax Verification
+### Phase 4: Active Tool Verification & Compilation
 
-- Validate the syntax of every diagram before inserting.
-- Run the headless Mermaid CLI verification script:
+- Validate syntax before inserting diagrams.
+- For single `.mmd` files, run:
   [`./scripts/verify-mmdc.sh`](./scripts/verify-mmdc.sh) `<diagram_file.mmd>`
-- If syntax errors occur, adjust node identifiers, quote special characters, or simplify relationship arrows.
+- For batch validation of Markdown documents containing embedded Mermaid blocks, run:
+  `python3 ./skills/mermaid-architect/scripts/verify-markdown.py <target_document.md>`
+- If compilation fails, diagnose the exact syntax error, close unescaped quotes, or fall back to standard grammar per the matrix.
 
-### Phase 5: Insertion & Delivery
+### Phase 5: Structured Delivery & File Application
 
-- Insert the verified diagram blocks into the source document at planned block boundaries.
-- Present the deliverable with:
-  - **Section A:** Visual Coverage Plan.
+- **Disk Target:** When modifying an existing file on disk, apply the verified diagram blocks directly using file modification tools (`replace_file_content` or `write_to_file`).
+- **Response Format:** Structure output in three distinct sections:
+  - **Section A:** Visual Coverage Plan (including the plan table).
   - **Section B:** Updated source document.
   - **Section C:** Compilation verification report.

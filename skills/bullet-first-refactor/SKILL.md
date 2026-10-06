@@ -11,7 +11,7 @@ Follow this 5-phase deterministic pipeline to restructure dense, disorganized, o
 
 ## 1. Core Mandates & Invariants
 
-- **The Zero-Loss Invariant:** Preserve 100% of the substantive information from the source text:
+- **The Zero-Loss Invariant:** Preserve 100% of substantive information from the source text:
   - Every factual assertion, role, entity, technology, metric, and SLA.
   - Every condition, prerequisite, and causal dependency (`A causes B under C`).
   - Exact modal certainty (`must`, `should`, `may`, `target` — never dilute or amplify).
@@ -27,8 +27,8 @@ Execute the following five phases sequentially:
 
 ### Phase 1: Atomic Inventory Ledger
 
-- Ingest the raw source and extract every distinct assertion, constraint, definition, metric, and rule.
-- Group extracted items into an atomic ledger to guarantee that nothing is omitted during drafting.
+- Ingest the raw source and extract distinct assertions, constraints, definitions, metrics, and rules.
+- For dense or legally sensitive texts, use the [Preservation Ledger Schema](./references/preservation-ledger.md) (`P001`, `P002`, ...) to track entities systematically.
 
 ### Phase 2: Structural Blueprint & Re-Sequencing
 
@@ -46,7 +46,7 @@ Execute the following five phases sequentially:
 
 ### Phase 4: Reconciliation & Parity Audit
 
-- Perform a line-by-line cross-check comparing the synthesized text against the Phase 1 Atomic Inventory Ledger.
+- Perform a cross-check comparing the synthesized text against the Phase 1 Atomic Inventory Ledger.
 - Verify that every metric, prerequisite, and rule from the source text is represented in the output.
 
 ### Phase 5: Verification Gate & Delivery
