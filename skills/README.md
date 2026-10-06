@@ -124,9 +124,9 @@ The library provides 12 situational skills organized by operational domain:
 
 ### Learning & Pedagogy
 
-| Skill                                   | Description                                                                                           |
-| :-------------------------------------- | :---------------------------------------------------------------------------------------------------- |
-| [concept-tutor](concept-tutor/SKILL.md) | Teach technical concepts through self-contained guides, steelmanned hypotheses, and Mermaid diagrams. |
+| Skill                                   | Description                                                                                               |
+| :-------------------------------------- | :-------------------------------------------------------------------------------------------------------- |
+| [concept-tutor](concept-tutor/SKILL.md) | Teach technical concepts through self-contained explanations, steelmanned premises, and structured paths. |
 
 ---
 
