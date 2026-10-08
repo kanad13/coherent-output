@@ -14,13 +14,14 @@ Follow this methodology to stress-test claims, arguments, technical proposals, a
 - **Hypothesis Framing:** Treat every assertion as a hypothesis requiring rigorous validation. Reformulate claims into their strongest, most falsifiable versions before testing.
 - **Disconfirmation Search:** Actively seek contradictory evidence, counter-examples, and hidden failure modes as aggressively as supporting data.
 - **Calibrated 5-Verdict Matrix:**
-  | Verdict | Definition |
+
+  | Verdict                 | Definition                                                                                  |
   | :---------------------- | :------------------------------------------------------------------------------------------ |
-  | **SUPPORTED** | Strong, authoritative evidence verifies the claim; material counter-arguments are resolved. |
-  | **PARTIALLY SUPPORTED** | Core premise has evidence, but scope, conditions, or certainty are overstated. |
-  | **INCONCLUSIVE** | Evidence is mixed, indirect, conflicting, or dependent on unverified assumptions. |
-  | **CONTRADICTED** | Authoritative evidence directly conflicts with the claim or reveals a fatal defect. |
-  | **REFRAME REQUIRED** | The claim is vague, circular, or unfalsifiable; requires tighter scoping before assessment. |
+  | **SUPPORTED**           | Strong, authoritative evidence verifies the claim; material counter-arguments are resolved. |
+  | **PARTIALLY SUPPORTED** | Core premise has evidence, but scope, conditions, or certainty are overstated.              |
+  | **INCONCLUSIVE**        | Evidence is mixed, indirect, conflicting, or dependent on unverified assumptions.           |
+  | **CONTRADICTED**        | Authoritative evidence directly conflicts with the claim or reveals a fatal defect.         |
+  | **REFRAME REQUIRED**    | The claim is vague, circular, or unfalsifiable; requires tighter scoping before assessment. |
 
 ---
 

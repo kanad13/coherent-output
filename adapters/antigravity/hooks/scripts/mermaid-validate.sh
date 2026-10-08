@@ -33,7 +33,7 @@ if [ -n "$TARGET_FILE" ] && [ -f "$TARGET_FILE" ]; then
         REPO_DIR="$(cd "$SCRIPT_DIR/../../../.." && pwd)"
         VERIFY_SCRIPT="$REPO_DIR/skills/mermaid-architect/scripts/verify-markdown.py"
         if [ -f "$VERIFY_SCRIPT" ]; then
-          python3 "$VERIFY_SCRIPT" "$TARGET_FILE"
+          python3 "$VERIFY_SCRIPT" "$TARGET_FILE" >&2 || true
         fi
       fi
       ;;

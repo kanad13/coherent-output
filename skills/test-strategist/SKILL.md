@@ -126,7 +126,7 @@ Never declare tests complete without executing them:
    - If the repository has a `TESTING.md` (or testing section in `README.md`), ensure setup instructions, test commands, and architectural testing tiers reflect reality.
 2. **Commit Test Evolution:**
    - Stage test files, test fixtures, and harness configuration.
-   - Commit and push using [commit-scribe](../commit-scribe/SKILL.md):
+   - Commit and push using the commit-scribe skill:
      ```text
      test(suite): reconcile test strategy and harness to match current architecture
      ```

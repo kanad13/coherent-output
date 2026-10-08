@@ -40,7 +40,7 @@ Extract and formulate:
 
 ### Step 2: Atomic Inventory Ledger
 
-Borrowing the structural discipline of [bullet-first-refactor](../bullet-first-refactor/SKILL.md), extract every distinct piece of information from the raw draft into a numbered Atomic Inventory Ledger (`E001`, `E002`, ...):
+Borrowing the structural discipline of the bullet-first-refactor skill, extract every distinct piece of information from the raw draft into a numbered Atomic Inventory Ledger (`E001`, `E002`, ...):
 
 | ID Code  | Category            | Content Description                                                  |
 | :------- | :------------------ | :------------------------------------------------------------------- |

@@ -76,7 +76,7 @@ description: Concise, third-person trigger criteria explaining WHAT the skill do
 
 ### Portability & Linking Rules
 
-- **Sibling Skills:** Link to sibling skills using relative Markdown paths: `[commit-scribe](../commit-scribe/SKILL.md)`. Sibling links resolve identically in repository source and deployed application symlinks (`~/.agents/skills/` and `~/.gemini/config/skills/`).
+- **Sibling Skills:** Reference sibling skills by name without relative Markdown paths (e.g., `activate the commit-scribe skill`). AI coding agents match skill names against their runtime skills catalog rather than resolving relative filesystem links.
 - **No External Relative Links:** Never use relative paths to files outside the `skills/` directory (e.g., `../AGENTS.md` or `../../README.md`). Deployed skills reside in separate configuration directories where those relative paths do not exist. Refer to external standards conceptually.
 
 ### Style & Content Standards
