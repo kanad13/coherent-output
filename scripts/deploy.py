@@ -55,6 +55,7 @@ def generated_files():
     replacements = {
         "{{safety_gate}}": shlex.quote(str(scripts / "safety-gate.sh")),
         "{{prettier_format}}": shlex.quote(str(scripts / "prettier-format.sh")),
+        "{{mermaid_validate}}": shlex.quote(str(scripts / "mermaid-validate.sh")),
     }
     for config in hooks.values():
         for event, groups in config.items():

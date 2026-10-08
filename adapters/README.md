@@ -26,8 +26,18 @@ Antigravity lifecycle hooks are configured via `adapters/antigravity/hooks/hooks
 - **Prettier Auto-Formatter (`prettier-format.sh`):**
   - Event: `PostToolUse` on `write_to_file` and `replace_file_content`.
   - Behavior: Sanitizes file paths (stripping quotes and expanding home paths), checks for project-level Prettier configs, falls back to the repository `.prettierrc` for unconfigured files, and automatically formats Markdown and code files.
+- **Mermaid Diagram Validator (`mermaid-validate.sh`):**
+  - Event: `PostToolUse` on `write_to_file` and `replace_file_content`.
+  - Behavior: Fast-checks written or modified Markdown files for ` ```mermaid ` code blocks and batch-compiles them using `verify-markdown.py`. Non-zero exit on syntax error prevents broken diagram syntax from persisting unnoticed.
 
-The installer renders local absolute script paths dynamically into `.generated/antigravity/hooks.json`, ensuring hook paths work on any Mac regardless of checkout location.
+The installer renders local absolute script paths dynamically into `.generated/antigravity/hooks.json` via `./scripts/deploy.sh`, ensuring hook paths work on any Mac regardless of checkout location.
+
+### Adding New Hooks: Standard Workflow
+
+1. Place the executable shell/Python script in `adapters/antigravity/hooks/scripts/`.
+2. Register the event trigger in `adapters/antigravity/hooks/hooks.template.json` using the `{{script_placeholder}}` syntax.
+3. Add the template replacement in `scripts/deploy.py` under `replacements`.
+4. Run `./scripts/deploy.sh` and `./scripts/verify.sh` to compile `.generated/antigravity/hooks.json` and confirm test suite passage.
 
 ---
 

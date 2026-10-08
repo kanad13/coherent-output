@@ -64,10 +64,13 @@ Follow this protocol to design, verify, and insert native Mermaid diagrams into 
 ### Phase 4: Active Tool Verification & Compilation
 
 - Validate syntax before inserting diagrams.
-- For single `.mmd` files, run:
-  [`./scripts/verify-mmdc.sh`](./scripts/verify-mmdc.sh) `<diagram_file.mmd>`
-- For batch validation of Markdown documents containing embedded Mermaid blocks, run:
-  `python3 ./skills/mermaid-architect/scripts/verify-markdown.py <target_document.md>`
+- Locate helper scripts in the `scripts/` directory sibling to this `SKILL.md`:
+  - Single `.mmd` preview validation:
+    `<skill_dir>/scripts/verify-mmdc.sh <diagram_file.mmd>`
+  - Markdown batch verification:
+    `python3 <skill_dir>/scripts/verify-markdown.py <target_document.md>`
+    _(Resolve `<skill_dir>` to this skill's folder, e.g. `~/.gemini/config/skills/mermaid-architect` or `skills/mermaid-architect`)_.
+- Note: A platform lifecycle hook (`PostToolUse`) also automatically triggers batch verification on modified Markdown documents to prevent broken diagram syntax from persisting on disk.
 - If compilation fails, diagnose the exact syntax error, close unescaped quotes, or fall back to standard grammar per Appendix A.
 
 ### Phase 5: Structured Delivery & File Application

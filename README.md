@@ -137,5 +137,5 @@ For authoring standards, frontmatter contracts, and progressive disclosure archi
 
 ## 8. Lifecycle Hooks and Local Settings
 
-- **Antigravity Hooks:** Implements a destructive command gate (`safety-gate.sh` on `PreToolUse` for `run_command`) and a Prettier auto-formatter (`prettier-format.sh` on `PostToolUse` for file write operations). See [adapters/README.md](adapters/README.md) for contract details.
+- **Antigravity Hooks:** Implements a destructive command gate (`safety-gate.sh` on `PreToolUse` for `run_command`), a Prettier auto-formatter (`prettier-format.sh` on `PostToolUse` for file write operations), and a Mermaid syntax validator (`mermaid-validate.sh` on `PostToolUse` for Markdown writes). See [adapters/README.md](adapters/README.md) for contract details.
 - **Codex Approvals:** Codex retains its native command approval policies. Codex's hook contract does not support `force_ask`, so native prompts govern command execution.

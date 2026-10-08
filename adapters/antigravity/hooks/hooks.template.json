@@ -28,5 +28,20 @@
         ]
       }
     ]
+  },
+  "mermaid-syntax-validator": {
+    "enabled": true,
+    "PostToolUse": [
+      {
+        "matcher": "write_to_file|replace_file_content",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/bin/bash {{mermaid_validate}}",
+            "timeout": 30
+          }
+        ]
+      }
+    ]
   }
 }

@@ -85,6 +85,20 @@ description: Concise, third-person trigger criteria explaining WHAT the skill do
 - **Why, Not What:** Document invariants, safety constraints, and decision rationale.
 - **Zero Residue:** Ensure execution steps clean up scratchpads, temporary files, and debug logging.
 
+### Scripts vs. Lifecycle Hooks: Architectural Rule
+
+When adding executable code or validation logic, use the appropriate mechanism:
+
+| Mechanism               | Location                                              | Invocation Model                                                                | Primary Purpose                                                        | Examples                                                                                                                                                            |
+| :---------------------- | :---------------------------------------------------- | :------------------------------------------------------------------------------ | :--------------------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Skill Helper Script** | `skills/<skill>/scripts/`                             | **Probabilistic / On-Demand** (Agent invokes via `run_command` during workflow) | Task-specific helpers, interactive tools, or specialized runbook steps | Compiling a single `.mmd` preview, generating domain scaffolding, parsing specialized fixtures                                                                      |
+| **Lifecycle Hook**      | `adapters/antigravity/hooks/` (`hooks.template.json`) | **Deterministic / Runtime-Enforced** (Fired automatically on lifecycle events)  | Mandatory invariants, universal guardrails, and formatters             | Prettier auto-formatting on file write (`PostToolUse`), Mermaid syntax validation on Markdown save (`PostToolUse`), destructive command safety gates (`PreToolUse`) |
+
+**Script Authoring Invariants:**
+
+1. **No CWD Assumptions:** Never assume the agent's Current Working Directory is the repository root or skill folder. Always instruct agents to resolve scripts relative to the skill directory (e.g., `<skill_dir>/scripts/<script_name>`).
+2. **Enforce Invariants via Hooks:** If a rule or check is non-negotiable and must execute every single time without relying on model memory or prompt adherence, register it as a Lifecycle Hook rather than a skill script alone.
+
 ---
 
 ## 3. Skills Inventory
