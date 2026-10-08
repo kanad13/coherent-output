@@ -69,6 +69,7 @@ Do not improvise complex, multi-step procedures. Activate the dedicated skill up
 - **When stress-testing claims, factual assertions, or technical strategies against evidence:** Activate `claim-validator`.
 - **When handling external APIs, libraries, framework behavior, or empirical claims (at inception and iteratively as questions emerge during execution):** Activate `web-research` to validate internal knowledge against authoritative sources. Skip only for trivial standard operations or purely local codebase logic.
 - **When reorganizing dense text, notes, or messy markdown into structured outlines:** Activate `bullet-first-refactor`.
+- **When reviewing document wording from user feedback or applying selected alternatives:** Activate `articulation-review`.
 - **When validating markdown link integrity, folder numbering, or documentation indexes:** Activate `markdown-audit`.
 - **When designing or embedding Mermaid architecture, sequence, or workflow diagrams:** Activate `mermaid-architect`.
 - **When drafting, editing, or rewriting emails, announcements, or communications:** Activate `email-rewrite`.

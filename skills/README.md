@@ -89,7 +89,7 @@ description: Concise, third-person trigger criteria explaining WHAT the skill do
 
 ## 3. Skills Inventory
 
-The library provides 12 situational skills organized by operational domain:
+The library provides 13 situational skills organized by operational domain:
 
 ### Repository Operations & Git Hygiene
 
@@ -112,6 +112,7 @@ The library provides 12 situational skills organized by operational domain:
 
 | Skill                                                   | Description                                                                                                |
 | :------------------------------------------------------ | :--------------------------------------------------------------------------------------------------------- |
+| [articulation-review](articulation-review/SKILL.md)     | Review document wording from user feedback, offer three inline alternatives, and apply selections.         |
 | [bullet-first-refactor](bullet-first-refactor/SKILL.md) | Refactor text into ultra-clean, bullet-first Markdown with 100% semantic fidelity.                         |
 | [conversation-notes](conversation-notes/SKILL.md)       | Synthesize multi-turn conversations into self-contained, book-like documentation.                          |
 | [email-rewrite](email-rewrite/SKILL.md)                 | Transform rough drafts into three ASD-STE100 candidate emails via atomic audit and radical reorganization. |
