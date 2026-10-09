@@ -1,11 +1,11 @@
 ---
 name: claim-validator
-description: Stress-tests claims, proposals, and strategies against verified evidence, exposes failure modes, and renders calibrated verdicts. Use when evaluating assertions, auditing proposals, fact-checking claims, or performing risk assessments.
+description: Stress-tests claims, proposals, and strategies against verified evidence, exposes failure modes, and renders calibrated verdicts. Use when evaluating assertions, auditing proposals, fact-checking claims, or performing risk assessments. Do not use for assessing code ROI or architectural churn (use worth-the-squeeze instead).
 ---
 
 # Evidence-Based Claim Validator
 
-Follow this methodology to stress-test claims, arguments, technical proposals, and strategic assumptions against verified evidence.
+Follow this methodology to stress-test claims, arguments, technical proposals, and strategic assumptions against verified evidence. Execute a disconfirmation-first audit to uncover counter-examples, unstated dependencies, and failure modes, delivering a calibrated verdict with concrete source citations.
 
 ---
 

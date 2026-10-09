@@ -1,11 +1,11 @@
 ---
 name: mermaid-architect
-description: Ingests technical documents, formulates a visual coverage plan, constructs native Mermaid diagrams, verifies compilation, and inserts them cleanly without altering existing text. Use when creating architecture diagrams, visualizing workflows, or enhancing docs with Mermaid.
+description: Ingests technical documents, formulates a visual coverage plan, constructs native Mermaid diagrams, verifies compilation, and inserts them cleanly without altering existing text. Use when creating architecture diagrams, visualizing workflows, or enhancing docs with Mermaid. Do not use for rendering external UI widgets or modifying surrounding prose.
 ---
 
 # Mermaid Visualization Architect & Inserter
 
-Follow this protocol to design, verify, and insert native Mermaid diagrams into technical documents.
+Follow this protocol to design, verify, and insert native Mermaid diagrams into technical documents. Enforce strict insertion-only editing—leaving pre-existing text 100% immutable—and verify diagram syntax compilation before saving.
 
 ---
 

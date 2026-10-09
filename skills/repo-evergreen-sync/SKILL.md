@@ -1,11 +1,11 @@
 ---
 name: repo-evergreen-sync
-description: Synchronizes the entire repository after coding changes, resolving systemic drift across code, contracts, documentation, and tests. Analyzes session diff and conversation intent, enforces Google-style module prefacing and "Why, Not What" comment standards, audits ripple impacts, adapts test suites via test-strategist, refactors docs with ASD-STE100, verifies regressions, and commits via commit-scribe. Use immediately after implementing, editing, or refactoring code.
+description: Synchronizes the entire repository after coding changes, resolving systemic drift across code, contracts, documentation, and tests. Analyzes session diff and conversation intent, enforces Google-style module prefacing and "Why, Not What" comment standards, audits ripple impacts, adapts test suites via test-strategist, refactors docs with ASD-STE100, verifies regressions, and commits via commit-scribe. Use immediately after implementing, editing, or refactoring code. Do not use for initial exploratory coding or standalone documentation audits without recent codebase modifications.
 ---
 
 # Evergreen Repository Synchronization Engine
 
-Follow this protocol immediately after a coding session to inspect recent functional changes, audit systemic ripple effects across the entire codebase, adapt tests, update documentation, and commit the reconciled state.
+Follow this protocol immediately after a coding session to inspect recent functional changes, audit systemic ripple effects across the entire codebase, adapt tests, update documentation, and commit the reconciled state. Eliminate split-brain drift between code and documentation before closing a development task.
 
 ---
 

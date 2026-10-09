@@ -67,12 +67,32 @@ Every `SKILL.md` must start with valid YAML frontmatter containing exactly `name
 ```yaml
 ---
 name: example-skill
-description: Concise, third-person trigger criteria explaining WHAT the skill does and WHEN the agent must use it. Maximum 1024 characters.
+description: Concise, third-person trigger criteria explaining WHAT the skill does, WHEN to invoke it, and WHEN NOT to invoke it. Maximum 1024 characters.
 ---
 ```
 
 - **`name`:** Lowercase alphanumeric with hyphens (`kebab-case`). Must match the parent directory name.
-- **`description`:** High-signal trigger statement. Harnesses use this text for semantic matching during Tier 1 cataloging.
+- **`description`:** High-signal trigger statement. Harnesses pre-load only this text into the system prompt during Tier 1 discovery.
+
+### Authoring Guidance: Frontmatter `description` vs. Post-H1 Paragraph
+
+Because AI harnesses use progressive disclosure, the frontmatter `description` and the post-H1 introductory paragraph fulfill two fundamentally distinct roles:
+
+1. **Frontmatter `description` (Tier 1: Routing & Discovery Contract):**
+   - **Audience:** The routing model deciding _whether_ to activate a skill before reading its body.
+   - **Required Three-Part Anatomy:**
+     - **Capabilities:** Direct statement of what technical outcome or artifact the skill produces.
+     - **Positive Triggers:** Explicit user intents, phrasing, task stages, or symptoms signaling invocation (e.g., `"Use when reviewing drafts...", "Activate before staging git changes..."`).
+     - **Negative Triggers (Boundaries):** Explicit exclusions preventing false-positive activations (e.g., `"Do not use for code blocks...", "Omit during intermediate WIP iterations..."`).
+   - **Constraints:** Maximum 1,024 characters. Write in concise third-person or imperative register.
+
+2. **Post-H1 Introductory Paragraph (Tier 2: Operational Grounding Contract):**
+   - **Audience:** The active agent that has _already_ loaded the skill into context.
+   - **Required Three-Part Anatomy:**
+     - **Operational Mission:** Direct executive directive setting the agent's professional posture.
+     - **Transformation Contract:** Clear statement of input $\rightarrow$ output guarantees (e.g., converting disorganized drafts into two-tier Markdown while preserving 100% of substantive facts).
+     - **Behavioral Invariants:** Non-negotiables governing the execution (e.g., zero sycophancy, verbatim code protection, ASD-STE100 active voice).
+   - **Anti-Pattern to Avoid:** Never repeat routing cues (`"Use this skill when..."`) in the post-H1 paragraph. Focus strictly on execution standards and invariants.
 
 ### Portability & Linking Rules
 
@@ -124,12 +144,12 @@ The library provides 13 situational skills organized by operational domain:
 
 ### Content Refactoring & Writing
 
-| Skill                                                   | Description                                                                                                |
-| :------------------------------------------------------ | :--------------------------------------------------------------------------------------------------------- |
-| [articulation-review](articulation-review/SKILL.md)     | Review document wording from user feedback, offer three inline alternatives, and apply selections.         |
-| [bullet-first-refactor](bullet-first-refactor/SKILL.md) | Refactor text into ultra-clean, bullet-first Markdown with 100% semantic fidelity.                         |
-| [conversation-notes](conversation-notes/SKILL.md)       | Synthesize multi-turn conversations into self-contained, book-like documentation.                          |
-| [email-rewrite](email-rewrite/SKILL.md)                 | Transform rough drafts into three ASD-STE100 candidate emails via atomic audit and radical reorganization. |
+| Skill                                                             | Description                                                                                                |
+| :---------------------------------------------------------------- | :--------------------------------------------------------------------------------------------------------- |
+| [articulation-review](articulation-review/SKILL.md)               | Review document wording from user feedback, offer three inline alternatives, and apply selections.         |
+| [cognitive-clarity-refactor](cognitive-clarity-refactor/SKILL.md) | Refactor text into low-cognitive-load, scannable Markdown with 100% semantic fidelity.                     |
+| [conversation-notes](conversation-notes/SKILL.md)                 | Synthesize multi-turn conversations into self-contained, book-like documentation.                          |
+| [email-rewrite](email-rewrite/SKILL.md)                           | Transform rough drafts into three ASD-STE100 candidate emails via atomic audit and radical reorganization. |
 
 ### Architecture, Design & Discovery
 

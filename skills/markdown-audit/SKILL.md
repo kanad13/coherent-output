@@ -1,11 +1,11 @@
 ---
 name: markdown-audit
-description: Audits Markdown repositories and documentation folders against numbering, naming, README coverage, navigation, and link integrity standards. Use when reviewing documentation structure or organizing repo docs.
+description: Audits Markdown repositories and documentation folders against numbering, naming, README coverage, navigation, and link integrity standards. Use when reviewing documentation structure or organizing repo docs. Do not use for evaluating prose wording (use articulation-review) or refactoring text content (use cognitive-clarity-refactor).
 ---
 
 # Markdown Repository Audit
 
-Follow this protocol to audit documentation folders, verify structural standards, and produce sequenced correction plans.
+Follow this protocol to audit documentation folders, verify structural standards, and produce sequenced correction plans. Execute a non-destructive audit of file hierarchies, broken links, and navigation indexes, categorizing all defects into prioritized remediation batches.
 
 ---
 

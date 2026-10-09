@@ -1,11 +1,11 @@
 ---
 name: commit-scribe
-description: Creates structured, high-context git commits for repository changes with problem, solution, decisions, and notes, and pushes them to the upstream remote. Use when staging changes, writing commit messages, finalizing git commits, or pushing commits to remote.
+description: Creates structured, high-context git commits for repository changes with problem, solution, decisions, and notes, and pushes them to the upstream remote. Use when staging changes, writing commit messages, finalizing git commits, or pushing commits to remote. Do not use during intermediate WIP coding before verification passes.
 ---
 
 # Commit Scribe
 
-Follow this protocol when creating Git commits and pushing changes for repository updates.
+Follow this protocol when creating Git commits and pushing changes for repository updates. Enforce pre-commit hygiene, inspect staged diffs, and construct four-section commit messages that document architectural intent, trade-offs, and verification results.
 
 ---
 

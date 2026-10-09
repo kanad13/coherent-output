@@ -1,11 +1,11 @@
 ---
 name: email-rewrite
-description: Transforms unstructured, disorganized, or poorly articulated drafts into professional correspondence by steelmanning intent, conducting an atomic information audit, radically reorganizing content, and generating three ASD-STE100 candidate drafts. Use when drafting, editing, rewriting, or restructuring business and technical emails.
+description: Transforms unstructured, disorganized, or poorly articulated drafts into professional correspondence by steelmanning intent, conducting an atomic information audit, radically reorganizing content, and generating three ASD-STE100 candidate drafts. Use when drafting, editing, rewriting, or restructuring business and technical emails. Do not use for superficial spell-checking where original prose must remain unchanged.
 ---
 
 # Professional Email Rewrite & Radical Information Architecture
 
-Follow this protocol to transform unstructured notes, messy thoughts, or poorly articulated drafts into clear, persuasive, and actionable correspondence.
+Follow this protocol to transform unstructured notes, messy thoughts, or poorly articulated drafts into clear, persuasive, and actionable correspondence. Reject superficial proofreading in favor of radical information architecture restructuring, producing three distinct candidate drafts tailored to recipient authority and operational stakes.
 
 ---
 
@@ -40,7 +40,7 @@ Extract and formulate:
 
 ### Step 2: Atomic Inventory Ledger
 
-Borrowing the structural discipline of the bullet-first-refactor skill, extract every distinct piece of information from the raw draft into a numbered Atomic Inventory Ledger (`E001`, `E002`, ...):
+Borrowing the structural discipline of the cognitive-clarity-refactor skill, extract every distinct piece of information from the raw draft into a numbered Atomic Inventory Ledger (`E001`, `E002`, ...):
 
 | ID Code  | Category            | Content Description                                                  |
 | :------- | :------------------ | :------------------------------------------------------------------- |

@@ -1,11 +1,11 @@
 ---
 name: worth-the-squeeze
-description: Rigorously stress-tests proposals, architectural refactors, feature ideas, and library updates against objective ROI, critical trade-offs, and empirical evidence to determine if the value justifies the effort and risk without compliance bias.
+description: Rigorously stress-tests proposals, architectural refactors, feature ideas, and library updates against objective ROI, critical trade-offs, and empirical evidence to determine if the value justifies the effort and risk without compliance bias. Use when evaluating proposals, refactoring ideas, dependency additions, or when deciding whether candidate text edits add meaningful value. Do not use for factual truth claims without architectural impact (use claim-validator instead).
 ---
 
 # Worth-the-Squeeze: Independent ROI & Friction Auditor
 
-Use this skill when evaluating whether an engineering proposal, architectural refactor, third-party dependency migration, feature request, or optimization is genuinely worth doing.
+Use this skill when evaluating whether an engineering proposal, architectural refactor, third-party dependency migration, feature request, or optimization is genuinely worth doing. Maintain strict anti-sycophancy and default to status-quo preservation unless net lifetime utility demonstrably exceeds operational friction.
 
 ---
 

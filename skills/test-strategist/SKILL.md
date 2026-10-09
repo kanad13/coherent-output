@@ -1,11 +1,11 @@
 ---
 name: test-strategist
-description: Assesses repository topology, evaluates testing gaps, formulates or adapts test strategies, provisions test harnesses, and evolves test suites alongside code changes without dogmatic tooling bias. Use when strategizing test coverage, setting up a test harness, or reconciling tests mid-development.
+description: Assesses repository topology, evaluates testing gaps, formulates or adapts test strategies, provisions test harnesses, and evolves test suites alongside code changes without dogmatic tooling bias. Use when strategizing test coverage, setting up a test harness, or reconciling tests mid-development. Do not use for routine single-test execution or trivial assertion fixes.
 ---
 
 # Adaptive Test Strategy & Harness Evolution
 
-Use this skill mid-development or during repository bootstrapping to formulate a test strategy, audit the test harness against codebase evolution, identify verification deltas, and adapt test suites without dogmatic tooling bias.
+Use this skill mid-development or during repository bootstrapping to formulate a test strategy, audit the test harness against codebase evolution, identify verification deltas, and adapt test suites without dogmatic tooling bias. Anchor testing decisions in system boundaries, interface contracts, and fast feedback loops.
 
 ---
 

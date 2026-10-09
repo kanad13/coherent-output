@@ -1,11 +1,11 @@
 ---
 name: articulation-review
-description: Use when the user flags articulation problems and asks to review a document's bullets or sections for clarity or ASD-STE100 plain language. Work from comments or a stated concern, offer three inline alternatives for worthwhile changes, and finalize selected wording.
+description: Reviews document articulation, formatting, and structural organization from user comments or autonomous scans. Proposes three inline alternatives for high-friction passages using worth-the-squeeze thresholding, and finalizes selections. Use when documents have sound content but poor clarity, structure, or layperson readability. Do not use for creating new documents from scratch.
 ---
 
 # Articulation Review
 
-Help the user decide how a document should express its meaning. Preserve substantive information while improving clarity, structure, and precision.
+Help the user elevate document clarity, logical sequencing, and structural ergonomics without altering substantive meaning. Review documents either from explicit feedback (such as `[LOOKOUT: ...]` annotations) or through an autonomous diagnostic scan when widespread articulation defects obstruct layperson comprehension. Apply cognitive-clarity-refactor principles to reorganize content, and gate every proposed edit through the worth-the-squeeze skill to ensure changes resolve critical friction rather than introducing cosmetic churn.
 
 ## 1. Read the Document and Establish the Stage
 
@@ -16,7 +16,7 @@ Help the user decide how a document should express its meaning. Preserve substan
 
 ## 2. Understand Feedback and Audit Related Text
 
-- Treat annotations that start with "[LOOKOUT" as user feedback, including "[LOOKOUT: ...]" and escaped forms. Preserve Markdown links, code, and literal notation, including examples that explain the feedback format.
+- Treat annotations that start with "[LOOKOUT" as user feedback, including "[LOOKOUT: ...]".
 - Steelman each comment: explain what the user wants the reader to understand, what currently obstructs that understanding, and what a successful revision must achieve.
 - If there are no annotations, use the user's stated concerns and accepted feedback from the conversation to review each bullet and section. Identify additional issues through judgment, with evidence from the text.
 - Turn compound concerns into atomic, positive writing instructions. Give each issue a stable identifier and record its affected passage and acceptance criteria—the checks that show the revision meets the user's concern—in a working inventory outside the final document.
@@ -27,10 +27,8 @@ Useful inventory instructions include:
 
 - Explain a technical concept's practical meaning and why it matters to the reader before implementation detail. Add a short, familiar analogy or example when it makes the concept easier to understand. Keep the explanation simple and avoid introducing more unfamiliar terms.
 - At first use in the file, place a short, plain-language explanation beside an unfamiliar term or acronym. Explain only what the reader needs for the passage. Use familiar words and leave secondary details for later. Explain the term once per file unless the user requests repetition.
-- Write short, active sentences with one main idea. State the actor and replace a pronoun when its reference is unclear.
-- Use one term for each concept. Remove filler and unnecessary jargon.
 - Explain why a decision matters and state the conditions under which a mechanism or action applies.
-- Preserve facts, commitments, dependencies, and genuine uncertainty. Identify missing context without inventing facts.
+- Apply cognitive-clarity-refactor standards: group related assertions under bold category anchors, convert multi-clause prose into single-thought declarative child bullets, and replace conditional text walls with decision tables.
 
 ## 3. Decide Which Changes Add Value
 
@@ -43,7 +41,7 @@ Useful inventory instructions include:
 
 - For each worthwhile issue, write three alternatives that differ meaningfully in structure, emphasis, or detail. Explain removal or relocation when that resolves a structural problem better than rewording.
 - Preserve facts, commitments, conditions, dependencies, and the source's degree of certainty. Keep unresolved questions visible. Flag any alternative that changes substance or requires a decision beyond wording.
-- Use the bullet-first-refactor skill when restructuring dense Markdown into clear bullets. Apply the user's approved changes while retaining the skill's preservation checks for unaffected information.
+- Use the cognitive-clarity-refactor skill when restructuring dense Markdown into clear bullets. Apply the user's approved changes while retaining the skill's preservation checks for unaffected information.
 - Check every alternative against the shared writing principles and its passage-specific acceptance criteria. Confirm clear actors and references, consistent terms, sufficient explanation, appropriate certainty, and preserved conditions.
 - Insert the alternatives beside the original passage. Retain the user's comment and label each option with its issue identifier:
 

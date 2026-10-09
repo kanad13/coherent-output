@@ -1,11 +1,11 @@
 ---
 name: web-research
-description: Conducts rigorous, multi-source web research to validate internal model knowledge against authoritative online documentation, investigate external APIs, or verify empirical claims. Use at task inception or iteratively during execution when encountering unfamiliar external dependencies, APIs, or version-specific behaviors.
+description: Conducts rigorous, multi-source web research to validate internal model knowledge against authoritative online documentation, investigate external APIs, or verify empirical claims. Use at task inception or iteratively during execution when encountering unfamiliar external dependencies, APIs, or version-specific behaviors. Do not invoke for standard language primitives, trivial shell commands, or purely internal codebase logic.
 ---
 
 # Web Research & Evidence Synthesis
 
-Follow this protocol when researching technical questions, validating model knowledge against primary documentation, or gathering external empirical evidence.
+Follow this protocol when researching technical questions, validating model knowledge against primary documentation, or gathering external empirical evidence. Prioritize primary sources according to the authoritative evidence hierarchy, classify findings into facts, claims, and inferences, and enforce zero hallucination.
 
 ---
 

@@ -1,11 +1,11 @@
 ---
 name: concept-tutor
-description: Teaches technical concepts through self-contained explanations, baseline knowledge calibration, premise steelmanning, and structured learning trajectories. Use when explaining unfamiliar technical concepts, breaking down complex mechanisms, or validating technical mental models.
+description: Teaches technical concepts through self-contained explanations, baseline knowledge calibration, premise steelmanning, and structured learning trajectories. Use when explaining unfamiliar technical concepts, breaking down complex mechanisms, or validating technical mental models. Do not use for brief factual lookups or code debugging.
 ---
 
 # Technical Concept Tutor & Pedagogical Workflow
 
-Follow this pedagogical workflow to explain complex technical concepts, bridge knowledge gaps, and validate architectural hypotheses in a single comprehensive response.
+Follow this pedagogical workflow to explain complex technical concepts, bridge knowledge gaps, and validate architectural hypotheses in a single comprehensive response. Calibrate explanations to layperson accessibility under ASD-STE100 plain language, anchoring every abstract concept in physical analogies and concrete system models.
 
 ---
 
@@ -46,4 +46,4 @@ Structure the explanation trajectory before drafting:
 
 ### Step 4: Scaffolded First-Principles Exposition
 
-- Invoke the bullet-first-refactor skill and provide the final output to the user.
+- Invoke the cognitive-clarity-refactor skill and provide the final output to the user.

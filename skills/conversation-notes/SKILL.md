@@ -1,11 +1,11 @@
 ---
 name: conversation-notes
-description: Synthesizes multi-turn conversations into comprehensive, self-contained, book-like notes capturing all decisions, explanations, code snippets, and rationale adhering to ASD-STE100 plain language. Use when wrapping up a session, summarizing a long discussion, or compiling project documentation from chat history.
+description: Synthesizes multi-turn conversations into comprehensive, self-contained, book-like notes capturing all decisions, explanations, code snippets, and rationale adhering to ASD-STE100 plain language. Use when wrapping up a session, summarizing a long discussion, or compiling project documentation from chat history. Do not use for mid-conversation status updates or brief meeting minutes.
 ---
 
 # Conversation to Comprehensive Notes
 
-Follow this protocol to transform a multi-turn conversation into structured, cohesive and coherent text, that an independent reader can understand without the original chat transcript.
+Follow this protocol to transform a multi-turn conversation into structured, cohesive, and coherent documentation that an independent reader can understand without the original chat transcript. Synthesize all architectural rationale, decisions, and verified artifacts into a permanent standalone reference.
 
 ---
 
