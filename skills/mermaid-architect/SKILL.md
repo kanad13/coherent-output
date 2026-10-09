@@ -17,16 +17,8 @@ Follow this protocol to design, verify, and insert native Mermaid diagrams into 
   2. Exactly one fenced Mermaid code block (` ```mermaid ` ... ` ``` `) placed at a valid block boundary immediately following the passage introducing the concept.
   - **No Headings for Captions:** Never use Markdown headings (`#`, `##`, `###`) for captions to protect document Table of Contents hierarchy.
   - **No Prose Injections:** Never inject introductory summaries or transitions into the source document.
+- **Explicit Subgraph Namespaces:** When grouping nodes into subgraphs, declare both an alphanumeric programmatic identifier and an explicit quoted display title: `subgraph SubgraphId ["Display Title"] ... end`.
 - **Cross-Theme Styling Directives (Appendix B):** Ensure full visual contrast and legibility in both light and dark editor themes. Apply categorical token classes (`c1` through `c5`) defined in Appendix B. Never hardcode font colors (`color:#...`) or connector stroke colors (`linkStyle`); leave text and connectors unassigned so the host viewer automatically applies native theme styling.
-- **Flowchart Semantic Shape Grammar:** Use standard semantic shapes consistently:
-  - `([Stadium / Pill])`: Terminal endpoints, external callers, client applications, start/end states.
-  - `[Rectangle]`: Processing steps, computations, actions, microservice handlers.
-  - `{Diamond}`: Decision points, conditional branches, guard evaluations.
-  - `[(Cylinder)]`: Persistent databases, caches, session stores, disk storage.
-  - `((Circle))`: Event triggers, pub/sub messages, signals, event stream topics.
-  - `{{Hexagon}}`: Business rules, policy evaluations, cryptographic operations.
-  - `[/Parallelogram/]`: Input / Output payloads, external network data.
-  - `subgraph Name ["Display Title"] ... end`: System boundaries, namespaces, VPCs, trust zones.
 - **Layout & Anti-Noodle Rules:**
   - Cap individual diagrams at a maximum of 10–12 nodes. Break larger systems into separate overview and subsystem diagrams ("peel the onion").
   - Default to `TD` for lifecycles, hierarchies, and decision trees; default to `LR` for pipelines and time sequences.
@@ -56,7 +48,6 @@ Follow this protocol to design, verify, and insert native Mermaid diagrams into 
 
 ### Phase 3: Construct Native Mermaid Diagrams
 
-- Apply the semantic shape grammar and subgraphs.
 - Bind all nodes to categorical theme classes (`c1` through `c5`) from Appendix B based on logical component tier.
 - Include the active theme definitions (defaulting to Theme A) at the head of every flowchart.
 - Keep node labels concise (2–6 words) and enclose them in double quotes.
