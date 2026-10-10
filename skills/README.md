@@ -38,7 +38,7 @@ Skills are activated through two complementary channels:
 
 1. **Autonomous Policy Routing (`AGENTS.md` Section 5):**
    - The harness pre-loads skill names and paths in the system prompt.
-   - The parent policy in `AGENTS.md` tells the agent _when_ it must not improvise (e.g., `"When committing, use commit-scribe"`).
+   - The universal directive in `AGENTS.md` tells the agent _when_ it must not improvise (e.g., `"When committing, use commit-scribe"`).
    - The model matches the named policy to its pre-loaded skills catalog and reads the instructions without requiring user intervention.
 2. **Explicit User Invocations (Slash Commands):**
    - The user explicitly calls a skill in chat (e.g., `/commit-scribe`, `/repo-evergreen-sync`, `/web-research`).
@@ -137,7 +137,7 @@ The library provides 14 situational skills organized by operational domain:
 
 | Skill                                           | Description                                                                                            |
 | :---------------------------------------------- | :----------------------------------------------------------------------------------------------------- |
-| [test-strategist](test-strategist/SKILL.md)     | Assess repository topology, evaluate harness deltas, and adapt test portfolios.                        |
+| [test-strategist](test-strategist/SKILL.md)     | Formulate test strategies, audit verification harnesses, and adapt test portfolios.                    |
 | [claim-validator](claim-validator/SKILL.md)     | Stress-test claims, proposals, and strategies against verified evidence.                               |
 | [worth-the-squeeze](worth-the-squeeze/SKILL.md) | Audit proposals, migrations, and refactors against empirical ROI and friction without compliance bias. |
 | [web-research](web-research/SKILL.md)           | Conduct multi-source web research with strict source hierarchy and citation trails.                    |
@@ -153,10 +153,10 @@ The library provides 14 situational skills organized by operational domain:
 
 ### Architecture, Design & Discovery
 
-| Skill                                               | Description                                                                                                            |
-| :-------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------- |
-| [project-scaffolding](project-scaffolding/SKILL.md) | Plan and establish minimal repository structure, technical foundations, testing harnesses, and development continuity. |
-| [mermaid-architect](mermaid-architect/SKILL.md)     | Design and insert compilable native Mermaid architecture and workflow diagrams.                                        |
+| Skill                                               | Description                                                                               |
+| :-------------------------------------------------- | :---------------------------------------------------------------------------------------- |
+| [project-scaffolding](project-scaffolding/SKILL.md) | Guide discovery, minimal stack selection, test harness setup, and durable project memory. |
+| [mermaid-architect](mermaid-architect/SKILL.md)     | Design and insert compilable native Mermaid architecture and workflow diagrams.           |
 
 ### Learning & Pedagogy
 

@@ -1,13 +1,11 @@
 ---
 name: project-scaffolding
-description: Plan and establish minimal repository structure, technical foundations, testing harnesses, and development continuity for new projects or young repositories. Grounds requirements, validates smallest viable stacks, selects proportionate layouts, and embeds durable project memory. Use at project inception or when repairing missing repository foundations. Do not invoke for routine feature development, ordinary handoffs, or established project restructuring.
+description: Guides autonomous discovery, minimal technical stack selection, layout scaffolding, test harness setup, and durable project memory for new projects. Use when bootstrapping a project from an initial idea, scaffolding foundations, or establishing multi-session continuity. Do not invoke for routine feature development, ordinary handoffs, or established project restructuring.
 ---
-
-[LOOKOUT: This skill has an identify crisis. I want it when say starting a new project. I say...this is my idea and I want to develop it further. So then immediately there are a few things that should happen e.g. a readme with blah blah content, areehctureal decision records are tracked, plan is tracked and updated, etc. I have mentioned many of these things already in the skill below. But you see we can't anticipate every kind of project. Each project has different requirements and needs different things. So this skill does not say always do this and that. But gives sufficient isnutrcitons to the human or ai agent scaffolding the new project to go find out and do things on its own and then to scaffold the project. ]
 
 # Project Scaffolding & Development Continuity
 
-Establish the minimal viable technical foundation, directory layout, verification harness, and operational memory required for an initial feature slice and seamless multi-session continuity. Prevent starter-stack bloat and premature governance by anchoring every file, dependency, and convention in verified project requirements.
+Every project presents distinct requirements, operational constraints, and runtime targets. This skill does not impose an inflexible starter template or attempt to predict future complexity. Instead, it equips the engineer or AI agent with a universal discovery protocol and foundational scaffolding checklist: clarify operational boundaries, validate the smallest viable stack, scaffold a proportionate directory layout, provision a verified baseline test harness via `test-strategist`, and embed durable project memory (`README.md`, `AGENTS.md`, and decision tracking) for friction-free multi-session development.
 
 ---
 

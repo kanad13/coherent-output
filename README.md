@@ -20,52 +20,63 @@ Run deployment from this checkout:
 
 ## 2. Source Layout
 
-| Location                        | Purpose                                                                     |
-| :------------------------------ | :-------------------------------------------------------------------------- |
-| [AGENTS.md](AGENTS.md)          | Universal baseline parent directive: persona, workflow loop, and boundaries |
-| [skills/](skills/README.md)     | Situational child playbooks formatted to the Agent Skills open standard     |
-| [rules/](rules/)                | Scoped file-pattern policies activated conditionally via glob triggers      |
-| [adapters/](adapters/README.md) | Tool-specific configuration blueprints, hook templates, and runtime bridges |
-| [scripts/](scripts/README.md)   | Deployment, synchronization, and automated verification scripts             |
-| [.prettierrc](.prettierrc)      | Repository formatting standards                                             |
+| Location                        | Purpose                                                                             |
+| :------------------------------ | :---------------------------------------------------------------------------------- |
+| [AGENTS.md](AGENTS.md)          | Universal baseline directive: persona, workflow loop, boundaries, and policy router |
+| [skills/](skills/README.md)     | Situational child playbooks formatted to the Agent Skills open standard             |
+| [rules/](rules/)                | Scoped file-pattern policies activated conditionally via glob triggers              |
+| [adapters/](adapters/README.md) | Tool-specific configuration blueprints, hook templates, and runtime bridges         |
+| [scripts/](scripts/README.md)   | Deployment, synchronization, and automated verification scripts                     |
+| [.prettierrc](.prettierrc)      | Repository formatting standards                                                     |
 
 Local templates are generated into `.generated/` during installation and are excluded from Git.
 
 ---
 
-## 3. Architecture: The Parent-Child Operating Pattern
+## 3. Architecture: Universal Directives vs. Contextual Execution
 
-[LOOKOUT: The parent/child contract can benefit from better aritculaituon. Its a bit confusing read right now. Let me tell you my view: I as a parent tell my child be safe, keep yourself hydrated, when in danger seek help from grownups, etc. These are basic things my child should follow irrespective of whether they are at school, playground, home, etc. I can not anticipate every time, what new challenges they will face. The challenges may be different each time based on time, place, context. Its the same with the skills and approaches in this repo. The agents.md our sometimes rules.md will be like a set of instructions given by a parent that are universal in nature while certain skills or hooks or other things will be a certain set of instructions that get invoked based on context or based on these skills/hooks being explicitly invoked. So instructions are not parent/child, but instructions are universal/contextual. The parent wants to make their child capable of tacking any scenario, any changing circumstance, and be ready. This clarity in thinking would lead to a complete rehaul of this section as well as any other aspects of the repo that you see.]
-[LOOKOUT: There is another layer of the universal/contextual too. Even within application of say skills, e.g. about saying the test-strategist skill. We dont know what all different scenarios would we encounter where we want to create test strategy from scratch, update strategy, use different tools, etc. The test-strategist skill should not anticipate of every scenario. But give sufficient instructions like a checklist...hey did you think of this, did you think of that, an ideal strategy is supposed to have this, not that. Ideally strategy and execution of tests should be invoked in these scenarios and not that, etc. And then the actual test strategy for that repo or tool or system sits in say the TESTING.MD file or whatever. Thats the real home of the test strategy. The test-strategist is the one which helps formulate and maintain the test strategy for a particular context. But does not formulate the strategy in itself. The human or ai coding tool working on the actual project should do that. Please stellman my intent and tell me your understanding of it.]
+This repository structures agent steering across two complementary operational dimensions: **Universal Directives** and **Contextual Execution**.
 
-This repository organizes agent steering into a high-signal hierarchy that prevents instruction bloat and cognitive friction:
+A parent equips a child with universal, non-negotiable principles: stay safe, maintain hydration, and seek adult guidance when facing danger. The child applies these principles in any environment—whether at home, school, or the playground. The parent does not micromanage or anticipate every isolated hazard in advance; instead, the parent prepares the child to assess and navigate changing circumstances responsibly.
+
+Similarly, instructions in this repository divide into universal baselines and situational playbooks:
 
 ```
 ┌────────────────────────────────────────────────────────────────────────┐
-│ THE PARENT CONTRACT: AGENTS.md (Universal Baseline)                    │
+│ UNIVERSAL DIRECTIVE: AGENTS.md (System Baseline)                       │
 │ "Stay safe, communicate clearly, and follow the 4-step workflow."       │
-│ • Universal Communication Register (ASD-STE100, zero filler)           │
+│ • Universal Communication Register (ASD-STE100, active voice)          │
 │ • The 4-Step Workflow Progression (Ground ➔ Plan ➔ Execute ➔ Verify)   │
 │ • Escalation Boundaries (Autonomous by default; 3 explicit pause gates) │
 │ • Decision Rationale ("Why, Not What")                                 │
-│ • Situational-Agnostic: Governs coding, research, writing, and chat    │
+│ • Domain-Agnostic: Governs coding, research, writing, and chat         │
 └───────────────────────────────────┬────────────────────────────────────┘
                                     │ Activates on demand:
          ┌──────────────────────────┼──────────────────────────┐
          ▼                          ▼                          ▼
 ┌─────────────────┐        ┌─────────────────┐        ┌─────────────────┐
-│ Situational     │        │ Situational     │        │ Scoped Rules    │
-│ Skills (Child)  │        │ Skills (Child)  │        │ (rules/*.md)    │
-│ • commit-scribe │        │• test-strategist│        │• Glob-triggered │
-│ • repo-evergreen│        │• cognitive-     │        │  rules loaded   │
-│   -sync         │        │  clarity-       │        │  only on match  │
-│                 │        │  refactor       │        │                 │
+│ Situational     │        │ Scoped Rules    │        │ Lifecycle Hooks │
+│ Skills          │        │ (rules/*.md)    │        │ (adapters/hooks)│
+│ • test-strategist│       │ • Glob triggers │        │ • Safety gates  │
+│ • project-      │        │   loaded only   │        │ • Formatters    │
+│   scaffolding   │        │   on file match │        │ • Validators    │
+│ • commit-scribe │        │                 │        │                 │
 └─────────────────┘        └─────────────────┘        └─────────────────┘
 ```
 
-1. **The Parent Baseline (`AGENTS.md`):** High-level, positive, and situational-agnostic. It sets the baseline posture independent of domain. It defines the universal 4-step workflow and acts as an autonomous policy router (Section 5) that directs agents toward specific skills when encountering complex procedures.
-2. **The Situational Skills (`skills/*/SKILL.md`):** Deep, specialized playbooks following the [Agent Skills standard](skills/README.md). They operate via **Progressive Disclosure**: harnesses pre-load lightweight metadata (`name` and `description`) into the system prompt, and the agent reads full procedural instructions only when activated. Skills are triggered either autonomously via `AGENTS.md` policy routing or deterministically via user slash commands (e.g., `/commit-scribe`).
-3. **The Scoped Rules (`rules/*.md`):** Reserved exclusively for file-pattern adaptations (`trigger: glob`, e.g. `*.py` or `*.tsx`) that load only when the agent touches matching file paths.
+### The Two Layers of Universal vs. Contextual
+
+1. **System Layer (Directive vs. Playbook):**
+   - **Universal Directives (`AGENTS.md`):** High-level, positive, and domain-agnostic. It establishes operational posture across all tools and tasks. It defines the universal 4-step workflow, communication standards, safety boundaries, and policy routing (Section 5) that directs agents to specialized skills when encountering multi-step procedures.
+   - **Contextual Capabilities (`skills/`, `rules/`, `adapters/hooks`):** Activated only when context demands them:
+     - **Situational Skills (`skills/*/SKILL.md`):** Specialized playbooks following the [Agent Skills standard](skills/README.md). Harnesses pre-load lightweight metadata (`name` and `description`) into the system prompt (**Progressive Disclosure**), and the agent reads full procedural bodies only when activated via `AGENTS.md` policy routing or user slash commands (e.g., `/test-strategist`).
+     - **Scoped Rules (`rules/*.md`):** Loaded conditionally based on file-pattern triggers (`trigger: glob`, e.g. `*.py` or `*.tsx`) when the agent accesses matching paths.
+     - **Lifecycle Hooks (`adapters/antigravity/hooks`):** Deterministic guardrails executed by the harness on runtime tool events (`PreToolUse`, `PostToolUse`).
+
+2. **Skill Layer (Invariant Protocol vs. Project Artifact):**
+   - The universal/contextual separation also recurs within individual skills. A skill such as `test-strategist` or `project-scaffolding` does not attempt to anticipate every unique project topology or hardcode a static plan.
+   - Instead, the skill provides **universal invariants, discovery checklists, and verification heuristics** (e.g., mapping execution surfaces, cost-to-evidence parity, defect reproduction, zero assertion weakening).
+   - The **concrete contextual strategy** belongs to the target project itself (stored in that repository's `TESTING.md`, `README.md`, or architecture records). The skill provides the repeatable protocol to formulate, audit, and evolve that contextual strategy.
 
 ---
 
@@ -112,7 +123,7 @@ When any AI coding agent modifies rules, skills, or adapters in this repository,
 
    Ensures that `.generated/codex/AGENTS.md` is re-composed from updated rules and that local hook templates match the active repository path.
 
-1. **Execute Full Verification:**
+2. **Execute Full Verification:**
 
    ```bash
    ./scripts/verify.sh
@@ -137,6 +148,7 @@ For authoring standards, frontmatter contracts, and progressive disclosure archi
 | [email-rewrite](skills/email-rewrite/SKILL.md)                           | Rewrite professional correspondence                                              |
 | [markdown-audit](skills/markdown-audit/SKILL.md)                         | Inspect documentation structure and links                                        |
 | [mermaid-architect](skills/mermaid-architect/SKILL.md)                   | Create Mermaid diagrams                                                          |
+| [project-scaffolding](skills/project-scaffolding/SKILL.md)               | Discover requirements, scaffold minimal stacks, and establish project memory     |
 | [repo-evergreen-sync](skills/repo-evergreen-sync/SKILL.md)               | Synchronize repository and resolve cascading drift                               |
 | [test-strategist](skills/test-strategist/SKILL.md)                       | Strategize test coverage and adapt harnesses mid-development                     |
 | [web-research](skills/web-research/SKILL.md)                             | Research external questions using primary evidence                               |

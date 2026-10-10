@@ -64,6 +64,7 @@ Do not improvise complex, multi-step procedures. Activate the dedicated skill up
 
 - **Before staging, committing, or pushing git changes:** Activate `commit-scribe`.
 - **After structural refactors, multi-file edits, or schema/contract changes:** Activate `repo-evergreen-sync`.
+- **When starting a new project, establishing repository foundations, or setting up development continuity:** Activate `project-scaffolding`.
 - **When auditing coverage, establishing harnesses, or debugging brittle tests:** Activate `test-strategist`.
 - **When evaluating proposals, architectural refactors, or dependency additions:** Activate `worth-the-squeeze`.
 - **When stress-testing claims, factual assertions, or technical strategies against evidence:** Activate `claim-validator`.

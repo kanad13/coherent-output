@@ -1,15 +1,11 @@
 ---
 name: test-strategist
-description: Formulate, audit, and adapt project-specific testing strategies across code evolution, interface changes, runtime updates, or harness audits. Maps execution surfaces, selects risk-proportionate verification tiers, reconciles test portfolios, and enforces non-negotiable execution and assertion integrity. Use during planning, harness setup, and code modifications. Do not invoke for routine single-test runs or prose-only documentation edits.
+description: Formulates project-specific test strategies, audits verification harnesses, and reconciles test portfolios following code modifications or architectural drift. Use when establishing a testing strategy, auditing existing coverage, or adapting tests after changes. Do not invoke for routine single-test runs or prose-only documentation edits.
 ---
-
-[LOOKOUT: It feels like we are describing the full skill inside the front matter above. Should the focus not be on saying... hey use this skill to formulate a test strategy or to help you improve/review the existing test coverage based off the latest code changes?]
 
 # Adaptive Test Strategy & Verification Protocol
 
-[LOOKOUT: There is an identify crisi here. We want this skill not to help define the full strategy for any kind of scenario or repo out there. We simply can't anticipate that. The objective is to say hey .. universally, irrespective of system/tool, you should ensure we do this, and that. Or in case blah blah change has happened in repo, ensure the test strategy gets updated and the tests get updated and executed. Or if its a new repo or a new feature being introduced, then you should ensure you have tested the feature in this way e.g. visually takings crneennshots and checking them, or making changes yourself as part of testing and seeing if the system behaves as expected. Based on this, can you evaluate the full skill and help me improve it?]
-
-Assess repository topology, evaluate test harness deltas, select risk-proportionate verification methods, and reconcile test portfolios alongside functional evolution without dogmatic tooling bias. Protect observable behavior and system boundaries through fast local feedback loops, reproducible execution, and non-negotiable assertion integrity.
+Formulate, audit, and evolve repository test strategies using universal verification invariants and structured checklists. This skill does not prescribe a static, pre-packaged test strategy for all systems; the concrete test strategy belongs in the target project's `TESTING.md` or `README.md`. Use this skill to evaluate project topology, enforce execution integrity, reconcile test portfolios after code changes, and verify user-facing features directly.
 
 ---
 
@@ -144,7 +140,7 @@ Never declare testing complete without executing the relevant suite and inspecti
   - If the implementation has a defect, fix the source code.
   - If the test expectation is incorrect, update the assertion only after verifying against intended product requirements.
 - **Determinism & Flake Eradication:** Tests must produce identical results across repeated runs. Investigate intermittent failures, race conditions, global state leakage, and execution-order dependencies immediately.
-- **Visual & UI Verification:** When validating UI or layout changes, capture representative states and inspect rendered elements or image diffs. Never update baseline snapshots blindly to mask visual regressions.
+- **Visual & Interactive Verification:** When introducing new features or validating UI/layout surfaces, capture representative states (e.g., screenshots or rendered element trees) and perform hands-on interactive validation: execute inputs, observe runtime state transitions, and verify observable system responses. Never update baseline snapshots blindly to mask visual regressions.
 - **Transparent Blocker Reporting:** If an authorized check cannot run due to missing environment dependencies, credentials, or hardware constraints, document the blocker and remaining risk explicitly. Do not disguise omitted checks as passing verification.
 
 ---
