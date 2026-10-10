@@ -35,6 +35,9 @@ Local templates are generated into `.generated/` during installation and are exc
 
 ## 3. Architecture: The Parent-Child Operating Pattern
 
+[LOOKOUT: The parent/child contract can benefit from better aritculaituon. Its a bit confusing read right now. Let me tell you my view: I as a parent tell my child be safe, keep yourself hydrated, when in danger seek help from grownups, etc. These are basic things my child should follow irrespective of whether they are at school, playground, home, etc. I can not anticipate every time, what new challenges they will face. The challenges may be different each time based on time, place, context. Its the same with the skills and approaches in this repo. The agents.md our sometimes rules.md will be like a set of instructions given by a parent that are universal in nature while certain skills or hooks or other things will be a certain set of instructions that get invoked based on context or based on these skills/hooks being explicitly invoked. So instructions are not parent/child, but instructions are universal/contextual. The parent wants to make their child capable of tacking any scenario, any changing circumstance, and be ready. This clarity in thinking would lead to a complete rehaul of this section as well as any other aspects of the repo that you see.]
+[LOOKOUT: There is another layer of the universal/contextual too. Even within application of say skills, e.g. about saying the test-strategist skill. We dont know what all different scenarios would we encounter where we want to create test strategy from scratch, update strategy, use different tools, etc. The test-strategist skill should not anticipate of every scenario. But give sufficient instructions like a checklist...hey did you think of this, did you think of that, an ideal strategy is supposed to have this, not that. Ideally strategy and execution of tests should be invoked in these scenarios and not that, etc. And then the actual test strategy for that repo or tool or system sits in say the TESTING.MD file or whatever. Thats the real home of the test strategy. The test-strategist is the one which helps formulate and maintain the test strategy for a particular context. But does not formulate the strategy in itself. The human or ai coding tool working on the actual project should do that. Please stellman my intent and tell me your understanding of it.]
+
 This repository organizes agent steering into a high-signal hierarchy that prevents instruction bloat and cognitive friction:
 
 ```
@@ -102,14 +105,19 @@ Primary Mac (Make Changes)                Secondary Mac (Receive Changes)
 When any AI coding agent modifies rules, skills, or adapters in this repository, the agent must adhere to the following two-step contract before concluding work:
 
 1. **Synchronize Local State:**
+
    ```bash
    ./scripts/deploy.sh
    ```
+
    Ensures that `.generated/codex/AGENTS.md` is re-composed from updated rules and that local hook templates match the active repository path.
-2. **Execute Full Verification:**
+
+1. **Execute Full Verification:**
+
    ```bash
    ./scripts/verify.sh
    ```
+
    Validates symlink integrity, executes the deployment isolation test suite, and checks Prettier formatting across all files.
 
 ---

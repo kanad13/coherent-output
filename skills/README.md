@@ -123,7 +123,7 @@ When adding executable code or validation logic, use the appropriate mechanism:
 
 ## 3. Skills Inventory
 
-The library provides 13 situational skills organized by operational domain:
+The library provides 14 situational skills organized by operational domain:
 
 ### Repository Operations & Git Hygiene
 
@@ -153,9 +153,10 @@ The library provides 13 situational skills organized by operational domain:
 
 ### Architecture, Design & Discovery
 
-| Skill                                           | Description                                                                     |
-| :---------------------------------------------- | :------------------------------------------------------------------------------ |
-| [mermaid-architect](mermaid-architect/SKILL.md) | Design and insert compilable native Mermaid architecture and workflow diagrams. |
+| Skill                                               | Description                                                                                                            |
+| :-------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------- |
+| [project-scaffolding](project-scaffolding/SKILL.md) | Plan and establish minimal repository structure, technical foundations, testing harnesses, and development continuity. |
+| [mermaid-architect](mermaid-architect/SKILL.md)     | Design and insert compilable native Mermaid architecture and workflow diagrams.                                        |
 
 ### Learning & Pedagogy
 
