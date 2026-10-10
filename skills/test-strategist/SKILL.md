@@ -1,35 +1,35 @@
 ---
 name: test-strategist
-description: Formulates project-specific test strategies, audits verification harnesses, and reconciles test portfolios following code modifications or architectural drift. Use when establishing a testing strategy, auditing existing coverage, or adapting tests after changes. Do not invoke for routine single-test runs or prose-only documentation edits.
+description: Formulates, audits, and maintains project-specific testing strategies in TESTING.md. Enforces universal verification invariants, tier selection, and assertion integrity. Use when defining test architectures, reviewing coverage gaps after changes, or resolving brittle tests. Do not invoke for routine single-test runs or prose-only documentation edits.
 ---
 
 # Adaptive Test Strategy & Verification Protocol
 
-Formulate, audit, and evolve repository test strategies using universal verification invariants and structured checklists. This skill does not prescribe a static, pre-packaged test strategy for all systems; the concrete test strategy belongs in the target project's `TESTING.md` or `README.md`. Use this skill to evaluate project topology, enforce execution integrity, reconcile test portfolios after code changes, and verify user-facing features directly.
+Formulate, audit, and evolve repository test strategies using universal verification invariants and structured checklists. This skill does not prescribe a static, hardcoded test plan for all systems. The canonical test strategy belongs in the target project's `TESTING.md` (or the testing section in `README.md`). When invoked, evaluate project reality, formulate or reconcile `TESTING.md`, enforce universal verification invariants, and verify user-facing features directly.
 
 ---
 
-## 1. Operating Modes & Scope Discipline
+## 1. The Canonical Testing Strategy Invariant (`TESTING.md`)
 
-Operate under one of three distinct authorization modes:
+The target repository's `TESTING.md` is the single source of truth for how that specific project is verified. This skill does not replace project documentation; it formulates, audits, and maintains it.
 
-- **Strategy & Planning Mode:**
-  - Inspect repository topology, interface contracts, and requirements delta.
-  - Formulate verification matrix, recommended tooling, test cases, and execution commands.
-  - Do not modify existing files, install dependencies, or provision test harnesses unless explicitly authorized.
-- **Harness Audit Mode:**
-  - Audit existing test suites, runners, fixtures, and configuration against current architectural boundaries.
-  - Identify coverage gaps, brittle assertions, slow test paths, and capability deltas.
-  - Present an evidence-backed diagnostic audit before proposing modifications.
-- **Implementation & Verification Mode:**
-  - Provision or adapt the test harness, reconcile the test portfolio (add, update, prune, retain), execute checks in the target environment, and report concrete evidence.
-  - Confine changes to the authorized feature or defect boundary.
+Upon invocation, execute the following triage:
 
-Preserve user approval gates. A strategy or audit deliverable does not authorize deployment, commits, or upstream git pushes.
+1. **Check Strategy Presence:**
+   - Inspect the repository for a canonical `TESTING.md` (or a dedicated testing section within `README.md`).
+2. **If `TESTING.md` is Missing:**
+   - Formulate and scaffold `TESTING.md`.
+   - Inspect the codebase to discover execution surfaces, runtime requirements, and existing test commands.
+   - Define verification tiers, runner commands, failure modes, test vector matrices, and environment setup required for this project.
+   - Establish the project's invocation workflows (e.g., local fast unit tests vs. milestone end-to-end runs).
+3. **If `TESTING.md` Exists:**
+   - Audit current repository reality against `TESTING.md`.
+   - Identify drift: new endpoints, modified function signatures, changed runtime dependencies, brittle mocks, or coverage gaps.
+   - Reconcile the test portfolio (Add, Update, Prune, Retain) and synchronize `TESTING.md` with new test commands, fixtures, or contracts.
 
 ---
 
-## 2. Phase 1: Repository Topology & Boundary Mapping
+## 2. Phase 1: Repository Topology & Surface Mapping Checklist
 
 Before designing or modifying tests, inspect the repository to map observable behavior, execution surfaces, and system boundaries:
 
@@ -49,9 +49,9 @@ Before designing or modifying tests, inspect the repository to map observable be
 
 ---
 
-## 3. Phase 2: Verification Tier Selection
+## 3. Phase 2: Verification Tier Selection Checklist
 
-Select verification methods proportionate to changed behavior and risk profile. Treat the following taxonomy as a decision matrix, not a mandatory checklist:
+Select verification methods proportionate to changed behavior and risk profile. Treat the following taxonomy as a decision matrix for what belongs in `TESTING.md`:
 
 | Verification Tier         | Primary Target                                               | Trigger Condition                                                                   |
 | :------------------------ | :----------------------------------------------------------- | :---------------------------------------------------------------------------------- |
@@ -75,9 +75,9 @@ Select verification methods proportionate to changed behavior and risk profile. 
 
 ---
 
-## 4. Phase 3: Harness Capability Audit & Adaptive Provisioning
+## 4. Phase 3: Harness Audit & Adaptive Provisioning
 
-Inspect existing test tooling before introducing new dependencies.
+Inspect existing test tooling before introducing new dependencies:
 
 ### Capability Delta Assessment
 
@@ -103,7 +103,7 @@ When provisioning or upgrading a test harness:
 
 ---
 
-## 5. Phase 4: Test Portfolio Reconciliation
+## 5. Phase 4: Test Portfolio Reconciliation (Add / Update / Prune / Retain)
 
 For every modified or proposed behavior, assign one of four explicit dispositions:
 
@@ -126,7 +126,7 @@ Audit changed surfaces against concrete edge cases and failure modes:
 
 ---
 
-## 6. Phase 5: Execution Integrity & Assertion Discipline
+## 6. Phase 5: Universal Execution Invariants & Assertion Discipline
 
 Never declare testing complete without executing the relevant suite and inspecting actual outputs:
 
@@ -145,13 +145,13 @@ Never declare testing complete without executing the relevant suite and inspecti
 
 ---
 
-## 7. Phase 6: Strategy Synchronization & Handoff
+## 7. Phase 6: Living Strategy Synchronization in `TESTING.md`
 
 Keep repository documentation aligned with test suite evolution:
 
-- **Living Documentation Sync:**
-  - If test commands, configuration, or environment setup change, update the testing instructions in `README.md`.
-  - Maintain a dedicated `TESTING.md` only when multi-tier test suites, fixture setups, or CI environments exceed the scannable limits of `README.md`.
+- **Living Strategy Synchronization:**
+  - Record active test runner commands, setup prerequisites, fixture management, and verification tiers in `TESTING.md` (or the testing section in `README.md`).
+  - Document environment prerequisites and platform-specific runner behaviors.
 - **Evidence Reporting:**
   - Surface affected behavior and selected verification tiers.
   - Itemize tests added, updated, pruned, or retained.
@@ -165,10 +165,8 @@ Keep repository documentation aligned with test suite evolution:
 
 ## 8. Completion Criteria
 
-- **In Strategy & Planning Mode:** Deliver an evidence-grounded verification matrix, tool selections, and test scenarios. Do not mutate source files or test suites.
-- **In Harness Audit Mode:** Deliver a clear diagnostic delta separating existing coverage reality from architectural requirements.
-- **In Implementation Mode:**
-  - Test dispositions (add, update, prune, retain) are justified and implemented.
-  - Affected test suites run cleanly with passing assertions.
-  - Zero weakened assertions or masked defects exist.
-  - Project testing documentation accurately reflects current runner commands and setup.
+- `TESTING.md` exists (or is updated) in the target repository and accurately reflects current runner commands, tiers, and setup.
+- Test dispositions (add, update, prune, retain) are justified and implemented.
+- Affected test suites run cleanly with passing assertions.
+- Zero weakened assertions or masked defects exist.
+- Visual and interactive verification is performed for user-facing surfaces.

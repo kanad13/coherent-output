@@ -131,28 +131,15 @@ When any AI coding agent modifies rules, skills, or adapters in this repository,
 
    Validates symlink integrity, executes the deployment isolation test suite, and checks Prettier formatting across all files.
 
----
+## 7. Skills & Authoring Architecture
 
-## 7. Skills Inventory
+Situational agent playbooks reside in [skills/](skills/README.md) and adhere to the [Agent Skills open standard](https://agentskills.io).
 
-For authoring standards, frontmatter contracts, and progressive disclosure architecture, see [skills/README.md](skills/README.md).
+To eliminate documentation drift and preserve single-source-of-truth integrity, canonical skill documentation is centralized:
 
-| Skill                                                                    | Purpose                                                                          |
-| :----------------------------------------------------------------------- | :------------------------------------------------------------------------------- |
-| [articulation-review](skills/articulation-review/SKILL.md)               | Review document wording with inline alternatives and apply selections            |
-| [cognitive-clarity-refactor](skills/cognitive-clarity-refactor/SKILL.md) | Refactor text into low-cognitive-load, scannable Markdown without losing meaning |
-| [claim-validator](skills/claim-validator/SKILL.md)                       | Evaluate claims against evidence                                                 |
-| [commit-scribe](skills/commit-scribe/SKILL.md)                           | Write structured Git commits and push to remote                                  |
-| [concept-tutor](skills/concept-tutor/SKILL.md)                           | Teach technical concepts                                                         |
-| [conversation-notes](skills/conversation-notes/SKILL.md)                 | Turn conversations into standalone notes                                         |
-| [email-rewrite](skills/email-rewrite/SKILL.md)                           | Rewrite professional correspondence                                              |
-| [markdown-audit](skills/markdown-audit/SKILL.md)                         | Inspect documentation structure and links                                        |
-| [mermaid-architect](skills/mermaid-architect/SKILL.md)                   | Create Mermaid diagrams                                                          |
-| [project-scaffolding](skills/project-scaffolding/SKILL.md)               | Discover requirements, scaffold minimal stacks, and establish project memory     |
-| [repo-evergreen-sync](skills/repo-evergreen-sync/SKILL.md)               | Synchronize repository and resolve cascading drift                               |
-| [test-strategist](skills/test-strategist/SKILL.md)                       | Strategize test coverage and adapt harnesses mid-development                     |
-| [web-research](skills/web-research/SKILL.md)                             | Research external questions using primary evidence                               |
-| [worth-the-squeeze](skills/worth-the-squeeze/SKILL.md)                   | Stress-test proposals against objective ROI and trade-offs                       |
+- **Skills Catalog & Categorized Inventory:** For the full list of available skills by operational domain, see [skills/README.md Section 3](skills/README.md#3-skills-inventory).
+- **Authoring Contract & Progressive Disclosure:** For frontmatter guidelines, directory conventions, and discovery mechanics, see [skills/README.md Section 2](skills/README.md#2-skill-authoring-contract).
+- **Autonomous Policy Routing:** For universal triggers directing agents to activate specific skills, see [AGENTS.md Section 5](AGENTS.md#5-situational-skills).
 
 ---
 

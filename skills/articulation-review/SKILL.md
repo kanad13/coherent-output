@@ -11,7 +11,7 @@ Help the user elevate document clarity, logical sequencing, and structural ergon
 
 - Read the full document before proposing local changes. Identify its purpose, audience, governing instructions, and relevant repository context.
 - Identify the requested stage: initial review, another round of options, or finalization of selections. A request for options keeps the original text; a request to apply preferences produces final content.
-- Inspect uncommitted changes before editing. When commits are part of the agreed workflow, use the commit-scribe skill to preserve the annotated draft first. Keep recoverable copies of files outside Git.
+- Inspect uncommitted changes before editing. When commits are part of the agreed workflow, use the commit-scribe skill to preserve the annotated draft first. Rely on Git or designated scratchpad paths rather than untracked workspace copies.
 - For a finalization request, read the earlier concerns and the new selections, then continue at Step 6. Do not generate another set of options unless requested.
 
 ## 2. Understand Feedback and Audit Related Text
@@ -77,9 +77,7 @@ Useful inventory instructions include:
 - Check formatting, links, protected elements, and remaining review residue. Use markdown-audit when navigation or link changes warrant it; run other available checks in proportion to the change.
 - Use commit-scribe when final commits are requested or required. Report the changed files, key decisions, verification results, and commit status.
 
-## Supporting Skills and Maintenance
+## Supporting Skills & Scope Discipline
 
-- Read a named supporting skill from the current available-skills catalog when its step applies. Skill names are instructions to load that workflow, not tool commands or automatic dependencies.
-- If a supporting skill is unavailable, use the decision criteria in this workflow and report the missing specialist step. Do not invent a tool or modify unrelated setup.
+- Read a named supporting skill from the available skills catalog when its step applies. Skill names are instructions to activate that workflow, not automatic tool commands.
 - Keep invocation within the user's authorized task. A review request does not authorize publication, external messages, or edits across unrelated repositories.
-- Maintain this skill from demonstrated failures. Check realistic annotated-review, unannotated-review, and finalization cases when changing its behavior; validate its metadata and update affected references when renaming it.

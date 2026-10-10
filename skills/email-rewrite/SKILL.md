@@ -72,7 +72,7 @@ Draft three distinct, copy-ready candidate emails using ASD-STE100 plain languag
 - Use explicit, defined terms rather than ambiguous pronouns (`it`, `this`).
 - Eliminate corporate clichés, passive evasions, and filler.
 
-Provide **three distinct tactical approaches** for the user to choose from based on your understanding of the context, and the appproroate variety of choices for user to choose from.
+Provide **three distinct tactical approaches** (Draft A: Executive & Bullet-First, Draft B: Contextual & Collaborative, Draft C: Operational & Decision-Focused) with distinct structural emphasis, tone, and strategic rationale.
 
 ### Step 5: Parity & Traceability Audit
 

@@ -46,4 +46,5 @@ Structure the explanation trajectory before drafting:
 
 ### Step 4: Scaffolded First-Principles Exposition
 
-- Invoke the cognitive-clarity-refactor skill and provide the final output to the user.
+- Draft the explanation following the Step 3 plan, progressing methodically from foundational axioms to concrete mechanics, physical analogies, and practical code or system examples.
+- Structure and format the exposition using the scannable Markdown principles of the cognitive-clarity-refactor skill before delivering the final response.

@@ -5,7 +5,7 @@ description: Rigorously stress-tests proposals, architectural refactors, feature
 
 # Worth-the-Squeeze: Independent ROI & Friction Auditor
 
-Use this skill when evaluating whether an engineering proposal, architectural refactor, third-party dependency migration, feature request, or optimization is genuinely worth doing. Maintain strict anti-sycophancy and default to status-quo preservation unless net lifetime utility demonstrably exceeds operational friction.
+Follow this protocol to evaluate whether an engineering proposal, architectural refactor, third-party dependency migration, feature request, or optimization is genuinely worth doing. Maintain strict anti-sycophancy and default to status-quo preservation unless net lifetime utility demonstrably exceeds operational friction.
 
 ---
 

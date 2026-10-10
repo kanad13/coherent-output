@@ -1,183 +1,171 @@
 ---
 name: project-scaffolding
-description: Guides autonomous discovery, minimal technical stack selection, layout scaffolding, test harness setup, and durable project memory for new projects. Use when bootstrapping a project from an initial idea, scaffolding foundations, or establishing multi-session continuity. Do not invoke for routine feature development, ordinary handoffs, or established project restructuring.
+description: Guides autonomous discovery, technical foundation setup, test harness provisioning, and project memory tracking for new projects. Use when bootstrapping a project from an idea, scaffolding repository foundations, or establishing multi-session continuity. Do not invoke for routine feature development, ordinary handoffs, or established project restructuring.
 ---
 
 # Project Scaffolding & Development Continuity
 
-Every project presents distinct requirements, operational constraints, and runtime targets. This skill does not impose an inflexible starter template or attempt to predict future complexity. Instead, it equips the engineer or AI agent with a universal discovery protocol and foundational scaffolding checklist: clarify operational boundaries, validate the smallest viable stack, scaffold a proportionate directory layout, provision a verified baseline test harness via `test-strategist`, and embed durable project memory (`README.md`, `AGENTS.md`, and decision tracking) for friction-free multi-session development.
+Guide autonomous discovery, minimal technical foundation setup, baseline verification, and durable project memory for new projects or young repositories. Projects differ substantially across operational domains (CLI tools, backend APIs, libraries, web services, desktop applications). This skill does not impose an inflexible starter template or anticipate speculative complexity. Instead, it equips the engineer or AI agent with universal discovery checklists and scaffolding protocols: discover operational drivers, validate the smallest viable stack, scaffold proportionate layout, provision baseline verification via `test-strategist`, and embed living project memory (`README.md`, `DECISIONS.md`, `PLAN.md`, `AGENTS.md`) so the project tracks its evolution seamlessly.
 
 ---
 
-## 1. Operating Modes & Scope Discipline
+## 1. Grounding & Project Memory Triage
 
-Operate under one of three distinct authorization modes:
+A project must track its evolution as it develops through canonical living files rather than relying on ephemeral chat context.
 
-- **Discovery & Planning Mode:**
-  - Inspect requirements, target platforms, operational constraints, and technical assumptions.
-  - Formulate the minimal viable architecture, stack selection, and directory layout proposal.
-  - Formulate bounded technical probes for high-risk runtime assumptions.
-  - Zero filesystem writes or package installations occur in this mode.
-- **Drafting Mode:**
-  - Generate reviewable project configuration manifests, instruction drafts, or structural layouts in scratchpad artifacts.
-  - Do not apply changes to active repository source paths without user approval.
-- **Foundation Implementation Mode:**
-  - Materialize the authorized directory structure, initialize manifests, provision the test harness via `test-strategist`, implement the walking skeleton or first feature increment, and verify execution.
-  - Confine implementation strictly to approved project boundaries.
+Upon invocation, execute the following triage:
 
-Preserve user approval gates before provisioning infrastructure, creating files, installing external toolchains, or executing git operations.
+1. **Audit Existing Project State:**
+   - Inspect the current working directory, existing manifests, repository layout, version control history, and available toolchains.
+   - Determine whether the task is a greenfield initialization (0 files) or repairing missing foundations in a young project.
+2. **Establish the Evolution Tracking Contract:**
+   - Confirm that the project has designated homes for project memory:
+     - Canonical entry point and commands (`README.md`).
+     - Architectural drivers, trade-offs, and decision records (`DECISIONS.md` or a dedicated section in `README.md`).
+     - Implementation plan, walking skeleton scope, and milestones (`PLAN.md` or a dedicated section in `README.md`).
+     - Testing strategy, execution surfaces, and commands (`TESTING.md`, established via `test-strategist`).
+     - Operational instructions and agent constraints (`AGENTS.md`).
 
 ---
 
-## 2. Phase 1: Context Grounding & Boundary Definition
+## 2. Phase 1: Operational Drivers & Boundary Discovery Checklist
 
-Inspect repository state, version control history, existing documentation, and available local tools. Ground the project across three core vectors:
+Inspect user requirements and context to discover the foundational project drivers:
 
 - **Operational Context:**
-  - Target audience, primary workflows, and execution environments (CLI, web service, library, background worker, desktop app).
-  - Supported platforms, runtime versions, and deployment destinations.
-  - Firm constraints, language/tooling preferences, and explicit out-of-scope exclusions.
-- **Architectural Boundaries:**
-  - Persistence locations, data ownership, filesystem mutations, network egress, and security boundaries.
-  - Consequence of failure: data corruption, credential leakage, network partition vulnerabilities.
-- **Scope Gating:**
-  - Isolate the first deliverable increment ("Walking Skeleton") from downstream roadmap items.
-  - Define clear, observable acceptance criteria for the initial release.
-  - Do not treat speculative future possibilities as current requirements.
+  - Target audience, primary workflows, and operational environments (CLI, HTTP service, library, background worker, desktop UI).
+  - Target platforms, runtime versions, and packaging/distribution expectations.
+  - Hard constraints, language/tooling boundaries, and explicit out-of-scope exclusions.
+- **Architectural Drivers & Risk Boundaries:**
+  - Persistence locations, filesystem mutations, data ownership, network egress, and security trust boundaries.
+  - Consequence of failure: data loss, persistent state corruption, security exposure, unhandled crashes.
+- **Scope Gating & The Walking Skeleton:**
+  - Isolate the first minimal end-to-end slice ("Walking Skeleton") from downstream roadmap desires.
+  - Define clear, observable acceptance criteria for the initial release increment.
+  - Reject premature feature bloat and speculative enterprise complexity.
 
 ---
 
-## 3. Phase 2: Foundation Validation & Dependency Gating
+## 3. Phase 2: Canonical Project Memory & Continuity Setup
 
-Identify runtime boundaries and the riskiest assumptions that could invalidate the architectural plan:
+Scaffold the durable project memory files to ensure that subsequent development sessions operate with complete context:
+
+- **Canonical Repository Entry Point (`README.md`):**
+  - Project purpose, core capabilities, prerequisite setup, quickstart commands, and architectural overview.
+- **Architectural Drivers & Decision Records (`DECISIONS.md`):**
+  - Record foundational architectural drivers and non-obvious constraints.
+  - Document major forks using Architecture Decision Records (ADRs): Problem, Considered Alternatives, Chosen Mechanism, Non-obvious Trade-offs, and Revisit Triggers.
+  - Mark superseded decisions explicitly when project architecture evolves.
+- **Roadmap & Milestone Tracking (`PLAN.md`):**
+  - Sequence implementation milestones from the initial Walking Skeleton to incremental feature releases.
+  - Record the active plan, completed increments, and immediate next actionable steps.
+- **Operational Directives (`AGENTS.md`):**
+  - Embed durable instructions, prohibited patterns, mandatory workflows, and skill routing rules.
+  - Include mandatory testing invocation directing agents to `test-strategist` during code changes.
+
+---
+
+## 4. Phase 3: Smallest Viable Stack & Dependency Gating
+
+Avoid starter-stack bloat by selecting the leanest technical stack that satisfies verified requirements:
 
 ### Smallest Viable Stack Invariant
 
-Choose the leanest possible technical stack that fulfills verified requirements. Favor runtime built-ins and standard libraries over heavy third-party meta-frameworks.
+Favor runtime built-ins, standard libraries, and minimal utilities over heavy meta-frameworks or multi-tier boilerplate templates.
 
 ### Dependency Gating Protocol
 
-Before adding external packages, runtimes, or database engines:
+Before adding external libraries, frameworks, or database engines:
 
-- **Validate Compatibility via Web Research:** Activate `web-research` to inspect current primary documentation, verify release stability, check platform support, and identify breaking changes in target toolchain versions.
-- **Audit Lifetime Friction via Worth-the-Squeeze:** Activate `worth-the-squeeze` for major framework additions or complex dependencies. Balance immediate developer utility against long-term operational friction, security update burden, and migration blast radius.
-- **Deterministic Dependency Pinning:** Always record explicit, reproducible dependency versions using standard package manifests and lockfiles.
+- **Validate Compatibility via Web Research:** Activate `web-research` to inspect current documentation, check platform stability, and verify breaking changes in the target runtime.
+- **Audit Lifetime Friction via Worth-the-Squeeze:** Activate `worth-the-squeeze` for major framework additions or complex dependencies. Balance immediate utility against long-term upgrade friction, security tax, and blast radius.
+- **Deterministic Pinning:** Always pin reproducible dependency versions using standard package manifests and lockfiles.
 
 ### Bounded Technical Probes
 
-When documentation leaves critical gaps regarding runtime behavior, external API contracts, or platform integration, design a minimal technical probe:
+When documentation leaves critical gaps regarding runtime behavior or external API contracts:
 
-- Author a self-contained, throwaway test script isolated from production code.
-- Run the probe only when operating under an authorized execution mode.
-- Never claim feasibility based on an unexecuted probe.
-
----
-
-## 4. Phase 3: Initial Verification Harness Integration
-
-Integrate testing into the initial architectural design before writing domain code:
-
-- **Delegate Strategy to test-strategist:** Activate `test-strategist` during project planning. Pass workflows, observable acceptance criteria, execution surfaces, and data risk profiles to formulate an adaptive test strategy.
-- **Materialize Baseline Harness:** When implementation is authorized, establish a runnable test harness alongside the first implemented feature slice. Ensure tests execute via a single standard command.
-- **Zero Synthetic Tests:** Do not generate artificial or trivial unit tests for static configuration files or boilerplate manifests that contain no executable domain logic.
+- Author a self-contained, throwaway probe script isolated from project code.
+- Run the probe to observe actual behavior before committing to an architectural approach.
 
 ---
 
-## 5. Phase 4: Proportionate Repository Layout
+## 5. Phase 4: Initial Verification Harness Integration via `test-strategist`
 
-Structure the repository using a two-tiered, necessity-driven layout model. Scale structure only when justified by codebase evolution:
+Testing foundations must exist before domain feature implementation begins:
 
-### Tier 1: Core Essentials (Mandatory for All Projects)
-
-| File or Directory     | Purpose & Invariant                                                                                                                 |
-| :-------------------- | :---------------------------------------------------------------------------------------------------------------------------------- |
-| `README.md`           | Canonical repository entry point: purpose, current capabilities, quickstart setup, operational commands, and known limitations.     |
-| `.gitignore`          | Prevent generated artifacts, local environment state, build caches, and sensitive files from polluting version control.             |
-| Manifests & Lockfiles | Manifest files (`package.json`, `pyproject.toml`, `Cargo.toml`, `go.mod`) defining reproducible runtime and dependency constraints. |
-| Source Tree           | Domain-bounded source directories matching ecosystem conventions (e.g., `src/`, `cmd/`, `internal/`).                               |
-| Test Harness          | Dedicated test directory (e.g., `tests/`) or co-located test files matching project harness conventions.                            |
-
-### Tier 2: Continuity & Context Scaling (Proportionate Scaling)
-
-Scale repository memory and governance documentation based on operational complexity:
-
-- **Embedded-First Principle:** Keep agent instructions, testing strategy, architecture decisions, and roadmap milestones as structured sections inside `README.md` or a root `AGENTS.md`.
-- **Extraction Threshold:** Extract dedicated markdown files (`TESTING.md`, `DECISIONS.md`, or a `docs/` index) **only** when documentation volume exceeds single-file scannability or requires distinct operational ownership.
-- **Layout Anti-Patterns:**
-  - Never create empty directories, placeholder files, or stub documents to satisfy a speculative enterprise template.
-  - Never generate separate documentation directories (`docs/`) for small projects where `README.md` is sufficient.
-  - Never commit local developer tooling state or transient machine paths.
+- **Activate `test-strategist`:** Delegate test architecture definition to `test-strategist`. Formulate `TESTING.md`, define verification tiers, map execution surfaces, and determine runner commands.
+- **Materialize Baseline Test Harness:** Establish a runnable test harness matching the project ecosystem (e.g., Python `unittest`, Node `node:test`, Go `testing`, Rust `cargo test`).
+- **Prove Execution:** Implement a minimal baseline smoke test proving that the runner executes cleanly and returns accurate exit codes.
+- **Zero Synthetic Tests:** Do not generate trivial or mock tests for static configuration manifests that contain no domain logic.
 
 ---
 
-## 6. Phase 5: Canonical Project Memory
+## 6. Phase 5: Proportionate Repository Layout
 
-Maintain unambiguous project memory to ensure future agent sessions execute with full context:
+Structure the repository using a necessity-driven layout model:
 
-- **Single Source of Truth Invariant:** Every project fact, configuration parameter, and architectural boundary must have exactly one authoritative location. Never duplicate assertions across disparate files.
-- **Active Present State Invariant:** Living files describe current system reality. Historical evolution, changelogs, and discarded paths belong exclusively in Git commit history.
-- **Durable Project Instructions (`AGENTS.md`):** Record non-obvious constraints, mandatory workflows, prohibited modifications, and required skill routing rules:
-  - Embed this standard testing directive:
+### Core Essentials (Mandatory for All Projects)
 
-> During planning and changes to code, features, dependencies, runtime or build configuration, or packaging, invoke test-strategist at a depth appropriate to the change. Reconcile tests (add, update, prune, retain) and execute applicable verification before declaring completion.
+| File or Directory     | Purpose & Invariant                                                                                |
+| :-------------------- | :------------------------------------------------------------------------------------------------- |
+| `README.md`           | Canonical entry point: purpose, capabilities, quickstart, commands, and architecture.              |
+| `.gitignore`          | Prevent build caches, runtime artifacts, local state, and sensitive credentials from entering git. |
+| Manifests & Lockfiles | Manifests (`package.json`, `pyproject.toml`, `Cargo.toml`, `go.mod`) defining pinned dependencies. |
+| Source Tree           | Domain-bounded source directories matching ecosystem idioms (e.g., `src/`, `cmd/`, `internal/`).   |
+| Test Harness          | Dedicated test directory (`tests/`) or co-located tests, with instructions in `TESTING.md`.        |
 
-- **Reversible Decision Records:** When a consequential architectural fork is chosen, record the problem, chosen mechanism, trade-offs, and revisit conditions. Mark superseded decisions immediately.
+### Layout Anti-Patterns
 
----
-
-## 7. Phase 6: Milestone Sequencing & Incremental Delivery
-
-Decompose the initial project implementation into small, testable milestones with observable outcomes:
-
-1. **Milestone 1: Risk Probe & Verification Spike:** Validate high-risk assumptions with minimal isolated scripts.
-2. **Milestone 2: Walking Skeleton:** Materialize the core repository structure, build configuration, minimal test harness, and one end-to-end executable path.
-3. **Milestone 3: Incremental Feature Expansion:** Implement domain features sequentially, reconciling code, tests, and documentation at each milestone.
-
-### Scope Drift & Plan Re-anchoring
-
-When implementation uncovers unexpected blockers or runtime drift:
-
-- Differentiate between requirement changes, implementation adjustments, and newly uncovered constraints.
-- Re-anchor live project state and acceptance criteria before writing further code.
-- Prompt the user for steering only when a decision crosses an approval boundary or permanently alters project scope.
+- Never create empty directories, placeholder files, or stub documents to satisfy a speculative enterprise template.
+- Never extract separate documentation directories (`docs/`) for small projects where `README.md` or single files suffice.
+- Never commit transient developer tooling state, local editor settings, or machine-specific absolute paths.
 
 ---
 
-## 8. Phase 7: Verification & Multi-Session Continuity Protocol
+## 7. Phase 6: Milestone Sequencing & Walking Skeleton
 
-Before closing an initial scaffolding session, verify foundation integrity and record continuity state:
+Decompose early project implementation into minimal, testable milestones:
 
-### Foundation Verification
+1. **Milestone 1: Risk Probe & Spike:** Validate high-risk technical assumptions with throwaway probe scripts.
+2. **Milestone 2: Walking Skeleton:** Materialize the core repository layout, build configuration, baseline test harness, and one end-to-end executable path.
+3. **Milestone 3: Incremental Feature Expansion:** Implement domain features sequentially, updating code, tests (`TESTING.md`), and decisions (`DECISIONS.md`) in lockstep.
 
-- Verify that documented installation, bootstrap, and run commands succeed cleanly in a fresh shell.
-- Run the full test suite and confirm zero failing assertions.
-- Confirm all build and package commands produce valid, executable artifacts.
-- Verify Markdown links and documentation navigation using portable relative paths.
+---
+
+## 8. Phase 7: Foundation Verification & Continuity Protocol
+
+Before concluding a scaffolding session, verify foundation integrity and record continuity state:
+
+### Foundation Verification Checklist
+
+- [ ] Installation and bootstrap commands execute cleanly in a fresh shell without undocumented prerequisites.
+- [ ] Test harness runs and passes initial baseline checks via a single standard command.
+- [ ] Build and package commands produce valid executable artifacts without warnings.
+- [ ] All relative Markdown links resolve to valid files.
 
 ### Four-Step Session Continuity Protocol
 
-Establish this operational protocol in project documentation for future sessions:
+Document this operational rhythm in project documentation for future sessions:
 
-1. **Context Grounding:** At session start, inspect repository constraints, version control diffs, and live roadmap state before executing tasks.
+1. **Context Grounding:** Inspect repository constraints, version control diffs, and live roadmap state before executing tasks.
 2. **External Revalidation:** Revalidate third-party dependencies and external assumptions before beginning dependent feature work.
-3. **Synchronized Evolution:** Reconcile code, tests, and living documentation in lockstep during every development increment.
-4. **Handoff State Capture:** At session conclusion, document completed milestones, outstanding tasks, verification evidence, and the immediate next actionable step.
+3. **Synchronized Evolution:** Reconcile code, tests, and living documentation (`README.md`, `TESTING.md`, `DECISIONS.md`) in lockstep.
+4. **Handoff State Capture:** Document completed milestones, outstanding tasks, verification evidence, and the immediate next actionable step.
 
 ### Git Hygiene & Handoff
 
-When version control initialization or commits are authorized:
+When version control is initialized or changes are staged:
 
-- Initialize repository and configure `.gitignore` before staging code.
-- Activate `commit-scribe` to generate structured, contextual commit messages.
-- Never push upstream without explicit user authorization.
+- Ensure `.gitignore` excludes build artifacts and local state before staging files.
+- Activate `commit-scribe` to create structured, high-context commits.
 
 ---
 
 ## 9. Completion Criteria
 
-- **In Discovery & Planning Mode:** Deliver a justified minimal stack, layout proposal, de-risked milestone sequence, and identified unknowns. Zero unapproved file modifications exist.
-- **In Implementation Mode:**
-  - The repository contains only necessary files, manifests, and source code.
-  - The test harness is provisioned and passes initial baseline checks.
-  - Setup and execution commands run cleanly without undocumented prerequisites.
-  - Project memory (`README.md`, `AGENTS.md`) is established and provides sufficient context for subsequent sessions to continue without friction.
+- Project memory files (`README.md`, `TESTING.md`, `DECISIONS.md`, `AGENTS.md`) are established and reflect project reality.
+- The repository layout contains only necessary, purposeful files and manifests.
+- The test harness is provisioned, verified, and passing baseline checks.
+- Setup and run commands execute cleanly without undocumented requirements.
+- The next actionable milestone is clearly identified.
