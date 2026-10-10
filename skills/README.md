@@ -137,7 +137,7 @@ The library provides 14 situational skills organized by operational domain:
 
 | Skill                                           | Description                                                                                            |
 | :---------------------------------------------- | :----------------------------------------------------------------------------------------------------- |
-| [test-strategist](test-strategist/SKILL.md)     | Formulate test strategies, audit verification harnesses, and adapt test portfolios.                    |
+| [test-strategist](test-strategist/SKILL.md)     | Audit behavior, implement verification strategies, execute checks, and maintain test instructions.     |
 | [claim-validator](claim-validator/SKILL.md)     | Stress-test claims, proposals, and strategies against verified evidence.                               |
 | [worth-the-squeeze](worth-the-squeeze/SKILL.md) | Audit proposals, migrations, and refactors against empirical ROI and friction without compliance bias. |
 | [web-research](web-research/SKILL.md)           | Conduct multi-source web research with strict source hierarchy and citation trails.                    |
@@ -153,10 +153,10 @@ The library provides 14 situational skills organized by operational domain:
 
 ### Architecture, Design & Discovery
 
-| Skill                                               | Description                                                                               |
-| :-------------------------------------------------- | :---------------------------------------------------------------------------------------- |
-| [project-scaffolding](project-scaffolding/SKILL.md) | Guide discovery, minimal stack selection, test harness setup, and durable project memory. |
-| [mermaid-architect](mermaid-architect/SKILL.md)     | Design and insert compilable native Mermaid architecture and workflow diagrams.           |
+| Skill                                               | Description                                                                                              |
+| :-------------------------------------------------- | :------------------------------------------------------------------------------------------------------- |
+| [project-scaffolding](project-scaffolding/SKILL.md) | Establish verified project foundations and practices for tracking progress, decisions, and verification. |
+| [mermaid-architect](mermaid-architect/SKILL.md)     | Design and insert compilable native Mermaid architecture and workflow diagrams.                          |
 
 ### Learning & Pedagogy
 

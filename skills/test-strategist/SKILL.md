@@ -1,57 +1,58 @@
 ---
 name: test-strategist
-description: Formulates, audits, and maintains project-specific testing strategies in TESTING.md. Enforces universal verification invariants, tier selection, and assertion integrity. Use when defining test architectures, reviewing coverage gaps after changes, or resolving brittle tests. Do not invoke for routine single-test runs or prose-only documentation edits.
+description: Audits and evolves project-specific testing strategies against real user workflows, runtime surfaces, and failure risks. Reuses effective checks and repairs gaps in coverage, harnesses, and verification instructions. Use when defining test strategies, auditing coverage after changes, establishing harnesses, or resolving brittle tests. Do not invoke for routine single-test runs or prose-only edits.
 ---
 
-# Adaptive Test Strategy & Verification Protocol
+# Test Strategy & Behavioral Verification
 
-Formulate, audit, and evolve repository test strategies using universal verification invariants and structured checklists. This skill does not prescribe a static, hardcoded test plan for all systems. The canonical test strategy belongs in the target project's `TESTING.md` (or the testing section in `README.md`). When invoked, evaluate project reality, formulate or reconcile `TESTING.md`, enforce universal verification invariants, and verify user-facing features directly.
+Turn the project's requirements, existing checks, and runtime evidence into an implemented testing strategy that proves the behavior users and callers rely on. Follow stages 1–6 in order, carrying each stage's result into the next. Revisit the affected stage when execution exposes a changed assumption or evidence gap. Record concrete workflows, tools, commands, and execution triggers in the project's canonical testing documentation, such as `TESTING.md` or a testing section in `README.md`.
 
----
+## 1. Establish the Verification Baseline
 
-## 1. The Canonical Testing Strategy Invariant (`TESTING.md`)
+Inspect project instructions, testing documentation, source entry points, existing tests, build scripts, and continuous integration configuration. Compare the outcomes required by the project with the outcomes established by its actual checks.
 
-The target repository's `TESTING.md` is the single source of truth for how that specific project is verified. This skill does not replace project documentation; it formulates, audits, and maintains it.
+- **Establish Scope:**
+  - Identify the behavior under review and the completion claim that verification must support.
+  - Determine how users or callers reach that behavior and which runtime or distributed artifact they use.
+  - Identify critical failure consequences, including data loss, state corruption, security exposure, broken public contracts, and silent incorrect results.
+- **Assess Existing Practice:**
+  - Locate the canonical testing instructions and designate that location for strategy updates.
+  - Inspect representative assertions and recent results against intended behavior.
+  - Record effective coverage, missing checks, stale instructions, and checks that give misleading confidence.
+  - Establish a canonical home when testing instructions are missing, and populate it with discovered commands and requirements.
 
-Upon invocation, execute the following triage:
+- **Stage Result:**
+  - Record the verification scope, canonical strategy location, established evidence, and identified gaps. Use this baseline to select workflows in stage 2.
 
-1. **Check Strategy Presence:**
-   - Inspect the repository for a canonical `TESTING.md` (or a dedicated testing section within `README.md`).
-2. **If `TESTING.md` is Missing:**
-   - Formulate and scaffold `TESTING.md`.
-   - Inspect the codebase to discover execution surfaces, runtime requirements, and existing test commands.
-   - Define verification tiers, runner commands, failure modes, test vector matrices, and environment setup required for this project.
-   - Establish the project's invocation workflows (e.g., local fast unit tests vs. milestone end-to-end runs).
-3. **If `TESTING.md` Exists:**
-   - Audit current repository reality against `TESTING.md`.
-   - Identify drift: new endpoints, modified function signatures, changed runtime dependencies, brittle mocks, or coverage gaps.
-   - Reconcile the test portfolio (Add, Update, Prune, Retain) and synchronize `TESTING.md` with new test commands, fixtures, or contracts.
+## 2. Map User Workflows to Observable Evidence
 
----
+Use the baseline to map each critical or affected workflow in the project's testing documentation. Record:
 
-## 2. Phase 1: Repository Topology & Surface Mapping Checklist
+- The user or caller, starting state, and actual entry point.
+- The actions or inputs that exercise the behavior.
+- The expected observable result and relevant side effects.
+- The runtime and boundaries the check must exercise.
+- The existing check or required addition, execution trigger, and any remaining evidence gap.
 
-Before designing or modifying tests, inspect the repository to map observable behavior, execution surfaces, and system boundaries:
+Inspect applicable surfaces: command-line arguments, pipelines and exit codes; service endpoints and message consumers; library exports; browser interfaces; native desktop views; and packaged distributions. Trace relevant boundaries such as storage, filesystem access, network protocols, subprocesses, permissions, clocks, and randomness.
 
-- **Execution Surfaces:**
-  - Command-line interfaces (flags, subcommands, arguments, stdin/stdout pipelines, exit codes).
-  - HTTP, REST, RPC, WebSocket, or GraphQL endpoints and serialization schemas.
-  - Background workers, event queues, pub/sub consumers, and scheduled tasks.
-  - Reusable libraries, exported functions, type signatures, and public module contracts.
-  - User interfaces (browser components, web applications, native desktop views).
-- **System Boundaries & External Dependencies:**
-  - Persistence layers, relational databases, document stores, key-value caches.
-  - Filesystem access, temporary directories, file locks, disk quotas.
-  - Network calls, external third-party APIs, webhooks, cloud services.
-  - System clocks, timers, randomness, process spawning, OS signals, hardware resources.
-- **Consequence Severity:**
-  - Evaluate the impact of failure: data loss, persistent state corruption, security vulnerability, broken public API contract, or silent computation errors. Focus high-rigor checks on critical failure surfaces.
+- **Check Behavior Through Actual Use:**
+  - For a code editor whose requirements include persistent editing, launch the app, open a file, change text through the interface, save, and reopen the file to verify persistence.
+  - A parser unit test can prove parsing behavior; the editor workflow also requires evidence that input, application state, and storage work together.
+  - Use browser or native interaction checks for the surface users operate. Include focus, navigation, state transitions, and error handling where those affect the workflow.
+- **Require Defect-Sensitive Checks:**
+  - Ask whether the check would fail if the intended behavior broke.
+  - Assert on public results and observable side effects rather than private syntax or implementation structure.
+  - Include relevant input boundaries and failure paths: empty or malformed input, boundary values, Unicode, oversized payloads, timeouts, permission errors, cancellation, and unavailable dependencies.
 
----
+Derive the project's concrete workflows from its requirements and actual use.
 
-## 3. Phase 2: Verification Tier Selection Checklist
+- **Stage Result:**
+  - Produce a workflow-to-evidence map containing expected outcomes, runtime surfaces, boundaries, and coverage gaps. Use this map to select methods in stage 3.
 
-Select verification methods proportionate to changed behavior and risk profile. Treat the following taxonomy as a decision matrix for what belongs in `TESTING.md`:
+## 3. Select Methods That Support the Claim
+
+Select verification methods that establish each mapped outcome at the required runtime and system boundaries. Compare methods that provide sufficient evidence by execution cost, reliability, and maintenance effort. Use the table to select the methods needed for the project.
 
 | Verification Tier         | Primary Target                                               | Trigger Condition                                                                   |
 | :------------------------ | :----------------------------------------------------------- | :---------------------------------------------------------------------------------- |
@@ -66,107 +67,90 @@ Select verification methods proportionate to changed behavior and risk profile. 
 | **Performance & Scale**   | Throughput, latency, memory ceilings, payload scaling        | High-frequency code paths, resource-constrained runtimes, heavy batch workloads.    |
 | **Security & Robustness** | Trust boundaries, authorization, hostile payloads            | Unsanitized user inputs, permission escalations, path traversal, authentication.    |
 
-### Verification Invariants
+- **Match the Runtime:**
+  - Browser results do not establish native desktop behavior.
+  - Source-level results do not establish packaged artifact behavior.
+  - Unit mocks do not establish boundary compatibility; use real dependencies or representative controlled environments for critical boundary checks.
+- **Verify Delivered Artifacts:**
+  - When producing or claiming readiness of a package, launch or load that artifact in its intended runtime and exercise a representative critical path.
+  - Confirm the expected result and relevant runtime errors. Build success proves artifact creation; it does not prove that the artifact works.
+  - Run deployment checks against an authorized target when the claim concerns a deployed service.
+- **Inspect Visual Evidence:**
+  - Use screenshots or rendered states to assess appearance against a stated expectation.
+  - Pair visual evidence with actions and observable outcomes when the claim concerns interaction or state changes.
+  - Capturing a screenshot alone does not verify a workflow. Review snapshot differences before accepting a new baseline.
 
-- **Cost-to-Evidence Parity:** Select the lowest-cost, fastest verification tier that yields conclusive evidence. Do not substitute slow end-to-end tests for logic easily validated with sub-millisecond unit checks.
-- **Surface Fidelity:** Browser tests do not prove native desktop runtime correctness. Source-level tests do not prove bundled binaries execute. Match checks to actual deployment surfaces.
-- **Boundary Reality:** Unit mocks do not validate boundary compatibility. Critical persistence and network boundaries require real or high-fidelity containerized integration tests.
-- **Artifact Launchability:** Successful compilation or bundling does not prove runtime health. Always execute a smoke check against packaged distribution artifacts.
+Record project-specific triggers for fast checks, workflow checks, packaging checks, and broader milestone checks. Base cadence on affected behavior and risk. Required runtime checks must precede a readiness claim even when they cost more than the fast suite.
 
----
+- **Stage Result:**
+  - Record the selected methods and execution triggers for each mapped outcome, with the evidence each method must establish. Use these requirements to assess the harness in stage 4.
 
-## 4. Phase 3: Harness Audit & Adaptive Provisioning
+## 4. Establish the Required Harness Capabilities
 
-Inspect existing test tooling before introducing new dependencies:
+Compare the selected verification methods with existing tooling. Classify the harness as adequate, missing, outgrown, or brittle, then implement the required capability changes. Retain tooling that supports the strategy.
 
-### Capability Delta Assessment
+- **Select Tools:**
+  - Select runners that support the required checks, runtime, isolation, and failure reporting. Evaluate existing runners and ecosystem built-ins alongside specialized tools.
+  - Activate `web-research` for unfamiliar external tools, version compatibility, or platform constraints.
+  - Activate `worth-the-squeeze` before substantial framework additions; weigh defect detection against setup and ongoing maintenance.
+- **Isolate Checks:**
+  - Use temporary directories and deterministic cleanup for destructive filesystem tests.
+  - Use ephemeral ports or loopback addresses for local network tests.
+  - Reset persistent and shared state between runs.
+  - Control time and randomness where necessary; investigate intermittent failures, races, and execution-order dependence.
+- **Prove Harness Capability:**
+  - Verify that a newly provisioned runner executes checks and reports failures accurately.
+  - Exercise a representative project behavior through that runner. Runner health alone does not establish product correctness.
+  - Use a repeatable manual procedure when automation is unavailable or disproportionate; document its scope, expected results, and limitations.
 
-Categorize the harness state into one of four conditions:
+- **Stage Result:**
+  - Provide runnable checks or documented manual procedures for the selected methods, and identify blocked capabilities. Use the available capabilities to implement test dispositions in stage 5.
 
-- **Adequate:** Existing runners, fixtures, and configuration fully support required verification. Proceed directly to portfolio reconciliation.
-- **Missing:** Zero automated test harness exists in the repository.
-- **Outgrown:** The codebase has expanded (e.g., added an async service, CLI, or UI) beyond the capabilities of the current runner.
-- **Brittle:** Existing tests depend on unmocked external networks, rigid absolute paths, non-deterministic timers, or polluted shared state.
+## 5. Reconcile Tests Without Masking Defects
 
-### Adaptive Provisioning Protocol
+Use the workflow map and available harness to implement a disposition for each affected outcome or coverage gap:
 
-When provisioning or upgrading a test harness:
+- **Add:** Cover an unprotected outcome, failure mode, or public contract.
+- **Update:** Align checks with an intentionally changed requirement or interface.
+- **Prune:** Remove checks for deleted behavior or redundant checks that add cost without detecting distinct defects.
+- **Retain:** Identify existing checks that still prove the required outcome and explain why they suffice.
 
-- **Prefer Ecosystem Built-ins:** Leverage standard library or minimal runners (e.g., Python `unittest`, Node `node:test`, Go `testing`, Rust `cargo test`) before adding third-party frameworks.
-- **Research External Dependencies:** When specialized tools are necessary (e.g., Playwright for browsers, Testcontainers for databases), activate `web-research` to verify current version compatibility and platform constraints.
-- **Gate Additions via Worth-the-Squeeze:** Activate `worth-the-squeeze` before adding heavy testing frameworks or complex mocking libraries. Balance defect prevention dividends against installation overhead and CI maintenance tax.
-- **Ensure Test Isolation:**
-  - Execute destructive filesystem operations inside isolated temporary directories with deterministic cleanup.
-  - Bind network tests to ephemeral ports or loopback addresses.
-  - Reset database and in-memory caches between test runs.
-- **Materialize Baseline Proof:** Validate any newly provisioned harness by running a minimal baseline test that confirms the runner executes cleanly and reports accurate exit codes.
+When fixing a defect, reproduce the failure before applying the fix. Prefer an automated regression test; confirm failure before the fix and success afterward. If automation is blocked, record the blocker and a repeatable manual reproduction and verification procedure.
 
----
+- **Preserve Assertion Integrity:**
+  - Never relax, skip, comment out, or delete a failing assertion merely to obtain a green run.
+  - Fix implementation defects in the source.
+  - Change an incorrect test expectation only after checking the intended product requirement.
+  - Investigate intermittent failures rather than masking them with retries or baseline changes.
 
-## 5. Phase 4: Test Portfolio Reconciliation (Add / Update / Prune / Retain)
+- **Stage Result:**
+  - Implement and record the test dispositions. Confirm defect reproduction and assertion integrity before executing the selected verification in stage 6.
 
-For every modified or proposed behavior, assign one of four explicit dispositions:
+## 6. Execute, Inspect, and Maintain the Strategy
 
-- **Add:** Create new test cases to cover unprotected acceptance criteria, new failure modes, edge conditions, or interface contracts.
-- **Update:** Modify existing assertions or fixtures to match intentionally changed requirements, updated interfaces, or schema evolutions.
-- **Prune:** Delete tests for removed features, obsolete implementations, or duplicate tests that add runtime cost without increasing defect detection.
-- **Retain:** Confirm that existing coverage protects the modified surface without modification. Document the rationale for retention.
+Run the selected checks and inspect their actual results against the mapped expectations. Execute manual procedures directly when those are the selected method. Use failures to revise the affected tests, harness, or strategy, then rerun the relevant checks.
 
-### Defect Reproduction Invariant
+- **Record Evidence:**
+  - Report the behavior checked, runtime or artifact, exact commands or actions, expected results, and observed results.
+  - Include exit codes, test counts, and duration when available and relevant.
+  - Distinguish passed, failed, deferred, and blocked checks. State the exact blocker and remaining unverified outcome.
+- **Update Durable Instructions:**
+  - Keep the workflow map, commands, prerequisites, fixtures, environment constraints, and execution triggers current in the canonical testing documentation.
+  - Ensure project instructions point future agents to that strategy and require review when workflows, contracts, runtime surfaces, or tooling change.
+  - Record the evidence supporting retained coverage and the resolution of identified gaps.
+- **Respect Git Scope:**
+  - Commit or push only when the authorized workflow includes Git finalization.
+  - Activate `commit-scribe` before staging, committing, or pushing.
 
-When resolving a defect, write an automated regression test reproducing the failure **before** implementing the fix. Verify that the test fails on current code, apply the minimal fix, and verify that the test passes. If reproduction cannot be automated, document the technical blocker and the manual verification procedure.
+- **Stage Result:**
+  - Update the canonical strategy and report observed results for each required outcome. Identify unresolved gaps and the resulting readiness status.
 
-### Risk-Driven Test Vector Matrix
+## 7. Completion Criteria
 
-Audit changed surfaces against concrete edge cases and failure modes:
+- The canonical project strategy reflects actual workflows, applicable checks, commands, prerequisites, and execution triggers.
+- Each critical or affected outcome has sufficient verification or an explicit unresolved gap.
+- Required checks execute and establish observable results on the relevant runtime; delivered artifacts are exercised when applicable.
+- Test changes preserve assertion integrity and address the identified gaps.
+- Future agents can discover when to run checks and when to revise the strategy.
 
-- **Input Boundaries:** Empty collections, zero values, null/nil inputs, malformed structures, extreme Unicode characters, off-by-one boundary values, oversized payloads.
-- **Fault Injections:** Network dropouts, connection timeouts, unavailable dependencies, filesystem permission denials, process cancellation, storage exhaustion.
-- **Contract Preservation:** Anchor assertions to public behavior and observable side effects. Never assert on private implementation details or fragile internal syntax structures.
-
----
-
-## 6. Phase 5: Universal Execution Invariants & Assertion Discipline
-
-Never declare testing complete without executing the relevant suite and inspecting actual outputs:
-
-- **Direct Execution:** Execute test commands directly in the environment using project-idiomatic runners. Inspect exit codes, stdout, and stderr.
-- **Fast vs. Milestone Cadence:** Run fast unit and component suites on every local edit. Defer slow end-to-end, native package, and performance suites to milestone verification.
-
-### Non-Negotiable Assertion Invariants
-
-- **Zero Assertion Weakening:** Never relax, skip, comment out, or delete a failing assertion merely to obtain a green run.
-- **Root-Cause Defect Resolution:** When a test fails:
-  - If the implementation has a defect, fix the source code.
-  - If the test expectation is incorrect, update the assertion only after verifying against intended product requirements.
-- **Determinism & Flake Eradication:** Tests must produce identical results across repeated runs. Investigate intermittent failures, race conditions, global state leakage, and execution-order dependencies immediately.
-- **Visual & Interactive Verification:** When introducing new features or validating UI/layout surfaces, capture representative states (e.g., screenshots or rendered element trees) and perform hands-on interactive validation: execute inputs, observe runtime state transitions, and verify observable system responses. Never update baseline snapshots blindly to mask visual regressions.
-- **Transparent Blocker Reporting:** If an authorized check cannot run due to missing environment dependencies, credentials, or hardware constraints, document the blocker and remaining risk explicitly. Do not disguise omitted checks as passing verification.
-
----
-
-## 7. Phase 6: Living Strategy Synchronization in `TESTING.md`
-
-Keep repository documentation aligned with test suite evolution:
-
-- **Living Strategy Synchronization:**
-  - Record active test runner commands, setup prerequisites, fixture management, and verification tiers in `TESTING.md` (or the testing section in `README.md`).
-  - Document environment prerequisites and platform-specific runner behaviors.
-- **Evidence Reporting:**
-  - Surface affected behavior and selected verification tiers.
-  - Itemize tests added, updated, pruned, or retained.
-  - Report exact commands executed, exit codes, test run counts, and runtime duration.
-  - Disclose all deferred, skipped, or blocked checks alongside mitigation rationale.
-- **Git Handoff:**
-  - Do not automatically commit or push changes unless operating under an authorized workflow that mandates git finalization.
-  - When committing test changes, activate `commit-scribe` to record structured commit metadata.
-
----
-
-## 8. Completion Criteria
-
-- `TESTING.md` exists (or is updated) in the target repository and accurately reflects current runner commands, tiers, and setup.
-- Test dispositions (add, update, prune, retain) are justified and implemented.
-- Affected test suites run cleanly with passing assertions.
-- Zero weakened assertions or masked defects exist.
-- Visual and interactive verification is performed for user-facing surfaces.
+If a required check fails or is blocked, report the audit and completed repairs separately from product readiness. Do not declare the affected behavior verified.

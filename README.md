@@ -75,7 +75,7 @@ Similarly, instructions in this repository divide into universal baselines and s
 
 2. **Skill Layer (Invariant Protocol vs. Project Artifact):**
    - The universal/contextual separation also recurs within individual skills. A skill such as `test-strategist` or `project-scaffolding` does not attempt to anticipate every unique project topology or hardcode a static plan.
-   - Instead, the skill provides **universal invariants, discovery checklists, and verification heuristics** (e.g., mapping execution surfaces, cost-to-evidence parity, defect reproduction, zero assertion weakening).
+   - Instead, the skill provides **an ordered workflow with universal invariants, required stage results, and verification criteria**. The agent uses discovered project requirements to make decisions, implement changes, and verify outcomes. Each stage supplies the information needed by the next.
    - The **concrete contextual strategy** belongs to the target project itself (stored in that repository's `TESTING.md`, `README.md`, or architecture records). The skill provides the repeatable protocol to formulate, audit, and evolve that contextual strategy.
 
 ---

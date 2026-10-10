@@ -1,171 +1,171 @@
 ---
 name: project-scaffolding
-description: Guides autonomous discovery, technical foundation setup, test harness provisioning, and project memory tracking for new projects. Use when bootstrapping a project from an idea, scaffolding repository foundations, or establishing multi-session continuity. Do not invoke for routine feature development, ordinary handoffs, or established project restructuring.
+description: Audits and establishes project foundations that satisfy requirements and support durable development continuity. Defines and implements needed setup, plans, decisions, verification, and agent maintenance instructions. Use when bootstrapping a project, repairing foundations in a young repository, or establishing multi-session continuity. Do not invoke for routine feature work, ordinary handoffs, or unrelated restructuring.
 ---
 
-# Project Scaffolding & Development Continuity
+# Project Foundations & Development Continuity
 
-Guide autonomous discovery, minimal technical foundation setup, baseline verification, and durable project memory for new projects or young repositories. Projects differ substantially across operational domains (CLI tools, backend APIs, libraries, web services, desktop applications). This skill does not impose an inflexible starter template or anticipate speculative complexity. Instead, it equips the engineer or AI agent with universal discovery checklists and scaffolding protocols: discover operational drivers, validate the smallest viable stack, scaffold proportionate layout, provision baseline verification via `test-strategist`, and embed living project memory (`README.md`, `DECISIONS.md`, `PLAN.md`, `AGENTS.md`) so the project tracks its evolution seamlessly.
+Turn project requirements and existing practices into verified foundations and a working continuity process. Follow stages 1–7 in order, carrying each stage's result into the next. Revisit the affected stage when implementation or verification changes the evidence. The project records its concrete files, tools, layout, milestones, and maintenance instructions; this skill supplies the audit, decision, implementation, and verification sequence.
 
----
+## 1. Establish the Project Baseline
 
-## 1. Grounding & Project Memory Triage
+Inspect repository instructions, the entry document, manifests, source layout, available toolchains, version control state, existing plans, decisions, and testing guidance. Determine the requested scope: project initialization, foundation repair, or development continuity.
 
-A project must track its evolution as it develops through canonical living files rather than relying on ephemeral chat context.
+- **Compare Instructions With Practice:**
+  - Identify how the project records implementation changes, active work, decisions, verification evidence, and next steps.
+  - Check whether project instructions tell future agents where to find that information and when to maintain it.
+  - Compare the current plan and documented commands with recent changes and observed repository state.
+  - Check whether a new session can resume without reconstructing essential context from chat history.
+- **Classify Gaps:**
+  - Retain practices that already meet the requirements.
+  - Identify stale, contradictory, missing, or ineffective instructions and records that require repair.
+  - Identify existing record locations and information that lacks a canonical home.
+  - Report material unresolved choices or inaccessible context; label inferred requirements rather than treating them as confirmed.
 
-Upon invocation, execute the following triage:
+- **Stage Result:**
+  - Record the current foundations, continuity practices, evidence of effectiveness, and gaps within the requested scope. Use this baseline to define requirements in stage 2.
 
-1. **Audit Existing Project State:**
-   - Inspect the current working directory, existing manifests, repository layout, version control history, and available toolchains.
-   - Determine whether the task is a greenfield initialization (0 files) or repairing missing foundations in a young project.
-2. **Establish the Evolution Tracking Contract:**
-   - Confirm that the project has designated homes for project memory:
-     - Canonical entry point and commands (`README.md`).
-     - Architectural drivers, trade-offs, and decision records (`DECISIONS.md` or a dedicated section in `README.md`).
-     - Implementation plan, walking skeleton scope, and milestones (`PLAN.md` or a dedicated section in `README.md`).
-     - Testing strategy, execution surfaces, and commands (`TESTING.md`, established via `test-strategist`).
-     - Operational instructions and agent constraints (`AGENTS.md`).
+## 2. Define Foundation Requirements and Acceptance Criteria
 
----
-
-## 2. Phase 1: Operational Drivers & Boundary Discovery Checklist
-
-Inspect user requirements and context to discover the foundational project drivers:
+Use the baseline and agreed scope to define what the foundations must support:
 
 - **Operational Context:**
-  - Target audience, primary workflows, and operational environments (CLI, HTTP service, library, background worker, desktop UI).
-  - Target platforms, runtime versions, and packaging/distribution expectations.
-  - Hard constraints, language/tooling boundaries, and explicit out-of-scope exclusions.
-- **Architectural Drivers & Risk Boundaries:**
-  - Persistence locations, filesystem mutations, data ownership, network egress, and security trust boundaries.
-  - Consequence of failure: data loss, persistent state corruption, security exposure, unhandled crashes.
-- **Scope Gating & The Walking Skeleton:**
-  - Isolate the first minimal end-to-end slice ("Walking Skeleton") from downstream roadmap desires.
-  - Define clear, observable acceptance criteria for the initial release increment.
-  - Reject premature feature bloat and speculative enterprise complexity.
+  - Identify users or callers, primary workflows, and intended environments: command line, service, library, worker, browser, or desktop.
+  - Establish target platforms, runtime constraints, packaging expectations, and explicit exclusions.
+- **Risk Boundaries:**
+  - Identify persistence, filesystem mutations, data ownership, network access, and trust boundaries.
+  - Assess failure consequences such as data loss, corruption, security exposure, and crashes.
+- **Required Outcomes:**
+  - Identify the functionality, runtime integration, reliability, and development practices required for the current milestone.
+  - Define runnable workflows that demonstrate those requirements and expose the principal technical risks.
+  - State observable acceptance criteria and evidence required to declare the foundations ready.
+  - Sequence milestones by dependencies and risk, and record later work separately from the current commitment.
 
----
+For development continuity work, define acceptance criteria around the project's existing workflows, records, and ability to resume work.
 
-## 3. Phase 2: Canonical Project Memory & Continuity Setup
+- **Stage Result:**
+  - Record foundation requirements, acceptance criteria, required evidence, and milestone dependencies. Incorporate these requirements into the canonical project records in stage 3.
 
-Scaffold the durable project memory files to ensure that subsequent development sessions operate with complete context:
+## 3. Establish Discoverable Project Memory
 
-- **Canonical Repository Entry Point (`README.md`):**
-  - Project purpose, core capabilities, prerequisite setup, quickstart commands, and architectural overview.
-- **Architectural Drivers & Decision Records (`DECISIONS.md`):**
-  - Record foundational architectural drivers and non-obvious constraints.
-  - Document major forks using Architecture Decision Records (ADRs): Problem, Considered Alternatives, Chosen Mechanism, Non-obvious Trade-offs, and Revisit Triggers.
-  - Mark superseded decisions explicitly when project architecture evolves.
-- **Roadmap & Milestone Tracking (`PLAN.md`):**
-  - Sequence implementation milestones from the initial Walking Skeleton to incremental feature releases.
-  - Record the active plan, completed increments, and immediate next actionable steps.
-- **Operational Directives (`AGENTS.md`):**
-  - Embed durable instructions, prohibited patterns, mandatory workflows, and skill routing rules.
-  - Include mandatory testing invocation directing agents to `test-strategist` during code changes.
+Use the requirements to designate and populate a canonical home for each needed kind of information. Choose sections, files, or project tools that future agents can access. The table identifies the required information and possible locations.
 
----
+| Information           | What Must Be Discoverable                                                                | Possible Home                                                  |
+| :-------------------- | :--------------------------------------------------------------------------------------- | :------------------------------------------------------------- |
+| Purpose and operation | Scope, setup, run commands, prerequisites, and architecture overview                     | `README.md` or existing entry document                         |
+| Change history        | Inspectable implementation changes and meaningful reasons                                | Version control history or an existing change record           |
+| Active plan           | Current goal, acceptance criteria, progress, blockers, and next action                   | `PLAN.md`, a README section, or an accessible project tracker  |
+| Decisions             | Non-obvious constraints, alternatives, chosen approach, trade-offs, and revisit triggers | `DECISIONS.md`, existing decision records, or a README section |
+| Verification          | Real workflows, expected outcomes, checks, commands, and execution triggers              | `TESTING.md` or existing testing documentation                 |
+| Agent workflow        | Where to read context and when to update the canonical records                           | `AGENTS.md` or an existing project instruction file            |
 
-## 4. Phase 3: Smallest Viable Stack & Dependency Gating
+- **Maintain Canonical Records:**
+  - Choose record locations according to the amount of information, navigation needs, and maintenance responsibilities.
+  - Link canonical homes from the project entry point and agent instructions.
+  - Keep plans and operational guidance current; retain decision rationale and mark superseded decisions explicitly.
+  - Use version control for implementation history where appropriate. Initialize missing local version control when within scope; commits and remote publication require an authorized Git workflow.
+  - Populate records with current project facts and decisions, and link shared information to its canonical home.
 
-Avoid starter-stack bloat by selecting the leanest technical stack that satisfies verified requirements:
+- **Stage Result:**
+  - Provide populated canonical records and an entry point that identifies their locations. Use these locations to write maintenance instructions in stage 4.
 
-### Smallest Viable Stack Invariant
+## 4. Encode and Audit the Maintenance Contract
 
-Favor runtime built-ins, standard libraries, and minimal utilities over heavy meta-frameworks or multi-tier boilerplate templates.
+Write project-specific instructions in the designated agent instruction file, or another location the project uses for agent guidance. The instructions must tell future agents to perform these actions at the relevant points:
 
-### Dependency Gating Protocol
+| Trigger                                             | Required Project Practice                                                                                                                |
+| :-------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------- |
+| Start or resume work                                | Read the canonical plan, relevant decisions, testing guidance, and version control changes; reconcile stale state before dependent work. |
+| Select the next increment                           | Record the intended outcome, acceptance criteria, scope, and necessary verification in the active plan.                                  |
+| Complete an increment or encounter a blocker        | Update progress, verification status, blockers, and the next actionable step.                                                            |
+| Discover a changed requirement or failed assumption | Revise the affected plan and record the reason before continuing work that depends on the old assumption.                                |
+| Make a consequential design choice                  | Record the rationale, considered alternatives, trade-offs, and conditions for revisiting the choice.                                     |
+| Change behavior, interfaces, tooling, or setup      | Update affected tests and canonical instructions alongside implementation; audit the testing strategy when its assumptions change.       |
+| End a session or hand off work                      | Record completed work, remaining work, unresolved decisions, verification evidence, and the next action.                                 |
 
-Before adding external libraries, frameworks, or database engines:
+- **Make the Contract Executable:**
+  - Name the project's actual record locations and commands rather than copying generic instructions.
+  - Specify applicable verification and skill triggers; reference available skills only where their workflows are needed.
+  - Route to `test-strategist` for strategy or harness gaps when available. Routine checks follow the established project strategy.
+  - Carry forward project constraints and prohibited patterns without duplicating universal agent policy.
+- **Check Effectiveness:**
+  - Compare an active or recent work item with repository changes and recorded progress.
+  - Confirm that changed assumptions, completed work, and remaining gaps are reflected where the instructions require them.
+  - Repair stale records and missing maintenance triggers within the authorized task.
 
-- **Validate Compatibility via Web Research:** Activate `web-research` to inspect current documentation, check platform stability, and verify breaking changes in the target runtime.
-- **Audit Lifetime Friction via Worth-the-Squeeze:** Activate `worth-the-squeeze` for major framework additions or complex dependencies. Balance immediate utility against long-term upgrade friction, security tax, and blast radius.
-- **Deterministic Pinning:** Always pin reproducible dependency versions using standard package manifests and lockfiles.
+Verify the maintenance contract against actual record updates and project state. For a new project, establish the initial records and verify that the instructions explain how the first increment will update them.
 
-### Bounded Technical Probes
+- **Stage Result:**
+  - Install project-specific maintenance instructions and reconcile the records with current state. Use the resulting plan and constraints to guide implementation in stage 5.
 
-When documentation leaves critical gaps regarding runtime behavior or external API contracts:
+## 5. Implement the Required Technical Foundations
 
-- Author a self-contained, throwaway probe script isolated from project code.
-- Run the probe to observe actual behavior before committing to an architectural approach.
+Compare the foundation requirements with the current stack and layout. Decide which capabilities to retain, add, or change, and implement the decisions covered by the agreed scope.
 
----
+- **Select a Suitable Stack:**
+  - Select tools that satisfy the functional, deployment, reliability, and maintenance requirements.
+  - Compare suitable approaches by complexity, integration effort, and long-term cost.
+  - Use `web-research` to validate unfamiliar dependencies, current compatibility, or external contracts before relying on them.
+  - Use `worth-the-squeeze` for major frameworks or complex dependencies; account for installation and long-term maintenance.
+  - Use ecosystem-appropriate manifests, version constraints, and lockfiles to make dependency resolution reproducible.
+- **Resolve Critical Unknowns:**
+  - Run a bounded, isolated probe when documentation cannot establish a critical runtime assumption.
+  - Use the result to choose or revise the approach; discard throwaway probes after capturing relevant findings.
+- **Establish the Project Layout:**
+  - Use source organization appropriate to the ecosystem and current domain boundaries.
+  - Add manifests and build configuration when the project needs them.
+  - Configure ignore rules for generated artifacts, runtime state, and secrets when using version control.
+  - Place source, tests, and documentation where project conventions make them discoverable.
+  - Organize files around implemented capabilities and maintained documentation.
+  - Keep transient developer state and machine-specific paths out of shared foundations.
 
-## 5. Phase 4: Initial Verification Harness Integration via `test-strategist`
+- **Stage Result:**
+  - Provide the agreed setup, stack, layout, and runnable capabilities, with decisions and commands recorded. Identify any blocked requirement before configuring verification in stage 6.
 
-Testing foundations must exist before domain feature implementation begins:
+## 6. Establish Verification for Real Behavior
 
-- **Activate `test-strategist`:** Delegate test architecture definition to `test-strategist`. Formulate `TESTING.md`, define verification tiers, map execution surfaces, and determine runner commands.
-- **Materialize Baseline Test Harness:** Establish a runnable test harness matching the project ecosystem (e.g., Python `unittest`, Node `node:test`, Go `testing`, Rust `cargo test`).
-- **Prove Execution:** Implement a minimal baseline smoke test proving that the runner executes cleanly and returns accurate exit codes.
-- **Zero Synthetic Tests:** Do not generate trivial or mock tests for static configuration manifests that contain no domain logic.
+Use the requirements and technical foundations to establish checks for the agreed outcomes. Activate `test-strategist` for gaps in the project's verification strategy or harness. Record the workflows, commands, expected results, and execution triggers in the canonical testing instructions.
 
----
+- **Match Actual Use:**
+  - Verify the real entry point, actions, expected results, and relevant system boundaries.
+  - Include browser or native interaction when the outcome depends on a user interface.
+  - Assert on project outcomes and relevant side effects so the checks detect broken behavior.
+- **Sequence Work by Evidence:**
+  - Resolve high-risk assumptions early when probes are needed.
+  - Connect the checks to the agreed runnable workflows and acceptance criteria.
+  - Update the plan, relevant decisions, and testing strategy as implementation and evidence change.
+  - Revise milestone sequencing when project dependencies or risks change.
 
-## 6. Phase 5: Proportionate Repository Layout
+- **Stage Result:**
+  - Provide executable checks or repeatable manual procedures tied to the acceptance criteria. Use these procedures to verify foundations and continuity in stage 7.
 
-Structure the repository using a necessity-driven layout model:
+## 7. Verify Foundations and Demonstrate Continuity
 
-### Core Essentials (Mandatory for All Projects)
+Run applicable documented setup, launch, test, and packaging commands. Inspect results against the acceptance criteria. Check reproducibility in a clean or isolated environment where practical; disclose environment-dependent prerequisites.
 
-| File or Directory     | Purpose & Invariant                                                                                |
-| :-------------------- | :------------------------------------------------------------------------------------------------- |
-| `README.md`           | Canonical entry point: purpose, capabilities, quickstart, commands, and architecture.              |
-| `.gitignore`          | Prevent build caches, runtime artifacts, local state, and sensitive credentials from entering git. |
-| Manifests & Lockfiles | Manifests (`package.json`, `pyproject.toml`, `Cargo.toml`, `go.mod`) defining pinned dependencies. |
-| Source Tree           | Domain-bounded source directories matching ecosystem idioms (e.g., `src/`, `cmd/`, `internal/`).   |
-| Test Harness          | Dedicated test directory (`tests/`) or co-located tests, with instructions in `TESTING.md`.        |
+- **Verify Usability:**
+  - Exercise the agreed workflows and confirm their observable results.
+  - When a package is produced, launch or load the actual artifact and exercise a representative path in its intended runtime.
+  - Build success and screenshots alone do not establish runtime behavior.
+  - Verify that documentation references lead to existing canonical records and usable commands.
+- **Verify Continuity:**
+  - Reconcile the plan with completed work, blockers, and the next action.
+  - Capture consequential decisions and verification evidence in their designated homes.
+  - Confirm that another agent can locate the current state and follow the maintenance contract without private chat context.
+- **Report Limits and Git Status:**
+  - Identify failed or blocked checks, the exact barrier, and the remaining unverified outcome.
+  - Commit or push only when the authorized workflow includes Git finalization.
+  - Activate `commit-scribe` before staging, committing, or pushing.
 
-### Layout Anti-Patterns
+- **Stage Result:**
+  - Record observed results, completed requirements, unresolved gaps, and the next action in the canonical records. Report foundation readiness and continuity status against the acceptance criteria.
 
-- Never create empty directories, placeholder files, or stub documents to satisfy a speculative enterprise template.
-- Never extract separate documentation directories (`docs/`) for small projects where `README.md` or single files suffice.
-- Never commit transient developer tooling state, local editor settings, or machine-specific absolute paths.
+## 8. Completion Criteria
 
----
+- Existing foundations and continuity practices are audited; effective practices remain and identified gaps are repaired.
+- Canonical records capture current scope, changes, plan, decisions, verification status, and the next action.
+- Project instructions identify those records and require updates at the points where project state changes.
+- Technical foundations added within scope support a demonstrated real outcome with usable setup and run commands.
+- Another session can resume from discoverable project state.
 
-## 7. Phase 6: Milestone Sequencing & Walking Skeleton
-
-Decompose early project implementation into minimal, testable milestones:
-
-1. **Milestone 1: Risk Probe & Spike:** Validate high-risk technical assumptions with throwaway probe scripts.
-2. **Milestone 2: Walking Skeleton:** Materialize the core repository layout, build configuration, baseline test harness, and one end-to-end executable path.
-3. **Milestone 3: Incremental Feature Expansion:** Implement domain features sequentially, updating code, tests (`TESTING.md`), and decisions (`DECISIONS.md`) in lockstep.
-
----
-
-## 8. Phase 7: Foundation Verification & Continuity Protocol
-
-Before concluding a scaffolding session, verify foundation integrity and record continuity state:
-
-### Foundation Verification Checklist
-
-- [ ] Installation and bootstrap commands execute cleanly in a fresh shell without undocumented prerequisites.
-- [ ] Test harness runs and passes initial baseline checks via a single standard command.
-- [ ] Build and package commands produce valid executable artifacts without warnings.
-- [ ] All relative Markdown links resolve to valid files.
-
-### Four-Step Session Continuity Protocol
-
-Document this operational rhythm in project documentation for future sessions:
-
-1. **Context Grounding:** Inspect repository constraints, version control diffs, and live roadmap state before executing tasks.
-2. **External Revalidation:** Revalidate third-party dependencies and external assumptions before beginning dependent feature work.
-3. **Synchronized Evolution:** Reconcile code, tests, and living documentation (`README.md`, `TESTING.md`, `DECISIONS.md`) in lockstep.
-4. **Handoff State Capture:** Document completed milestones, outstanding tasks, verification evidence, and the immediate next actionable step.
-
-### Git Hygiene & Handoff
-
-When version control is initialized or changes are staged:
-
-- Ensure `.gitignore` excludes build artifacts and local state before staging files.
-- Activate `commit-scribe` to create structured, high-context commits.
-
----
-
-## 9. Completion Criteria
-
-- Project memory files (`README.md`, `TESTING.md`, `DECISIONS.md`, `AGENTS.md`) are established and reflect project reality.
-- The repository layout contains only necessary, purposeful files and manifests.
-- The test harness is provisioned, verified, and passing baseline checks.
-- Setup and run commands execute cleanly without undocumented requirements.
-- The next actionable milestone is clearly identified.
+Report incomplete foundations explicitly when required runtime proof or continuity evidence is blocked. Identify the remaining requirement and the action needed to establish it.
