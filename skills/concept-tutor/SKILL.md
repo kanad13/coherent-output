@@ -5,13 +5,14 @@ description: Teaches technical concepts through self-contained explanations, bas
 
 # Technical Concept Tutor & Pedagogical Workflow
 
-Follow this pedagogical workflow to explain complex technical concepts, bridge knowledge gaps, and validate architectural hypotheses in a single comprehensive response. Calibrate explanations to layperson accessibility under ASD-STE100 plain language, anchoring every abstract concept in physical analogies and concrete system models.
+Follow this pedagogical workflow to explain complex technical concepts, bridge knowledge gaps, and validate architectural hypotheses in a single comprehensive response. Calibrate explanations to the reader's baseline, establish an accurate picture of the whole subject, and deepen mechanisms and relationships through useful examples.
 
 ---
 
 ## 1. Core Pedagogical Mandates
 
-- **ASD-STE100 Plain Language:** Write direct, affirmative sentences in active voice. Define technical terms on first use. Discard buzzwords, filler, and corporate jargon.
+- **Plain Language:** Use selected STE100 and Google developer-documentation principles: direct verbs, clear references, consistent terms, and definitions at first use. Preserve necessary technical vocabulary and uncertainty. A Gunning Fog aim near 10 is an informal diagnostic; do not claim a score or full compliance without assessment.
+- **Accurate Examples:** Use an analogy only when it helps explain a mechanism. State its limits. Preserve the distinction between verified facts, reasoning, and assumptions.
 
 ---
 
@@ -40,11 +41,13 @@ When the user presents an argument, conjecture, mental model, or design to valid
 
 Structure the explanation trajectory before drafting:
 
-- **Concept Dependency Sequence:** Order concepts so every prerequisite is grounded before introducing downstream abstractions.
+- **Whole Picture Before Depth:** Plan an opening that explains the purpose, each major aspect's role, and how the aspects connect. Then add mechanisms, interactions, consequences, and practical detail. Each revisit must add understanding.
+- **Concept Dependency Sequence:** Introduce prerequisites before reasoning depends on them. Avoid exhausting one major aspect before introducing the others.
 - **Explanatory Devices:** Select high-leverage physical analogies, mechanical metaphors, or concrete system models to make abstract mechanisms tangible.
 - **Concrete Scenarios:** Select minimal, real-world examples or code snippets demonstrating the concept in action.
 
 ### Step 4: Scaffolded First-Principles Exposition
 
-- Draft the explanation following the Step 3 plan, progressing methodically from foundational axioms to concrete mechanics, physical analogies, and practical code or system examples.
-- Structure and format the exposition using the scannable Markdown principles of the cognitive-clarity-refactor skill before delivering the final response.
+- Draft the explanation following the Step 3 plan. Use connected paragraphs for reasoning, steps for executable procedures, lists for parallel facts, and tables for comparisons. Keep a brief explanation brief.
+- The progressive-documentation skill can help plan a substantial explanation if available. Use cognitive-clarity-refactor only when the requested artifact calls for its scannable bullet hierarchy. Neither sibling skill is required; the local rules above suffice.
+- Verify that the opening gives a useful model, each later section adds understanding, prerequisites appear before use, and examples preserve the concept's limits. Keep unresolved facts explicit.

@@ -1,11 +1,11 @@
 ---
 name: repo-evergreen-sync
-description: Synchronizes the entire repository after coding changes, resolving systemic drift across code, contracts, documentation, and tests. Analyzes session diff and conversation intent, enforces Google-style module prefacing and "Why, Not What" comment standards, audits ripple impacts, adapts test suites via test-strategist, refactors docs with ASD-STE100, verifies regressions, and commits via commit-scribe. Use immediately after implementing, editing, or refactoring code. Do not use for initial exploratory coding or standalone documentation audits without recent codebase modifications.
+description: Synchronizes the entire repository after coding changes, resolving systemic drift across code, contracts, documentation, and tests. Analyzes session diff and conversation intent, enforces Google-style module prefacing and "Why, Not What" comment standards, audits ripple impacts, adapts test suites via test-strategist, updates clear documentation, verifies regressions, and commits via commit-scribe when authorized. Use immediately after implementing, editing, or refactoring code. Do not use for initial exploratory coding or standalone documentation audits without recent codebase modifications.
 ---
 
 # Evergreen Repository Synchronization Engine
 
-Follow this protocol immediately after a coding session to inspect recent functional changes, audit systemic ripple effects across the entire codebase, adapt tests, update documentation, and commit the reconciled state. Eliminate split-brain drift between code and documentation before closing a development task.
+Follow this protocol immediately after a coding session to inspect recent functional changes, audit systemic ripple effects across the entire codebase, adapt tests, update documentation, and finalize the reconciled state within the user's authorized Git scope. Eliminate split-brain drift between code and documentation before closing a development task.
 
 ---
 
@@ -31,11 +31,11 @@ Apply these standards across all code and documentation modified or created duri
 - **Trivial Syntax Echo Purge:** Eradicate comments that merely narrate visible syntax mechanics (e.g., `# loop over items`, `// return true`, `count += 1  # increment count`).
 - **Residue Purge:** Delete commented-out legacy code blocks completely, purge temporary debug statements (`console.log`, `print`, `debugger`), and delete scratchpad notes.
 
-### Living Documentation & ASD-STE100 Standards
+### Living Documentation & Plain-Language Standards
 
 - **Active Present-Tense Invariant:** Living files (`*.md`, source code, configs, schemas) must describe current operational state. Never append changelog notes or version deltas into living reference docs (e.g., `*Note: Updated in v2 to use DuckDB*`). Route historical context exclusively to Git commit messages.
-- **ASD-STE100 Plain Language:** Write short, active sentences in affirmative voice. Limit each sentence to one main idea. Define technical terms on first use. Maintain a single consistent term for each concept; never rotate synonyms.
-- **Bullet-First Hierarchy:** Structure lists using bold category anchors (`- **Anchor:**`) with un-bolded declarative child bullets. Eliminate walls of dense paragraph prose. Eliminate heading echoing (never restate heading titles in the first sentence beneath them).
+- **Plain Language:** Use selected STE100 and Google developer-documentation principles: direct verbs, clear references, consistent terms, and definitions at first use. Preserve technical vocabulary and uncertainty. Treat a Gunning Fog aim near 10 as an informal diagnostic; do not claim a measured score or full compliance without assessment.
+- **Artifact-Specific Structure:** For substantial explanations, introduce the whole subject and main relationships before deepening mechanisms and detail. Use progressive-documentation if available; these local rules also suffice. Choose paragraphs, steps, lists, and tables for the task. Use cognitive-clarity-refactor only when the artifact needs its scannable bullet hierarchy. Keep procedures executable and required templates intact.
 - **Single Source of Truth:** Establish canonical documentation in one location and link to it using portable relative Markdown links. Avoid duplicate assertions across disparate files.
 
 ---
@@ -86,7 +86,7 @@ Apply all required modifications across the repository:
 
 - **Code & Contract Updates:** Update affected consumers, wrappers, configuration schemas, and environment variable references conforming to Section 1 commenting standards.
 - **Test Suite Updates:** Implement, adapt, or prune test cases as strategized in Phase 2.
-- **Documentation Refactoring:** Update affected documentation, parent tables, and operational runbooks conforming strictly to Section 1 ASD-STE100 and Bullet-First standards.
+- **Documentation Refactoring:** Update affected documentation, parent tables, and operational runbooks using the plain-language and artifact-specific rules in Section 1.
 
 ### Phase 5: Automated Verification & Regression Testing
 
@@ -101,7 +101,7 @@ Verify that the synchronization pass introduced zero regressions:
 
 ### Phase 6: Commit & Upstream Sync via commit-scribe skill
 
-Package the synchronized state into a clean, atomic Git commit:
+When the user has authorized Git finalization, package the synchronized state into a clean, atomic Git commit. Otherwise report the verified working-tree changes and stop before staging. Push only when the authorized workflow includes it:
 
 - Activate the commit-scribe skill to stage all reconciled files (`git add <files>`).
 - Construct a high-context structured commit message documenting:
@@ -109,10 +109,12 @@ Package the synchronized state into a clean, atomic Git commit:
   - **Solution:** Reconciled documentation, adapted test suites, and synchronized consumers.
   - **Decisions:** Non-obvious trade-offs made during synchronization.
   - **Implementation:** List of touched components and surfaces.
-- Push the commit to the upstream tracking remote (`git push`).
+- Push the commit to the upstream tracking remote (`git push`) only when authorized.
 - Report back to the user with the commit hash, modified files, test verification results, and upstream status.
 
 ---
+
+Required dependencies are test-strategist for the test audit and commit-scribe for authorized Git finalization. If either is unavailable, state the affected step, complete supported local reconciliation and checks, and report that step as incomplete. Do not claim the dependency workflow ran. Structural writing skills are optional; Section 1 provides the local fallback.
 
 ## 3. Pre-Commit Verification Checklist
 
@@ -128,7 +130,7 @@ Before completing execution, confirm that all items are satisfied:
 ### Documentation & Navigation
 
 - [ ] All updated docs written in active present tense (zero patch notes or backward-looking deltas).
-- [ ] All lists use Bullet-First hierarchy (bold category anchors, declarative child bullets, max 3 levels).
+- [ ] Document structure matches its purpose; explanatory layers add understanding, and procedures remain executable.
 - [ ] Zero heading echoing (first sentence beneath a heading does not restate the heading title).
 - [ ] Parent README manifests and root documentation index newly created or modified files.
 - [ ] All relative Markdown links resolve to valid sibling files.
@@ -138,4 +140,4 @@ Before completing execution, confirm that all items are satisfied:
 - [ ] CLI flags, schemas, configurations, and environment variables align across code, docs, and tests.
 - [ ] Test suites adapted and passing with 0 errors via project verification runners (e.g., `<repo_root>/scripts/verify.sh` or local test runner).
 - [ ] Prettier formatting verified with 0 warnings or syntax errors.
-- [ ] Changes staged cleanly and committed via commit-scribe skill.
+- [ ] Git finalization follows the user's scope; use commit-scribe before any authorized staging, commit, or push.

@@ -1,0 +1,25 @@
+Rewrite these notes into an explanatory document of 550–750 words for a product engineer. Preserve the command and table exactly. Save the finished document to output.md in your assigned directory.
+
+Storage:
+Archive keeps files for 90 days. Files over 50 MiB are rejected by intake. The store keeps the original bytes and a content hash. Duplicate content uses one stored blob but can have multiple metadata records. Metadata has an owner ID, access policy version, and created-at UTC time. Only an owner or admin can request deletion. Legal hold blocks deletion even for an admin. Blob deletion waits until no metadata record references the blob. There is no tested guarantee about deletion completion time. Backup expiry can take up to 14 more days. Do not promise immediate removal of every copy.
+Owners cannot change a content hash. Metadata can be updated independently. Access policy is evaluated at download time.
+
+Intake:
+The upload endpoint issues an upload token valid for 15 minutes. Intake validates the size, reads bytes, computes a content hash, creates the blob if needed, and then creates metadata. If metadata creation fails, a cleanup task removes unreferenced blobs. Cleanup runs every hour. Intake does not scan malware; customers must scan files before upload. Successful intake returns a file ID after both blob and metadata are stored. A file ID is different from a content hash. Two uploads with matching content and different owners get different file IDs.
+
+Delivery:
+The download API checks the current metadata access policy and issues a URL valid for five minutes. A URL already issued keeps working until it expires even if the metadata access policy changes. The URL identifies a blob and does not expose the owner ID. Legal hold blocks deletion but does not grant download permission. An admin can disable new URL issuance for a file; previously issued URLs still last up to five minutes. No supported bulk-download endpoint exists.
+
+Exact command:
+```bash
+archivectl inspect --file "demo 7" --format json
+```
+
+Exact table:
+| Operation | Authority |
+| --- | --- |
+| Upload | Account member |
+| Change access policy | Owner |
+| Request deletion | Owner or admin |
+
+Support has asked for instant revocation of URLs. The team has not decided whether to implement it. A possible design is a proxy download endpoint; its cost and latency are unknown.

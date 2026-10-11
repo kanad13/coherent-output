@@ -1,65 +1,67 @@
 # Tool Adapters
 
-This directory defines tool-specific installation blueprints and runtime bridges. Shared skills and policy source files remain strictly tool-agnostic.
+The adapters connect one shared library to host-specific directories and hook contracts. Installation manages links and generated configuration. Native applications decide when to discover skills, trust hooks, and fire tool events.
 
----
+## 1. Installed mappings
 
-## 1. Adapter Architecture
+`<repo>` is the absolute local checkout. Codex uses `CODEX_HOME` or `--codex-home` when supplied; the table shows defaults.
 
-Each adapter folder contains a `links.json` file specifying how shared sources map into tool-specific target locations:
+| Host            | Destination                   | Source                                         |
+| --------------- | ----------------------------- | ---------------------------------------------- |
+| Codex           | `~/.agents/skills`            | `<repo>/skills`                                |
+| Codex           | `~/.codex/AGENTS.md`          | `<repo>/.generated/codex/AGENTS.md`            |
+| Codex           | `~/.codex/hooks.json`         | `<repo>/.generated/codex/<home-id>/hooks.json` |
+| Antigravity IDE | `~/.gemini/AGENTS.md`         | `<repo>/AGENTS.md`                             |
+| Antigravity IDE | `~/.gemini/config/rules`      | `<repo>/rules`                                 |
+| Antigravity IDE | `~/.gemini/config/skills`     | `<repo>/skills`                                |
+| Antigravity IDE | `~/.gemini/config/hooks.json` | `<repo>/.generated/antigravity/hooks.json`     |
 
-| Adapter                         | Target Directory            | Key Mappings                                                                                                                                                 | Runtime Mechanics                                                                                                                                                                  |
-| :------------------------------ | :-------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **[Antigravity](antigravity/)** | `~/.gemini/`                | `AGENTS.md` → `~/.gemini/AGENTS.md`<br>`rules/` → `~/.gemini/config/rules`<br>`skills/` → `~/.gemini/config/skills`<br>Hooks → `~/.gemini/config/hooks.json` | Loads rules dynamically based on YAML trigger frontmatter (`always_on`, `glob`). Renders local hook commands dynamically from template.                                            |
-| **[Codex](codex/)**             | `~/.codex/`<br>`~/.agents/` | `AGENTS.md` → `~/.codex/AGENTS.md`<br>`skills/` → `~/.agents/skills`                                                                                         | Merges `AGENTS.md` and all modular written rules into `.generated/codex/AGENTS.md`. Wraps any glob rules in file conditions. Leaves native Codex command approval policy in place. |
+`<home-id>` is a stable hash of the Codex home. Merged user hooks use a separate generated file per destination, so testing a second home cannot overwrite the first home's settings.
 
----
+Each host's `links.json` declares these mappings. Deployment renders shell-quoted absolute commands so paths with spaces or apostrophes work.
 
-## 2. Antigravity Lifecycle Hooks
+Select a host with `./scripts/deploy.sh --tool antigravity` or `--tool codex`. Only that host's artifacts are generated and validated; shared skill metadata is still checked. Provision dependencies with `npm ci` and use the same host flag with `./scripts/verify.sh`. A selected-skill install alone does not install these hooks or their repository-wide checker.
 
-Antigravity lifecycle hooks are configured via `adapters/antigravity/hooks/hooks.template.json`:
+Codex composition supports `always_on` and `glob` rules. Glob rules receive a natural-language condition, which guides the model rather than enforcing a filesystem restriction. The composed file is bounded by the default 32 KiB discovery limit. Antigravity loads rules through its own trigger mechanism, including native `manual` and `model_decision` modes that Codex composition rejects. Those modes remain usable in Antigravity-only installations. See [Antigravity rules](https://antigravity.google/docs/rules).
 
-- **Destructive Command Gate (`safety-gate.sh`):**
-  - Event: `PreToolUse` on `run_command`.
-  - Behavior: Inspects command payloads for high-risk patterns (`rm -rf /`, `git reset --hard`, `DROP DATABASE`).
-  - Output: Returns `{"decision": "force_ask"}` for destructive patterns, `{"decision": "allow"}` otherwise.
-- **Prettier Auto-Formatter (`prettier-format.sh`):**
-  - Event: `PostToolUse` on `write_to_file` and `replace_file_content`.
-  - Behavior: Sanitizes file paths (stripping quotes and expanding home paths), checks for project-level Prettier configs, falls back to the repository `.prettierrc` for unconfigured files, and automatically formats Markdown and code files.
-- **Mermaid Diagram Validator (`mermaid-validate.sh`):**
-  - Event: `PostToolUse` on `write_to_file` and `replace_file_content`.
-  - Behavior: Fast-checks written or modified Markdown files for ` ```mermaid ` code blocks and batch-compiles them using `verify-markdown.py`. Non-zero exit on syntax error prevents broken diagram syntax from persisting unnoticed.
+## 2. Hook feedback and coverage
 
-The installer renders local absolute script paths dynamically into `.generated/antigravity/hooks.json` via `./scripts/deploy.sh`, ensuring hook paths work on any Mac regardless of checkout location.
+| Host/event                                                     | Input                            | Behavior                                                             |
+| -------------------------------------------------------------- | -------------------------------- | -------------------------------------------------------------------- |
+| Antigravity PreToolUse, `run_command`                          | `toolCall.args.CommandLine`      | Ask for native review of common destructive forms or malformed input |
+| Antigravity PostToolUse, `write_to_file\|replace_file_content` | `toolCall.args.TargetFile`       | Separate formatting and Mermaid checks                               |
+| Codex PostToolUse, `apply_patch\|Edit\|Write\|Bash`            | `tool_name`, `tool_input`, `cwd` | Extract patch/write paths and run both document checks               |
 
-### Adding New Hooks: Standard Workflow
+The Codex matcher covers the existing supported tool names. Its command uses the installer's absolute Python executable so bootstrap does not depend on a GUI PATH containing Python. Redeploy after changing that Python installation; native review applies to changed commands. Antigravity shell launchers add standard user and Homebrew runtime directories before locating Python. Bash payloads are an explicit no-op because arbitrary shell code cannot reliably identify edited paths. Patch moves check the destination. These hooks cover configured tool events, not every way a file can change.
 
-1. Place the executable shell/Python script in `adapters/antigravity/hooks/scripts/`.
-2. Register the event trigger in `adapters/antigravity/hooks/hooks.template.json` using the `{{script_placeholder}}` syntax.
-3. Add the template replacement in `scripts/deploy.py` under `replacements`.
-4. Run `./scripts/deploy.sh` and `./scripts/verify.sh` to compile `.generated/antigravity/hooks.json` and confirm test suite passage.
+[document-check.py](shared/document-check.py) separates payload handling from shared checks. It resolves quoted and relative paths, prefers the target project's installed Prettier, and uses the pinned library fallback when needed. The target project's configuration takes precedence; unconfigured files use this repository's `.prettierrc`.
 
----
+Mermaid checks use the helper bundled with the mermaid-architect skill. A Markdown document without Mermaid fences requires no renderer. Diagrams require a provisioned CLI at the expected version; checks do not fetch packages.
 
-## 3. Codex Bridge & Instruction Composition
+On success, document hooks return `{}` on stdout. Diagnostics go to stderr. On failure, the shared checker exits `2`; Codex also receives `decision: block` feedback. PostToolUse feedback cannot reverse the preceding edit. For exact Markdown assets, an allowed `<!-- prettier-ignore -->` comment before the protected block avoids reformatting. Inspect the saved file after hooks; a submitted edit alone does not prove preservation. Formatter errors, invalid diagrams, missing dependencies, and timeouts remain visible rather than becoming successful results.
 
-Codex CLI does not use a directory for Markdown prompt rules (Codex's `.rules` files use a Starlark DSL specifically for command sandboxing permissions).
+The Antigravity safety gate is a conservative pattern check. It recognizes common Git, SQL, and recursive forced removal forms, including split flags and relative paths. It is not a shell interpreter or a security boundary. Native permissions remain necessary.
 
-To ensure complete policy enforcement in Codex:
+## 3. Ownership and migration
 
-- The installer concatenates `AGENTS.md` with all modular rule bodies from `rules/*.md`.
-- Any glob-triggered policies are dynamically wrapped in natural-language boundary markers (e.g., `Apply the following policy only when working on files matching <pattern>`).
-- Output is written to `.generated/codex/AGENTS.md` (well under the 32 KiB instruction limit) and symlinked to `~/.codex/AGENTS.md`.
+The Codex installer replaces only a recognized invocation of this checkout's `adapters/shared/document-check.py --host codex`. It preserves other PostToolUse handlers, other events, and unrelated top-level settings. Malformed JSON or invalid supported hook-container shapes stop deployment before writes. Unknown fields are preserved; this is not a full Codex schema validator.
 
----
+Adopting an existing regular `hooks.json` requires `--backup-conflicts`. The original file remains recoverable in the backup directory. Later deployments read the managed file, retain unrelated additions, and update the owned entry without duplication.
 
-## 4. Skill Discovery Across Harnesses
+Codex's native trust review still applies to new or changed entries. The installer does not edit trust state. See [Codex hooks](https://learn.chatgpt.com/docs/hooks) and [Antigravity hooks](https://antigravity.google/docs/hooks).
 
-Both Antigravity and Codex implement the [Agent Skills open standard](../skills/README.md). Neither requires the model to traverse local directories:
+Antigravity's entire destination hook file remains installer-owned; conflicting originals are backed up when replacement is requested. It does not share Codex's merge schema.
 
-- **Antigravity Discovery:** Automatically scans `~/.gemini/config/skills/*/SKILL.md` (and workspace `.agents/skills/`), injects frontmatter (`name` and `description`) into an active `<skills>` system prompt block at startup, and loads the full `SKILL.md` instructions when activated.
-- **Codex Discovery:** Scans `~/.agents/skills/*/SKILL.md` and repository `.agents/skills/` walking up the directory tree, catalogs skill metadata into the model prompt, and loads bodies on demand.
+## 4. Other hosts and future hooks
 
-In both tools, Section 5 of `AGENTS.md` acts as an autonomous policy router that matches task intent to the harness-provided skill manifest.
+The portable [Skills CLI route](../README.md#2-install-selected-skills-in-a-project) distributes selected skill folders. Gemini CLI uses its own skills and `settings.json` hook conventions; this Antigravity adapter is not a Gemini CLI hook installer. Claude's native plugins can package skills and hooks, but no Claude hook adapter is maintained here.
+
+Before adding a hook:
+
+1. Verify the host's current event, input, output, failure, and trust contracts.
+2. Keep host normalization at the adapter boundary and reuse a shared checker only where semantics match.
+3. Add the template and shell-quoted render mapping.
+4. Exercise real side effects, errors, missing dependencies, and bounded execution in isolated tests.
+5. Document coverage and perform a native host check before claiming runtime delivery.
 
 Return to the [repository overview](../README.md).

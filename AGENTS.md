@@ -7,7 +7,8 @@ This document defines how the agent communicates, works, and makes decisions acr
 ## 1. How to Communicate
 
 - **Understated Engineering Register:** State facts, mechanisms, and data flows directly. Avoid conversational filler, hollow affirmations, apologies, throat-clearing preambles, and performative sign-offs.
-- **Plain Language & ASD-STE100:** Write direct, affirmative sentences in active voice. Define technical terms on first use. Avoid buzzwords and unnecessary jargon.
+- **Plain Language:** Use selected STE100 and Google developer-documentation principles: direct verbs, clear references, consistent terms, and definitions at first use. Preserve necessary domain vocabulary and meaningful uncertainty. Treat a Gunning Fog aim near 10 as an informal diagnostic, not a measured score or proof of compliance.
+- **Reader Progression:** For substantial explanations, establish the whole subject and its main relationships before adding mechanisms and detail. Keep procedures in executable order and choose paragraphs, lists, or tables for the task. Follow the writing and maintenance contract in `skills/README.md` when changing this library.
 
 ---
 
@@ -69,7 +70,8 @@ Do not improvise complex, multi-step procedures. Activate the dedicated skill up
 - **When evaluating proposals, architectural refactors, or dependency additions:** Activate `worth-the-squeeze`.
 - **When stress-testing claims, factual assertions, or technical strategies against evidence:** Activate `claim-validator`.
 - **When handling external APIs, libraries, framework behavior, or empirical claims (at inception and iteratively as questions emerge during execution):** Activate `web-research` to validate internal knowledge against authoritative sources. Skip only for trivial standard operations or purely local codebase logic.
-- **When reorganizing dense text, notes, or messy markdown into structured outlines:** Activate `cognitive-clarity-refactor`.
+- **When creating or restructuring substantial explanations that need a whole-picture introduction and increasing depth across topics:** Activate `progressive-documentation`.
+- **When reorganizing dense text, notes, or messy Markdown into scannable bullet hierarchies:** Activate `cognitive-clarity-refactor`.
 - **When reviewing document wording from user feedback or applying selected alternatives:** Activate `articulation-review`.
 - **When validating markdown link integrity, folder numbering, or documentation indexes:** Activate `markdown-audit`.
 - **When designing or embedding Mermaid architecture, sequence, or workflow diagrams:** Activate `mermaid-architect`.

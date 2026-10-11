@@ -1,6 +1,12 @@
 [
   {
     "scope": "codex",
+    "destination": "hooks.json",
+    "source": ".generated/codex/{codex_home_id}/hooks.json",
+    "previous_sources": [".generated/codex/hooks.json"]
+  },
+  {
+    "scope": "codex",
     "destination": "AGENTS.md",
     "source": ".generated/codex/AGENTS.md",
     "previous_sources": ["AGENTS.md"]

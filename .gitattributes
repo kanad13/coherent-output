@@ -1,0 +1,2 @@
+# Trial evidence must retain its original bytes, including insertion separators.
+evaluations/writing/**/*.txt -text whitespace=-blank-at-eof

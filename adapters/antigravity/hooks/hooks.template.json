@@ -23,7 +23,7 @@
           {
             "type": "command",
             "command": "/bin/bash {{prettier_format}}",
-            "timeout": 15
+            "timeout": 30
           }
         ]
       }
@@ -38,7 +38,7 @@
           {
             "type": "command",
             "command": "/bin/bash {{mermaid_validate}}",
-            "timeout": 30
+            "timeout": 90
           }
         ]
       }

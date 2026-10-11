@@ -1,0 +1,55 @@
+# Delivery guide
+
+Message delivery passes through the queue, storage, and search. The ingestion endpoint accepts a message before storage and search complete.
+
+## Delivery stages
+
+- **Acceptance:**
+  - The ingestion endpoint accepts a message after the message reaches the queue.
+  - The accepted message has not reached storage at that time.
+  - The endpoint rejects messages larger than 128 KiB.
+
+- **Storage:**
+  - A worker attaches a sequence number to the message.
+  - The worker writes the message to storage.
+
+| Write result        | Worker action                                                    |
+| ------------------- | ---------------------------------------------------------------- |
+| The write succeeds. | The worker acknowledges the queue only after the write succeeds. |
+| The write fails.    | The worker retries the write.                                    |
+
+- **Search:**
+  - The indexer then updates search separately.
+  - The measured search delay in the local test is 5 seconds.
+  - Production timing is unknown.
+  - Some readers mistakenly treat acceptance as search availability.
+
+| Stage  | Owner   |
+| ------ | ------- |
+| Queue  | Intake  |
+| Store  | Worker  |
+| Search | Indexer |
+
+## Tenant identity and duplicates
+
+- **Tenant identity:**
+  - A tenant key identifies the tenant at ingestion.
+  - Storage keys include the tenant ID.
+  - Search checks the tenant key before querying.
+
+- **Duplicate risk:**
+  - Client retries without a message ID can produce duplicates.
+
+| Message ID            | Duplicate handling                                                        |
+| --------------------- | ------------------------------------------------------------------------- |
+| A message ID exists.  | The system discards duplicate messages within the same tenant for 7 days. |
+| No message ID exists. | Duplicates can remain.                                                    |
+
+## Operator reference
+
+- **Production search delay:**
+  - Do not tell customers that production search delay is always 5 seconds.
+
+```bash
+deliverctl inspect --message "sample 3"
+```

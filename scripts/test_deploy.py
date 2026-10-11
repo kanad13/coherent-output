@@ -1,8 +1,14 @@
-"""Exercise installation against isolated checkouts and simulated Mac home folders."""
+"""Exercise installation against isolated checkouts and simulated Mac homes.
+
+Generated commands must work from the installed artifacts, not only the source
+scripts. Isolation makes backup and migration tests safe for existing app state.
+"""
 
 import json
+import os
 from pathlib import Path
 import shutil
+import shlex
 import subprocess
 import sys
 import tempfile
@@ -13,7 +19,10 @@ SOURCE = Path(__file__).resolve().parent.parent
 
 
 class DeploymentTests(unittest.TestCase):
+    """Verify installation ownership and observable host-command effects."""
+
     def setUp(self):
+        """Keep installation writes and device-owned state outside the real home."""
         self.temporary = tempfile.TemporaryDirectory(prefix="coherent-install-")
         self.addCleanup(self.temporary.cleanup)
         self.root = Path(self.temporary.name).resolve()
@@ -22,9 +31,20 @@ class DeploymentTests(unittest.TestCase):
         for name in ("skills", "rules", "adapters", "scripts"):
             shutil.copytree(SOURCE / name, self.repo / name, ignore=shutil.ignore_patterns("__pycache__"))
         shutil.copyfile(SOURCE / "AGENTS.md", self.repo / "AGENTS.md")
+        shutil.copyfile(SOURCE / ".prettierrc", self.repo / ".prettierrc")
+        (self.repo / "node_modules").symlink_to(SOURCE / "node_modules", target_is_directory=True)
         self.target = self.root / "user home"
 
     def run_deploy(self, *args, status=0):
+        """Require the installer's reported result to match its expected outcome.
+
+        Args:
+            *args: Additional installer CLI arguments.
+            status: Expected process exit status.
+
+        Returns:
+            The completed installer process for further result assertions.
+        """
         result = subprocess.run(
             [sys.executable, str(self.repo / "scripts/deploy.py"), "--target-home", str(self.target), *args],
             capture_output=True, text=True,
@@ -98,6 +118,45 @@ class DeploymentTests(unittest.TestCase):
         self.assertFalse((self.target / ".gemini").exists())
         self.assertFalse((self.repo / ".generated/antigravity").exists())
 
+    def test_antigravity_only_install_accepts_native_manual_and_model_rules(self):
+        """Keep Codex composition constraints out of Antigravity-only deployment."""
+        rule = self.repo / "rules/99-native-policy.md"
+        for trigger in ("manual", "model_decision"):
+            with self.subTest(trigger=trigger):
+                rule.write_text(f"---\ntrigger: {trigger}\ndescription: Native Antigravity policy.\n---\n# Native Policy\n")
+                self.run_deploy("--tool", "antigravity")
+                self.run_deploy("--tool", "antigravity", "--check")
+                self.assertFalse((self.repo / ".generated/codex").exists())
+                self.assertEqual((self.target / ".gemini/config/rules/99-native-policy.md").read_text(), rule.read_text())
+                self.run_deploy("--tool", "codex", "--dry-run", status=1)
+
+    def test_codex_only_install_does_not_parse_antigravity_templates(self):
+        """Prevent unrelated host configuration from blocking Codex deployment."""
+        (self.repo / "adapters/antigravity/hooks/hooks.template.json").write_text("not-json")
+        self.run_deploy("--tool", "codex")
+        self.run_deploy("--tool", "codex", "--check")
+        self.assertFalse((self.target / ".gemini").exists())
+
+    @unittest.skipUnless(sys.platform == "darwin", "Mac GUI runtime discovery contract")
+    def test_codex_installed_checker_starts_without_python_on_gui_path(self):
+        """Exercise the interpreter bootstrap before the checker's PATH setup."""
+        self.run_deploy("--tool", "codex")
+        config = json.loads((self.target / ".codex/hooks.json").read_text())
+        command = config["hooks"]["PostToolUse"][0]["hooks"][0]["command"]
+        gui_bin = self.root / "gui-bin"
+        gui_bin.mkdir()
+        sample = self.target / "sample.md"
+        sample.write_text("#  Header\n\n-  item\n")
+        result = subprocess.run(
+            ["/bin/bash", "-c", command],
+            input=json.dumps({"tool_name": "Write", "tool_input": {"file_path": str(sample)}}),
+            cwd=self.root, env={**os.environ, "PATH": str(gui_bin)},
+            capture_output=True, text=True, timeout=100,
+        )
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(json.loads(result.stdout), {})
+        self.assertEqual(sample.read_text(), "# Header\n\n- item\n")
+
     def test_existing_mapping_migrates_even_with_missing_old_hook_source(self):
         codex = self.target / ".codex/AGENTS.md"
         hooks = self.target / ".gemini/config/hooks.json"
@@ -137,6 +196,102 @@ class DeploymentTests(unittest.TestCase):
             )
             self.assertEqual(result.returncode, 0, result.stderr)
             self.assertEqual(json.loads(result.stdout), {})
+            self.assertEqual(sample_file.read_text(), "# Header\n\n- item\n")
+
+    @unittest.skipUnless(sys.platform == "darwin", "Mac GUI runtime discovery contract")
+    def test_antigravity_only_install_runs_all_generated_hooks_without_shell_profile(self):
+        """Exercise installed commands without inheriting terminal runtime paths."""
+        self.run_deploy("--tool", "antigravity")
+        self.run_deploy("--tool", "antigravity", "--check")
+        self.assertFalse((self.target / ".codex").exists())
+        self.assertEqual((self.target / ".gemini/config/skills").resolve(), self.repo / "skills")
+        self.assertTrue((self.target / ".gemini/config/skills/mermaid-architect/scripts/verify-markdown.py").is_file())
+        config = json.loads((self.target / ".gemini/config/hooks.json").read_text())
+        gui_bin = self.root / "gui-bin"
+        gui_bin.mkdir()
+        (gui_bin / "dirname").symlink_to(shutil.which("dirname"))
+        environment = {**os.environ, "PATH": str(gui_bin)}
+
+        def invoke(name, event, payload):
+            """Exercise the rendered command through the native shell boundary."""
+            command = config[name][event][0]["hooks"][0]["command"]
+            self.assertTrue(config[name]["enabled"])
+            return subprocess.run(
+                ["/bin/bash", "-c", command], input=json.dumps(payload),
+                cwd=self.root, env=environment, capture_output=True, text=True, timeout=100,
+            )
+
+        gate = invoke("destructive-command-safety-gate", "PreToolUse", {"toolCall": {"args": {"CommandLine": "git reset --hard"}}})
+        self.assertEqual(gate.returncode, 0, gate.stderr)
+        self.assertEqual(json.loads(gate.stdout)["decision"], "force_ask")
+        sample = self.target / "document with space's.md"
+        sample.write_text("#  Header\n\n-  item\n")
+        payload = {"toolCall": {"name": "write_to_file", "args": {"TargetFile": str(sample)}}}
+        formatted = invoke("prettier-auto-format", "PostToolUse", payload)
+        self.assertEqual(formatted.returncode, 0, formatted.stderr)
+        self.assertEqual(json.loads(formatted.stdout), {})
+        self.assertEqual(sample.read_text(), "# Header\n\n- item\n")
+        for diagram, expected in (("flowchart LR\n A-->B", 0), ("flowchart LR\n A-->", 2)):
+            with self.subTest(diagram=diagram):
+                sample.write_text("```mermaid\n" + diagram + "\n```\n")
+                compiled = invoke("mermaid-syntax-validator", "PostToolUse", payload)
+                self.assertEqual(compiled.returncode, expected, compiled.stderr)
+                self.assertEqual(json.loads(compiled.stdout), {})
+                if expected:
+                    self.assertIn("failed compilation", compiled.stderr)
+
+    def test_codex_hook_adoption_preserves_other_handlers_and_settings(self):
+        destination = self.target / ".codex/hooks.json"
+        destination.parent.mkdir(parents=True)
+        unrelated = {"type": "command", "command": "echo personal-hook"}
+        owned = {"type": "command", "command": "python3 " + shlex.quote(str(self.repo / "adapters/shared/document-check.py")) + " --host codex"}
+        original = {"custom": True, "hooks": {"Stop": [{"hooks": [unrelated]}], "PostToolUse": [{"matcher": ".*", "hooks": [owned, unrelated]}]}}
+        destination.write_text(json.dumps(original))
+        self.run_deploy(status=1)
+        self.assertFalse((self.repo / ".generated").exists())
+        self.run_deploy("--backup-conflicts")
+        installed = json.loads(destination.read_text())
+        self.assertTrue(installed["custom"])
+        self.assertEqual(installed["hooks"]["Stop"], original["hooks"]["Stop"])
+        self.assertEqual(installed["hooks"]["PostToolUse"][0]["hooks"], [unrelated])
+        self.assertEqual(len(installed["hooks"]["PostToolUse"]), 2)
+        before = destination.read_text()
+        self.run_deploy()
+        self.assertEqual(destination.read_text(), before)
+        self.run_deploy("--check")
+
+    def test_invalid_codex_hook_schema_aborts_before_writing(self):
+        destination = self.target / ".codex/hooks.json"
+        destination.parent.mkdir(parents=True)
+        destination.write_text('{"hooks": {"PostToolUse": "invalid"}}')
+        self.run_deploy("--backup-conflicts", status=1)
+        self.assertFalse((self.repo / ".generated").exists())
+        self.assertFalse((self.target / ".agents").exists())
+
+    def test_multiple_codex_homes_keep_unrelated_hook_state_isolated(self):
+        first = self.target / ".codex/hooks.json"
+        first.parent.mkdir(parents=True)
+        personal = {"matcher": ".*", "hooks": [{"type": "command", "command": "echo personal"}]}
+        first.write_text(json.dumps({"hooks": {"Stop": [personal]}}))
+        self.run_deploy("--tool", "codex", "--backup-conflicts")
+        before = first.read_text()
+        second_home = self.root / "second home"
+        self.run_deploy("--tool", "codex", "--target-home", str(second_home))
+        second = second_home / ".codex/hooks.json"
+        self.assertNotEqual(first.resolve(), second.resolve())
+        self.assertEqual(first.read_text(), before)
+        self.assertNotIn("Stop", json.loads(second.read_text())["hooks"])
+        self.run_deploy("--tool", "codex", "--check")
+
+    def test_skill_identity_and_description_limits_are_enforced(self):
+        skill = self.repo / "skills/worth-the-squeeze/SKILL.md"
+        original = skill.read_text()
+        for name in ("WRONG", "-wrong", "wrong--name", "x" * 65, "valid-but-mismatched"):
+            with self.subTest(name=name):
+                skill.write_text(original.replace("name: worth-the-squeeze", "name: " + name))
+                self.run_deploy("--dry-run", status=1)
+        skill.write_text("---\nname: worth-the-squeeze\ndescription: " + "x" * 1025 + "\n---\nBody\n")
+        self.run_deploy("--dry-run", status=1)
 
 
 if __name__ == "__main__":

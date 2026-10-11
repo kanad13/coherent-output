@@ -1,0 +1,16 @@
+{
+  "name": "coherent-output",
+  "private": true,
+  "scripts": {
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "python3 -m unittest discover -s scripts -p 'test_*.py'"
+  },
+  "devDependencies": {
+    "@mermaid-js/mermaid-cli": "12.0.0",
+    "prettier": "3.6.2"
+  },
+  "allowScripts": {
+    "puppeteer@25.13.0": true
+  }
+}

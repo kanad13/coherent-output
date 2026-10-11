@@ -1,129 +1,90 @@
 # Agent Skills Library
 
-This directory contains the situational skill library for AI coding agents. Every skill conforms to the open [Agent Skills specification](https://agentskills.io) and is shared across development environments (Google Antigravity and OpenAI Codex).
+This library contains portable, task-specific playbooks for AI agents. A host discovers each skill's name and description, the agent reads its body when needed, and bundled resources support the workflow. Installation makes a skill available; behavior still needs to be checked against the requested result.
 
----
+## 1. Discovery and execution
 
-## 1. Architecture: The Progressive Disclosure Model
+The [Agent Skills specification](https://agentskills.io/specification) separates lightweight metadata, the instruction body, and optional resources. Hosts choose their discovery paths, invocation syntax, consent, and caching behavior.
 
-AI agents do not search arbitrary directories to locate skills. Instead, runtime harnesses manage skills through a three-tier **Progressive Disclosure** pipeline:
+- Global policy in `AGENTS.md` can route a task to a named skill.
+- A user's explicit invocation requests the skill's workflow.
+- The agent must read the discovered `SKILL.md` and follow its applicable steps.
+- A helper runs only when called. A lifecycle hook runs only for supported events with an active, trusted configuration.
 
-```
-┌────────────────────────────────────────────────────────────────────────┐
-│ TIER 1: HARNESS STARTUP CATALOG (~50-100 tokens per skill)             │
-│ Harness scans ~/.agents/skills or ~/.gemini/config/skills.             │
-│ Reads YAML frontmatter (name + description) and injects into prompt:   │
-│   <skills>                                                             │
-│   - commit-scribe (/path/to/commit-scribe/SKILL.md): Creates ...       │
-│   </skills>                                                            │
-└───────────────────────────────────┬────────────────────────────────────┘
-                                    │ Task matches skill description
-                                    ▼
-┌────────────────────────────────────────────────────────────────────────┐
-│ TIER 2: ON-DEMAND INSTRUCTION ACTIVATION                               │
-│ Agent reads SKILL.md via file view tool using harness-supplied path.   │
-│ Full procedural instructions enter context only when actively needed.  │
-└───────────────────────────────────┬────────────────────────────────────┘
-                                    │ Workflow requires scripts or data
-                                    ▼
-┌────────────────────────────────────────────────────────────────────────┐
-│ TIER 3: RESOURCE EXECUTION                                             │
-│ Agent inspects local scripts/, references/, or assets/ only if called. │
-└────────────────────────────────────────────────────────────────────────┘
-```
+Invocation does not establish that every model-directed step occurred. Hooks do not cover every write path. Verify observable outcomes through the [testing strategy](../scripts/README.md#3-verification-strategy).
 
-### The Dual Ingestion Model
+## 2. Skill authoring contract
 
-Skills are activated through two complementary channels:
+### Scope and metadata
 
-1. **Autonomous Policy Routing (`AGENTS.md` Section 5):**
-   - The harness pre-loads skill names and paths in the system prompt.
-   - The universal directive in `AGENTS.md` tells the agent _when_ it must not improvise (e.g., `"When committing, use commit-scribe"`).
-   - The model matches the named policy to its pre-loaded skills catalog and reads the instructions without requiring user intervention.
-2. **Explicit User Invocations (Slash Commands):**
-   - The user explicitly calls a skill in chat (e.g., `/commit-scribe`, `/repo-evergreen-sync`, `/web-research`).
-   - This bypasses model autonomy and deterministically forces the harness and agent to execute the requested playbook.
-
----
-
-## 2. Skill Authoring Contract
-
-When adding or updating a skill, adhere strictly to the following standards:
-
-### Directory Structure
+Keep each skill focused on a distinct transformation or decision. State its input, output, preservation rules, and completion checks. Prefer extending an existing skill when the output contract matches; add a skill when a different job would otherwise distort that contract.
 
 ```text
 skills/<skill-name>/
-├── SKILL.md              # Required: Main instruction file with YAML frontmatter
-├── scripts/              # Optional: Helper shell or Python scripts
-├── references/           # Optional: Deep reference manuals, schemas, or docs
-└── resources/            # Optional: Templates, vocabularies, or static data
+├── SKILL.md
+├── scripts/       # Optional executable helpers
+├── references/    # Optional material loaded when needed
+└── assets/        # Optional templates or data
 ```
 
-### Frontmatter Schema
-
-Every `SKILL.md` must start with valid YAML frontmatter containing exactly `name` and `description`:
+Start `SKILL.md` with YAML frontmatter:
 
 ```yaml
 ---
 name: example-skill
-description: Concise, third-person trigger criteria explaining WHAT the skill does, WHEN to invoke it, and WHEN NOT to invoke it. Maximum 1024 characters.
+description: Produces a specific result. Use when concrete task symptoms call for it. Do not use for adjacent tasks with a different output contract.
 ---
 ```
 
-- **`name`:** Lowercase alphanumeric with hyphens (`kebab-case`). Must match the parent directory name.
-- **`description`:** High-signal trigger statement. Harnesses pre-load only this text into the system prompt during Tier 1 discovery.
+`name` must match its directory, use lowercase letters/digits with single hyphens, and contain at most 64 characters. `description` must be nonempty and contain at most 1,024 characters. Explain capability, positive triggers, and useful exclusions. The opening paragraph after the title states how to execute and what to preserve; it does not repeat routing cues.
 
-### Authoring Guidance: Frontmatter `description` vs. Post-H1 Paragraph
+The open specification permits optional fields, including license, compatibility, metadata, and experimental allowed-tools. Prefer the minimal two-field header here. The installer validates this repository's flat, single-line frontmatter profile, identities, and lengths; it is not a general YAML or full specification validator. Extend that parser and tests before adopting nested or multiline headers. Optional scalar fields can be used when supported by the target hosts.
 
-Because AI harnesses use progressive disclosure, the frontmatter `description` and the post-H1 introductory paragraph fulfill two fundamentally distinct roles:
+### Shared writing policy
 
-1. **Frontmatter `description` (Tier 1: Routing & Discovery Contract):**
-   - **Audience:** The routing model deciding _whether_ to activate a skill before reading its body.
-   - **Required Three-Part Anatomy:**
-     - **Capabilities:** Direct statement of what technical outcome or artifact the skill produces.
-     - **Positive Triggers:** Explicit user intents, phrasing, task stages, or symptoms signaling invocation (e.g., `"Use when reviewing drafts...", "Activate before staging git changes..."`).
-     - **Negative Triggers (Boundaries):** Explicit exclusions preventing false-positive activations (e.g., `"Do not use for code blocks...", "Omit during intermediate WIP iterations..."`).
-   - **Constraints:** Maximum 1,024 characters. Write in concise third-person or imperative register.
+Use selected STE100 and Google developer-documentation principles: direct verbs, clear references, consistent terms, familiar words, and definitions at first use. Preserve necessary domain vocabulary, facts, commitments, uncertainty, and protected assets. Treat a Gunning Fog aim near 10 as an informal diagnostic. Claim a measured score only with a stated assessment method; these instructions do not establish full ASD-STE100 conformance.
 
-2. **Post-H1 Introductory Paragraph (Tier 2: Operational Grounding Contract):**
-   - **Audience:** The active agent that has _already_ loaded the skill into context.
-   - **Required Three-Part Anatomy:**
-     - **Operational Mission:** Direct executive directive setting the agent's professional posture.
-     - **Transformation Contract:** Clear statement of input $\rightarrow$ output guarantees (e.g., converting disorganized drafts into two-tier Markdown while preserving 100% of substantive facts).
-     - **Behavioral Invariants:** Non-negotiables governing the execution (e.g., zero sycophancy, verbatim code protection, ASD-STE100 active voice).
-   - **Anti-Pattern to Avoid:** Never repeat routing cues (`"Use this skill when..."`) in the post-H1 paragraph. Focus strictly on execution standards and invariants.
+For substantial explanations, introduce the purpose, major aspects, and their relationships before deep implementation detail. Later sections must add mechanisms, consequences, choices, or actionable detail. Keep decision-critical limits and safety warnings early. Choose connected paragraphs, lists, tables, and diagrams for the content. Preserve executable procedure order, required chronology, lookup access, explicit templates, and short-answer limits.
 
-### Portability & Linking Rules
+[progressive-documentation](progressive-documentation/SKILL.md) owns whole-document progression. [cognitive-clarity-refactor](cognitive-clarity-refactor/SKILL.md) owns dense-text conversion into its strict two-tier bullet hierarchy. They can cooperate when both contracts apply. Neither layout is the default for every artifact.
 
-- **Sibling Skills:** Reference sibling skills by name without relative Markdown paths (e.g., `activate the commit-scribe skill`). AI coding agents match skill names against their runtime skills catalog rather than resolving relative filesystem links.
-- **No External Relative Links:** Never use relative paths to files outside the `skills/` directory (e.g., `../AGENTS.md` or `../../README.md`). Deployed skills reside in separate configuration directories where those relative paths do not exist. Refer to external standards conceptually.
+Use this section as the canonical authoring policy. Give each portable skill a short local version of the principles needed to execute on its own. Retain artifact-specific requirements: emails preserve recipient tone and modality; notes preserve comprehensive context; explanations preserve prerequisite order. Update those local versions together when the central policy changes.
 
-### Style & Content Standards
+### Dependencies and portable resources
 
-- **Understated Engineering Register:** Write affirmative, active-voice instructions compliant with ASD-STE100 plain language.
-- **Why, Not What:** Document invariants, safety constraints, and decision rationale.
-- **Zero Residue:** Ensure execution steps clean up scratchpads, temporary files, and debug logging.
+Name sibling skills without filesystem links inside a skill body. Mark each dependency as required or optional. For an optional skill, include sufficient local instructions to proceed without it. For a required dependency that is unavailable, state the blocked step and complete the supported work; do not silently claim that step was performed.
 
-### Scripts vs. Lifecycle Hooks: Architectural Rule
+Resolve bundled resources relative to the discovered skill directory. Do not assume the caller's current directory or access to this source checkout. Keep internal resource links inside the bundle. Do not require an installed skill to read the repository's README or global instructions.
 
-When adding executable code or validation logic, use the appropriate mechanism:
+Document helper prerequisites, versions, inputs, side effects, timeouts, cleanup, and failure meanings. Keep downloads in explicit provisioning steps. A missing required checker is an unavailable verification result, not success.
 
-| Mechanism               | Location                                              | Invocation Model                                                                | Primary Purpose                                                        | Examples                                                                                                                                                            |
-| :---------------------- | :---------------------------------------------------- | :------------------------------------------------------------------------------ | :--------------------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **Skill Helper Script** | `skills/<skill>/scripts/`                             | **Probabilistic / On-Demand** (Agent invokes via `run_command` during workflow) | Task-specific helpers, interactive tools, or specialized runbook steps | Compiling a single `.mmd` preview, generating domain scaffolding, parsing specialized fixtures                                                                      |
-| **Lifecycle Hook**      | `adapters/antigravity/hooks/` (`hooks.template.json`) | **Deterministic / Runtime-Enforced** (Fired automatically on lifecycle events)  | Mandatory invariants, universal guardrails, and formatters             | Prettier auto-formatting on file write (`PostToolUse`), Mermaid syntax validation on Markdown save (`PostToolUse`), destructive command safety gates (`PreToolUse`) |
+### Helpers, hooks, and completion gates
 
-**Script Authoring Invariants:**
+| Mechanism                                | Appropriate job                                   | Limit                                           |
+| ---------------------------------------- | ------------------------------------------------- | ----------------------------------------------- |
+| Skill helper in `skills/<name>/scripts/` | Task-specific work called by the agent            | Availability does not guarantee invocation      |
+| Host hook in `adapters/`                 | Timely feedback on configured tool events         | Coverage and trust depend on the native runtime |
+| Standalone verification                  | Required completion checks on resulting artifacts | Must be run and its result inspected            |
 
-1. **No CWD Assumptions:** Never assume the agent's Current Working Directory is the repository root or skill folder. Always instruct agents to resolve scripts relative to the skill directory (e.g., `<skill_dir>/scripts/<script_name>`).
-2. **Enforce Invariants via Hooks:** If a rule or check is non-negotiable and must execute every single time without relying on model memory or prompt adherence, register it as a Lifecycle Hook rather than a skill script alone.
+Share checker logic where semantics match; keep input/output adapters host-specific. Use executable assertions for mandatory completion criteria. Post-edit hooks can report a failure but cannot undo the preceding edit.
 
----
+### Maintenance and acceptance
 
-## 3. Skills Inventory
+When changing a skill:
 
-The library provides 14 situational skills organized by operational domain:
+1. Identify the output contract being changed and the reader or workflow benefit.
+2. Audit affected routing, local policies, references, helpers, and parent inventories.
+3. Preserve facts, protected assets, and artifact-specific requirements.
+4. Validate metadata, formatting, links, and helper behavior. Compare protected assets in the saved result after any hooks or post-processing, not only in the submitted edit.
+5. For a behavior change, run a fresh-agent trial with only the installed skill and task fixture. Include a normal case and a relevant boundary case; inspect actual outputs against explicit criteria.
+6. Record the skill snapshot, input, raw output, verdict, and limitations. A sample passing is evidence for that sample, not proof of universal adherence.
+7. Deploy and run the canonical verification command. Use native host checks before claiming hook event delivery.
+
+The [evaluation record](../SKILL-EVALUATION.md) demonstrates this process. Historical audit evidence belongs in a dated report; living instructions describe the current contract.
+
+## 3. Skills inventory
+
+The library provides 15 situational skills organized by operational domain:
 
 ### Repository Operations & Git Hygiene
 
@@ -144,12 +105,13 @@ The library provides 14 situational skills organized by operational domain:
 
 ### Content Refactoring & Writing
 
-| Skill                                                             | Description                                                                                                |
-| :---------------------------------------------------------------- | :--------------------------------------------------------------------------------------------------------- |
-| [articulation-review](articulation-review/SKILL.md)               | Review document wording from user feedback, offer three inline alternatives, and apply selections.         |
-| [cognitive-clarity-refactor](cognitive-clarity-refactor/SKILL.md) | Refactor text into low-cognitive-load, scannable Markdown with 100% semantic fidelity.                     |
-| [conversation-notes](conversation-notes/SKILL.md)                 | Synthesize multi-turn conversations into self-contained, book-like documentation.                          |
-| [email-rewrite](email-rewrite/SKILL.md)                           | Transform rough drafts into three ASD-STE100 candidate emails via atomic audit and radical reorganization. |
+| Skill                                                             | Description                                                                                           |
+| :---------------------------------------------------------------- | :---------------------------------------------------------------------------------------------------- |
+| [articulation-review](articulation-review/SKILL.md)               | Review document wording from user feedback, offer three inline alternatives, and apply selections.    |
+| [progressive-documentation](progressive-documentation/SKILL.md)   | Whole-picture explanations that deepen relationships, mechanisms, and detail.                         |
+| [cognitive-clarity-refactor](cognitive-clarity-refactor/SKILL.md) | Refactor text into low-cognitive-load, scannable Markdown with 100% semantic fidelity.                |
+| [conversation-notes](conversation-notes/SKILL.md)                 | Synthesize multi-turn conversations into self-contained, book-like documentation.                     |
+| [email-rewrite](email-rewrite/SKILL.md)                           | Transform rough drafts into three clear candidate emails via atomic audit and radical reorganization. |
 
 ### Architecture, Design & Discovery
 
@@ -166,11 +128,6 @@ The library provides 14 situational skills organized by operational domain:
 
 ---
 
-## 4. Maintenance & Validation Checklist
+## 4. Maintenance and validation
 
-Before committing additions or modifications to skills:
-
-1. **Frontmatter Validation:** Verify `name` matches directory name and `description` is concise and actionable.
-2. **Link Audit:** Verify all internal relative links point to valid sibling files.
-3. **Format Check:** Run `npx prettier --check skills/<skill-name>/SKILL.md`.
-4. **Deploy & Test:** Execute `./scripts/deploy.sh` followed by `./scripts/verify.sh` to confirm deployment sync and test suite passage.
+Follow the acceptance steps in [the authoring contract](#2-skill-authoring-contract) for every skill change. Deploy the updated sources and run `./scripts/verify.sh`. Record independent behavior trials when the output contract changes.

@@ -1,0 +1,11 @@
+Make comprehensive standalone notes from this transcript. Save the notes as output.md. Keep the notes below 1000 words.
+User: I want a documents library with ingestion, storage, and retrieval. Personal data must stay in the customer's region.
+Assistant: Upload stores the original file, then a worker extracts text, then a separate index is updated. A successful upload does not ensure immediate search availability.
+User: Keep originals for 60 days. Initially I proposed one shared index but now I want a separate index for each customer.
+Assistant: One shared index would cost less operationally, but a missing tenant filter could expose another customer's documents. Separate indexes reduce that specific risk and still need per-request authorization.
+User: Use separate indexes. We have no cost measurements yet. Access keys rotate every 30 days. Nina owns the ingestion work; Ravi owns indexing. Neither deadline is agreed.
+Tool: Local sample `docctl upload "notes v2.pdf"` returned `queued: d17`. The extracted text was visible after 4 seconds in this one local test. Production timing was not tested.
+Assistant: I proposed a 2-second promise earlier; the sample does not support it. Drop the promise. A CSV importer was tried and discarded because the prototype lost quoted line breaks.
+User: We may add CSV import later, if we can preserve line breaks. Restore from backups is still untested. Backups must also stay in the same customer region.
+Assistant: Retrieval should check authorization before querying the customer's index. Data deletion must remove both the original and index entry; we have not decided the ordering or measured the delay.
+User: Document that deletion ordering is open. Do not promise instant deletion. Our release decision depends on a successful restore test and a regional-storage check.

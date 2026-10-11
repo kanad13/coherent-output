@@ -1,0 +1,49 @@
+# Scoped reconciliation report
+
+The supplied change makes `tenant_id` mandatory and rejects an empty value with `ValueError` before reading data. The caller already supplies its authenticated tenant ID. Reconciliation requires a README correction and one focused test addition. This report provides those changes for application; no repository files or tests were modified.
+
+## Baseline and completion criteria
+
+The supplied parameter change and early rejection are the complete available diff. The existing test covers a successful lookup for tenant `t1` and a `None` result for tenant `t2` using the same key. No test execution evidence is available.
+
+Completion requires documentation that matches the required tenant argument and restriction, retention of the existing tenant isolation coverage, and an empty-tenant test that verifies both the exception and absence of a data read. Verification remains incomplete until the changes are applied and the relevant checks run in a checkout.
+
+## Atomic Drift Ledger
+
+| Drift ID | Surface | Affected component                      | Drift description                                                                      | Required resolution                                                                  |
+| -------- | ------- | --------------------------------------- | -------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------ |
+| D001     | Docs    | `README.md`                             | The sentence uses the old signature and omits tenant scope and empty-tenant rejection. | Replace it with the current contract below.                                          |
+| D002     | Tests   | Existing lookup test; path not supplied | Tenant isolation is covered, but the new empty-tenant rejection path is not.           | Add an empty-tenant case that asserts `ValueError` and verifies no data read occurs. |
+
+The caller needs no change because it already passes the authenticated tenant ID. The supplied helper change satisfies the required argument and early rejection contract. No other consumer or documentation drift can be established from the available facts.
+
+## Corrected README text
+
+Replace the supplied sentence with:
+
+> Use `lookup(key, tenant_id)` to retrieve a stored item for the authenticated tenant. The required `tenant_id` restricts the lookup to that tenant. An empty `tenant_id` raises `ValueError` before the function reads data.
+
+This replacement describes current behavior in present tense and adds no historical notes.
+
+## Test adaptation
+
+Keep the existing assertions that `lookup("alpha", "t1")` returns the stored value and `lookup("alpha", "t2")` returns `None`.
+
+Add a test for `lookup("alpha", "")` that:
+
+1. Asserts that the call raises `ValueError`.
+2. Uses the project's existing fixture or test double for the data-read boundary to assert that the boundary is never called.
+
+The second assertion protects the early-rejection requirement: an exception alone does not establish that data was not read. Use the actual read boundary once the implementation is available; its name and fixture interface are not supplied. Do not invent an exception message, whitespace-only rejection rule, or `None` handling rule.
+
+## Verification and limits
+
+The report has been checked against the supplied facts. The proposed README text matches the new signature, tenant scope, and empty-value behavior; the test recommendation preserves existing coverage and targets the uncovered path.
+
+The `test-strategist` dependency is unavailable in this exercise, so its required portfolio audit is incomplete. The focused test recommendation above uses only the supplied case and does not represent execution of that dependency workflow.
+
+There is no checkout or source text to inspect. Git diff inspection, repository-wide consumer tracing, module and function docstring audits, comment cleanup, manifest and navigation checks, relative-link checks, formatting checks, and test execution were not performed. No passing-test, zero-regression, or formatting claim is made.
+
+When a checkout is available, apply D001 and D002, inspect the touched source documentation for contract accuracy, audit affected consumers and references, and run the project's relevant tests and verification runners. Record actual results before declaring synchronization complete.
+
+Git finalization is outside the requested scope. Nothing was staged, committed, or pushed; the `commit-scribe` workflow was not invoked.

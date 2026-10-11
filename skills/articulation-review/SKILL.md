@@ -28,7 +28,7 @@ Useful inventory instructions include:
 - Explain a technical concept's practical meaning and why it matters to the reader before implementation detail. Add a short, familiar analogy or example when it makes the concept easier to understand. Keep the explanation simple and avoid introducing more unfamiliar terms.
 - At first use in the file, place a short, plain-language explanation beside an unfamiliar term or acronym. Explain only what the reader needs for the passage. Use familiar words and leave secondary details for later. Explain the term once per file unless the user requests repetition.
 - Explain why a decision matters and state the conditions under which a mechanism or action applies.
-- Apply cognitive-clarity-refactor standards: group related assertions under bold category anchors, convert multi-clause prose into single-thought declarative child bullets, and replace conditional text walls with decision tables.
+- Match structure to the artifact. For a substantial explanation, establish the whole subject and main relationships before adding mechanisms and detail; each revisit must add understanding. The progressive-documentation skill can help if available. Use cognitive-clarity-refactor for dense Markdown that needs its bullet hierarchy, with single-thought child bullets and useful decision tables. Preserve paragraphs, procedures, and required templates where appropriate.
 
 ## 3. Decide Which Changes Add Value
 
@@ -42,7 +42,7 @@ Useful inventory instructions include:
 - For each worthwhile issue, write three alternatives that differ meaningfully in structure, emphasis, or detail. Explain removal or relocation when that resolves a structural problem better than rewording.
 - Preserve facts, commitments, conditions, dependencies, and the source's degree of certainty. Keep unresolved questions visible. Flag any alternative that changes substance or requires a decision beyond wording.
 - Use the cognitive-clarity-refactor skill when restructuring dense Markdown into clear bullets. Apply the user's approved changes while retaining the skill's preservation checks for unaffected information.
-- Check every alternative against the shared writing principles and its passage-specific acceptance criteria. Confirm clear actors and references, consistent terms, sufficient explanation, appropriate certainty, and preserved conditions.
+- Use selected STE100 and Google developer-documentation principles: direct verbs, clear references, defined terms, and preserved uncertainty. Treat a Gunning Fog aim near 10 as an informal diagnostic; do not claim a measured score or full compliance. Check every alternative against these writing principles and its passage-specific acceptance criteria. Confirm clear actors and references, consistent terms, sufficient explanation, appropriate certainty, and preserved conditions.
 - Insert the alternatives beside the original passage. Retain the user's comment and label each option with its issue identifier:
 
 ```markdown
@@ -79,5 +79,5 @@ Useful inventory instructions include:
 
 ## Supporting Skills & Scope Discipline
 
-- Read a named supporting skill from the available skills catalog when its step applies. Skill names are instructions to activate that workflow, not automatic tool commands.
+- Read a named supporting skill from the available skills catalog when its step applies. Skill names are instructions to activate that workflow, not automatic tool commands. If an optional structural skill is absent, use the local preservation and artifact-specific rules above. If a required evaluator is absent, name it in the completion report and state that its workflow was not performed. Keep this disclosure outside the reviewed document. Perform only the review that the local rules support.
 - Keep invocation within the user's authorized task. A review request does not authorize publication, external messages, or edits across unrelated repositories.

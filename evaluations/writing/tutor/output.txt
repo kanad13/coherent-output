@@ -1,0 +1,19 @@
+This design separates accepting a message, storing it, and making it searchable. Intake puts the message in a queue and returns accepted. Workers copy queued messages into durable storage. A separate indexer reads that storage and updates the search index. Search queries use the index. Because these are separate stages, an HTTP acceptance response does not establish that the message has reached the search index.
+
+A queue holds messages for workers to process. In this design, it connects intake to durable storage. Durable storage holds the messages that workers successfully write. The search index is a separate representation that the indexer updates for search queries to use. The message therefore passes through this sequence:
+
+1. Intake appends the message to the queue and returns accepted.
+2. A worker writes the queued message into durable storage.
+3. The indexer reads durable storage and updates the search index.
+
+The worker also acknowledges the queue item. That acknowledgement signals that it has completed the queue item. Its timing matters: the worker can acknowledge only after the store write succeeds. That rule ties completion of queue processing to successful storage. It says nothing about completion of indexing, because the separate indexer handles that work.
+
+The strongest version of your hypothesis is that waiting in the queue prevents messages from becoming searchable, so adding workers could remove that wait and make accepted messages searchable sooner. The design supports the first part: increasing worker count can reduce queue delay. But it does not support the claim that accepted must mean searchable immediately.
+
+The governing condition is that a message must reach the search index before a search query can find it. Acceptance occurs earlier, when intake appends the message to the queue. Even after a worker stores the message and acknowledges the queue item, the indexer still has to update the index. Increasing worker count does not guarantee a shorter delay for that separate stage.
+
+Consider one message. Intake queues it and returns accepted. A worker then stores it successfully. Before the indexer includes it in the index, a search query cannot find it. This sequence follows every supplied design rule, yet the accepted message is temporarily absent from search. That example is enough to disprove the word “must” in your hypothesis. It requires no estimate of how long the delay lasts.
+
+Retries create a separate concern. The design says retries can produce duplicates unless the client supplies an event ID. For the client, acceptance, duplicate handling, and search visibility are therefore distinct concerns: supplying an event ID addresses the stated duplicate risk; it does not establish that indexing has finished.
+
+A supported conclusion is: “Adding workers can reduce queue delay, but accepted messages become searchable only after the indexer updates the search index.” No measured timing or throughput is available, so the supplied facts cannot tell you how many workers would help, how much delay they would remove, or how quickly an accepted message will appear in search. Treat accepted as confirmation of intake, and assess search visibility against completion of indexing.

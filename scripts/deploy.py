@@ -1,11 +1,18 @@
 #!/usr/bin/env python3
-"""Install the personal agent library without copying machine-owned app state."""
+"""Install the agent library without copying machine-owned application state.
+
+Preflight the selected host artifacts and shared skill metadata before writes.
+Generated commands resolve this checkout and its local runtime; conflicts stay
+recoverable through explicit backups rather than destructive replacement.
+"""
 
 import argparse
 import datetime
+import hashlib
 import json
 import os
 from pathlib import Path
+import re
 import shlex
 import sys
 import tempfile
@@ -15,20 +22,95 @@ REPO = Path(__file__).resolve().parent.parent
 
 
 def frontmatter(path):
+    """Read this library's flat metadata profile without claiming full YAML support.
+
+    Args:
+        path: Path to a skill or rule with single-line frontmatter fields.
+
+    Returns:
+        A metadata dictionary and the remaining document body.
+
+    Raises:
+        ValueError: Frontmatter is absent, nested, duplicate, or empty.
+        OSError: The source cannot be read.
+    """
     text = path.read_text()
     parts = text.split("---", 2)
     if len(parts) != 3 or parts[0].strip():
         raise ValueError(f"Missing frontmatter: {path}")
     metadata = {}
     for line in parts[1].strip().splitlines():
+        if not line.strip() or line.startswith("#"):
+            continue
+        if line[0].isspace():
+            raise ValueError(f"Only flat single-line frontmatter is supported: {path}")
         key, separator, value = line.partition(":")
         if not separator:
             raise ValueError(f"Unsupported frontmatter line in {path}: {line}")
+        if key in metadata or not value.strip():
+            raise ValueError(f"Duplicate or empty frontmatter field in {path}: {key}")
         metadata[key.strip()] = value.strip().strip('\"').strip("'")
     return metadata, parts[2].lstrip("\n")
 
 
-def generated_files():
+def codex_hooks(codex_home):
+    """Replace only this checkout's handler while preserving unrelated user state.
+
+    Args:
+        codex_home: Optional destination home whose existing hooks are merged.
+
+    Returns:
+        Serialized hooks using the installer's absolute Python executable.
+
+    Raises:
+        ValueError: Existing JSON or supported hook-container shapes are invalid.
+        OSError: An existing configuration or source template cannot be read.
+    """
+    template = json.loads(REPO.joinpath("adapters/codex/hooks.template.json").read_text())
+    checker = str(REPO / "adapters/shared/document-check.py")
+    for group in template["hooks"]["PostToolUse"]:
+        for handler in group["hooks"]:
+            handler["command"] = handler["command"].replace("{{python_executable}}", shlex.quote(sys.executable))
+            handler["command"] = handler["command"].replace("{{document_check}}", shlex.quote(checker))
+    destination = codex_home / "hooks.json" if codex_home else None
+    current = json.loads(destination.read_text()) if destination and destination.is_file() else {}
+    if not isinstance(current, dict) or not isinstance(current.get("hooks", {}), dict):
+        raise ValueError("Codex hooks.json must contain a hooks object; nothing installed.")
+    events = current.setdefault("hooks", {})
+    groups = events.get("PostToolUse", [])
+    if not isinstance(groups, list):
+        raise ValueError("Codex PostToolUse must be an array; nothing installed.")
+    preserved = []
+    for group in groups:
+        if not isinstance(group, dict) or not isinstance(group.get("hooks"), list):
+            raise ValueError("Invalid Codex PostToolUse group; nothing installed.")
+        handlers = []
+        for handler in group["hooks"]:
+            if not isinstance(handler, dict):
+                raise ValueError("Invalid Codex hook handler; nothing installed.")
+            try:
+                tokens = shlex.split(handler.get("command", ""))
+            except ValueError:
+                tokens = []
+            owned = len(tokens) == 4 and tokens[1:] == [checker, "--host", "codex"]
+            if not owned:
+                handlers.append(handler)
+        if handlers:
+            preserved.append({**group, "hooks": handlers})
+    events["PostToolUse"] = preserved + template["hooks"]["PostToolUse"]
+    return json.dumps(current, indent=2) + "\n"
+
+
+def codex_instructions():
+    """Compose supported policies without silently activating native-only triggers.
+
+    Returns:
+        Codex instruction text within its default discovery size limit.
+
+    Raises:
+        ValueError: A rule cannot be composed or the result exceeds 32 KiB.
+        OSError: An instruction source cannot be read.
+    """
     instructions = REPO.joinpath("AGENTS.md").read_text().rstrip() + "\n"
     for rule in sorted(REPO.joinpath("rules").glob("*.md")):
         metadata, body = frontmatter(rule)
@@ -49,7 +131,19 @@ def generated_files():
             instructions += "\n<!-- END CONDITIONAL POLICY -->\n"
     if len(instructions.encode()) > 32768:
         raise ValueError("Generated Codex instructions exceed the default 32 KiB discovery limit.")
+    return instructions
 
+
+def antigravity_hooks():
+    """Resolve local commands without importing another host's configuration.
+
+    Returns:
+        Serialized Antigravity hooks with shell-quoted checkout paths.
+
+    Raises:
+        ValueError: Source JSON or command placeholders are invalid.
+        OSError: The source template cannot be read.
+    """
     hooks = json.loads(REPO.joinpath("adapters/antigravity/hooks/hooks.template.json").read_text())
     scripts = REPO / "adapters/antigravity/hooks/scripts"
     replacements = {
@@ -67,17 +161,61 @@ def generated_files():
                         handler["command"] = handler["command"].replace(token, replacement)
                     if "{{" in handler["command"]:
                         raise ValueError("Unresolved hook command template")
-    return {
-        REPO / ".generated/codex/AGENTS.md": instructions,
-        REPO / ".generated/antigravity/hooks.json": json.dumps(hooks, indent=2) + "\n",
-    }
+    return json.dumps(hooks, indent=2) + "\n"
+
+
+def generated_files(codex_home=None, selected=("codex", "antigravity")):
+    """Scope preflight to selected hosts while leaving unselected state untouched.
+
+    Args:
+        codex_home: Optional destination for merging existing Codex hooks.
+        selected: Host names whose generated artifacts are required.
+
+    Returns:
+        A mapping from generated file paths to their intended text contents.
+    """
+    generated = {}
+    if "codex" in selected:
+        generated[REPO / ".generated/codex/AGENTS.md"] = codex_instructions()
+        generated[REPO / f".generated/codex/{codex_home_id(codex_home)}/hooks.json"] = codex_hooks(codex_home)
+    if "antigravity" in selected:
+        generated[REPO / ".generated/antigravity/hooks.json"] = antigravity_hooks()
+    return generated
 
 
 def present(path):
+    """Treat dangling links as existing destinations that require ownership checks.
+
+    Args:
+        path: Destination path to inspect.
+
+    Returns:
+        Whether a filesystem entry exists, including a dangling symlink.
+    """
     return os.path.lexists(path)
 
 
+def codex_home_id(codex_home):
+    """Keep merged user hooks isolated by installation destination.
+
+    Args:
+        codex_home: Resolved Codex destination home, or None for no destination.
+
+    Returns:
+        A stable 16-character hash used to namespace generated hook files.
+    """
+    return hashlib.sha256(str(codex_home).encode()).hexdigest()[:16]
+
+
 def link_target(path):
+    """Normalize filesystem aliases before deciding whether a link is owned.
+
+    Args:
+        path: Possible installation symlink.
+
+    Returns:
+        Its resolved target, including dangling targets, or None for other files.
+    """
     if not path.is_symlink():
         return None
     # macOS exposes /var through /private/var; normalize aliases even for dangling targets.
@@ -85,6 +223,15 @@ def link_target(path):
 
 
 def write_atomic(path, content):
+    """Avoid partial generated files and unnecessary writes on repeat deployment.
+
+    Args:
+        path: Generated output path.
+        content: Desired text contents.
+
+    Raises:
+        OSError: The source, temporary file, or replacement cannot be accessed.
+    """
     if path.is_file() and path.read_text() == content:
         return
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -99,6 +246,12 @@ def write_atomic(path, content):
 
 
 def main():
+    """Preflight ownership before installing the selected host mappings.
+
+    Returns:
+        Zero for installation, preview, or a correct installed state; one for
+        installed-state drift. Entry-point error handling also reports one.
+    """
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--tool", choices=("all", "codex", "antigravity"), default="all")
     modes = parser.add_mutually_exclusive_group()
@@ -113,12 +266,12 @@ def main():
     codex_home = (args.codex_home or Path(configured_codex or target_home / ".codex")).expanduser().resolve()
     scopes = {"home": target_home, "codex": codex_home}
     selected = ("codex", "antigravity") if args.tool == "all" else (args.tool,)
-    generated = generated_files()
+    generated = generated_files(codex_home, selected)
     links = []
     for tool in selected:
         for spec in json.loads(REPO.joinpath(f"adapters/{tool}/links.json").read_text()):
             destination = scopes[spec["scope"]] / spec["destination"]
-            source = REPO / spec["source"]
+            source = REPO / spec["source"].replace("{codex_home_id}", codex_home_id(codex_home))
             previous = [REPO / item for item in spec.get("previous_sources", [])]
             if source not in generated and not source.exists():
                 raise ValueError(f"Source is missing: {source}")
@@ -132,6 +285,13 @@ def main():
         metadata, _ = frontmatter(skill)
         if not metadata.get("name") or not metadata.get("description"):
             raise ValueError(f"Skill requires name and description: {skill}")
+        name = metadata["name"]
+        if len(name) > 64 or not re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)*", name):
+            raise ValueError(f"Invalid skill name: {skill}")
+        if name != skill.parent.name:
+            raise ValueError(f"Skill name must match its directory: {skill}")
+        if len(metadata["description"]) > 1024:
+            raise ValueError(f"Skill description exceeds 1024 characters: {skill}")
         names.append(metadata["name"])
     if len(names) != len(set(names)):
         raise ValueError("Duplicate names in source skill library")

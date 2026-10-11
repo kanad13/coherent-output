@@ -1,6 +1,6 @@
 ---
 name: email-rewrite
-description: Transforms unstructured, disorganized, or poorly articulated drafts into professional correspondence by steelmanning intent, conducting an atomic information audit, radically reorganizing content, and generating three ASD-STE100 candidate drafts. Use when drafting, editing, rewriting, or restructuring business and technical emails. Do not use for superficial spell-checking where original prose must remain unchanged.
+description: Transforms unstructured, disorganized, or poorly articulated drafts into professional correspondence by steelmanning intent, conducting an atomic information audit, radically reorganizing content, and generating three clear candidate drafts. Use when drafting, editing, rewriting, or restructuring business and technical emails. Do not use for superficial spell-checking where original prose must remain unchanged.
 ---
 
 # Professional Email Rewrite & Radical Information Architecture
@@ -40,7 +40,7 @@ Extract and formulate:
 
 ### Step 2: Atomic Inventory Ledger
 
-Borrowing the structural discipline of the cognitive-clarity-refactor skill, extract every distinct piece of information from the raw draft into a numbered Atomic Inventory Ledger (`E001`, `E002`, ...):
+Extract every distinct piece of information from the raw draft into a numbered Atomic Inventory Ledger (`E001`, `E002`, ...):
 
 | ID Code  | Category            | Content Description                                                  |
 | :------- | :------------------ | :------------------------------------------------------------------- |
@@ -63,14 +63,16 @@ Decouple completely from the raw draft's original disarrayed sentence order:
   3. **Decisions, Trade-offs & Options:** Concrete mitigation options or architectural alternatives.
   4. **Next Steps & Ownership:** Explicit action items, owners, and hard deadlines.
 
-### Step 4: Draft Three ASD-STE100 Candidate Variations
+### Step 4: Draft Three Clear Candidate Variations
 
-Draft three distinct, copy-ready candidate emails using ASD-STE100 plain language principles:
+Draft three distinct, copy-ready emails using selected STE100 and Google developer-documentation principles. Treat a Gunning Fog aim near 10 as an informal diagnostic; do not claim measured readability or full standards conformance. Keep the recipient's tone and genuine uncertainty.
 
 - Write short, active sentences.
 - Limit each sentence to one main idea.
-- Use explicit, defined terms rather than ambiguous pronouns (`it`, `this`).
+- Define unfamiliar terms and replace ambiguous references. Use clear pronouns when they improve flow.
 - Eliminate corporate clichés, passive evasions, and filler.
+
+Keep each email concise and copy-ready. Use ordinary paragraphs or appropriate bullets; do not impose a layered-document template or the cognitive-clarity-refactor bullet hierarchy. No sibling skill is required for this workflow.
 
 Provide **three distinct tactical approaches** (Draft A: Executive & Bullet-First, Draft B: Contextual & Collaborative, Draft C: Operational & Decision-Focused) with distinct structural emphasis, tone, and strategic rationale.
 
@@ -78,7 +80,7 @@ Provide **three distinct tactical approaches** (Draft A: Executive & Bullet-Firs
 
 Verify that:
 
-- 100% of facts, metrics, dates, and names from the Step 2 Atomic Inventory Ledger appear across the candidate drafts.
+- Every candidate independently preserves all substantive facts, metrics, dates, names, commitments, conditions, and uncertainties from the Step 2 Atomic Inventory Ledger.
 - Modality matches original intent: firm commitments stay firm; exploratory options remain flexible.
 - Every draft has a descriptive, action-oriented subject line.
 

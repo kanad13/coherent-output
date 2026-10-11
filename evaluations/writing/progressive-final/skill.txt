@@ -1,0 +1,77 @@
+---
+name: progressive-documentation
+description: Creates or restructures explanatory documents so readers understand the whole subject before exploring mechanisms, relationships, and detail. Use for multi-topic guides, system overviews, proposals, and documents that exhaust one topic before introducing the next. Do not expand brief answers or impose layers on procedure-only runbooks, chronological narratives, or lookup references.
+---
+
+# Progressive Documentation
+
+Build the reader's understanding of the whole subject in successive layers. Establish a useful, accurate mental model first, then deepen that model through mechanisms, relationships, consequences, and implementation detail. Preserve the source's facts, uncertainty, and artifact requirements.
+
+## 1. Choose the Reading Path
+
+Identify the reader, purpose, source material, required format, and what the reader should understand or decide. Distinguish an explanatory document from a procedure, chronological account, or reference.
+
+For an explanatory document, organize around increasing understanding of the subject as a whole. For a procedure, keep the actions in executable order and place prerequisites and warnings before the relevant action. Preserve required chronology or lookup structure. Keep a short answer short.
+
+When refactoring, read the whole source before moving passages. Preserve substantive facts, numerical values, commitments, conditions, exceptions, and the distinction between evidence, inference, and unresolved questions. Preserve code, commands, quotations, tables, and equations verbatim unless the user authorizes changes to those assets.
+
+## 2. Give the Reader a Working Picture
+
+Open with enough information to understand:
+
+- What the subject does or what problem the document addresses.
+- Which major aspects matter, with a brief explanation of each aspect's role.
+- How those aspects connect in a process, dependency, constraint, or decision.
+- The conclusion, action, or boundary the reader needs immediately.
+
+An introduction is an explanation, not a list of upcoming headings. A table of contents can help navigation, but it cannot replace this working picture. The first layer must remain true when later detail is added. Put limitations that change the main conclusion and safety-critical warnings in the first layer where needed.
+
+## 3. Plan Increasing Depth Across the Subject
+
+Use a working outline to assign information to the earliest layer that the reader can understand and use. A common path is:
+
+| Reader's question | Useful layer |
+| --- | --- |
+| What is this, why does it matter, and how do the main parts fit? | Orientation with the major roles and relationships |
+| What happens, and how do the parts affect one another? | Mechanisms and an example that connects the parts |
+| What follows from those interactions? | Trade-offs, constraints, failure modes, and choices |
+| What exact details do I need to act or inspect further? | Procedures, configurations, evidence, and reference material |
+
+Choose the number and names of sections for the task. The table is guidance, not a fixed output template.
+
+Establish the basic role of every major aspect before exhausting one aspect's implementation details. In later sections, revisit aspects when a relationship, mechanism, or consequence adds useful understanding. Do not create arbitrary round-robin alternation or repeat the same overview at each layer. Keep closely related details together when splitting them would force the reader to navigate back and forth.
+
+For example, a guide to collection, storage, and retrieval can first show how a request moves through all three. A later section can explain how collection choices affect storage and retrieval, then examine consistency or cost, before presenting exact settings.
+
+## 4. Draft Connected, Usable Layers
+
+- Lead each section with the question or practical insight the section resolves.
+- Introduce terms before the reasoning that depends on them. Give enough local explanation for readers who enter at that section.
+- Explain relationships concretely: what causes what, what depends on what, what constrains a choice, and what changes when one aspect changes.
+- Use a running example when the example helps the reader connect successive layers. Explain where an analogy stops matching the subject.
+- Use transitions to connect the previous understanding to the next question. Avoid recaps that add no information.
+- Keep essential conclusions and risks available to readers who stop early. Give readers a clear route to advanced or optional detail.
+- Choose connected paragraphs, steps, lists, tables, or diagrams according to the content. Layering does not require bold category anchors or a fixed bullet hierarchy.
+- Keep detailed procedures coherent and executable inside the broader explanation. Preserve explicit user templates, required sections, and length limits.
+
+Use direct verbs, clear references, consistent names, and familiar words. Define unfamiliar terms on first use and preserve necessary domain vocabulary. Apply selected STE100 and Google developer-documentation principles as plain-language guidance. Treat a Gunning Fog aim near 10 as an informal diagnostic; never claim a measured score or full standards compliance without performing the relevant assessment.
+
+When source material is insufficient, keep the gap explicit. Add connective explanation only when supported by the source or clearly labeled as an assumption. Do not invent relationships to make the document feel complete.
+
+## 5. Verify the Reader's Progression
+
+Review the document from a reader's position:
+
+1. After the opening, can the reader explain the purpose, major aspects, a meaningful relationship, and the immediate conclusion or boundary?
+2. Before a deep dive, has the document established the role of each major aspect?
+3. Does each later layer answer a new question or add a mechanism, relationship, consequence, or actionable detail?
+4. Can the reader understand each relationship without first reading detail that appears later?
+5. Does the structure preserve procedures, chronology, required templates, and direct lookup where those govern the task?
+6. Have facts, uncertainty, constraints, warnings, and protected assets survived the rewrite?
+7. Can the reader stop after an early layer with a useful understanding, or navigate directly to the detail needed?
+
+A summary followed by unchanged, exhaustive topic silos does not satisfy this workflow. Repair the sequence and connections, not just the headings or sentence length.
+
+Deliver the requested document. Keep planning tables, fact inventories, and self-evaluation outside the reader-facing artifact unless the user asks for them. This skill works on its own; no sibling skill or special tool is required.
+
+Compare protected assets byte-for-byte with the source after saving, including whitespace, fence labels, and table separators. Inspect the saved file after hooks or other post-processing; checking the submitted edit alone is insufficient. If Prettier changes a protected Markdown block, an allowed `<!-- prettier-ignore -->` comment before the block can protect it without changing its contents. If extra comments are forbidden, use a non-mutating delivery path or report the formatting conflict. Never claim exact preservation without comparing the final artifact.

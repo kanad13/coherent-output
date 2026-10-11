@@ -1,0 +1,22 @@
+# 1. On-call procedure
+
+**Risk:** The purge command deletes all audit rows. Take a backup before running it. Proceed only during the approved maintenance window. No restore procedure has been tested.
+
+1. Notify the incident channel.
+2. Run `auditctl backup --output audit.bak`.
+3. Confirm that the backup exists and can be read. If the backup cannot be read, stop before purge.
+4. Run `auditctl purge --all`.
+5. Run `auditctl count` and expect `0`.
+
+# 2. What HTTP 202 means for Relay
+
+Relay returns HTTP 202 only after a durable queue append. Workers write the store later, and the indexer makes events searchable later. HTTP 202 confirms durable queue acceptance; it does not guarantee search availability.
+
+# 3. Lookup reference
+
+| Category   | Entry                                       |
+| ---------- | ------------------------------------------- |
+| Intake     | limit 256 KiB                               |
+| Storage    | retention 30 days                           |
+| Search     | tenant key required                         |
+| Quarantine | invalid timestamps; no automatic correction |

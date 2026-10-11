@@ -33,11 +33,13 @@ Structure all text using a strict two-tier hierarchical layout:
 
 ## 3. The Tri-Standard Articulation Engine
 
-Draft every declarative child bullet by applying three standards simultaneously:
+Use selected STE100 and Google developer-documentation principles with a Gunning Fog aim near 10 as plain-language guidance. This workflow does not establish full ASD-STE100 conformance. A readability formula alone does not establish comprehension; report a score only if measured with a stated method.
+
+Draft every declarative child bullet by applying the following principles:
 
 ### A. Syntactic Discipline (ASD-STE100 Structural Mechanics)
 
-- **Explicit Referents:** Never use unanchored pronouns (`it`, `this`, `that`, `which`). Explicitly name the actor, service, table, or variable on every mention.
+- **Explicit Referents:** Replace ambiguous pronouns with the actor, service, table, or variable. Use a pronoun when its antecedent is clear; avoid repeating an entity name when repetition makes the sentence harder to read.
 - **Noun-Stack Limit:** Restrict noun clusters modifying a subject to a maximum of three consecutive words (e.g., convert "cloud storage bucket access policy token" to "access token for the cloud storage bucket").
 - **Domain Vocabulary:** Retain natural software engineering, distributed systems, and domain terminology.
 
@@ -62,8 +64,9 @@ Execute refactoring using this three-phase operational pipeline. For files excee
 
 ### Phase 1: Pre-Flight Ingestion & Asset Isolation
 
-1. **Boundary Segmentation:** Split the document into discrete execution chunks along primary Markdown headings (`##` / `###`).
-2. **Lexicon Extraction:** Build an internal Global Entity Lexicon containing system names, environment variables, roles, and acronyms to guarantee consistent terminology across all chunks.
+1. **Whole-Document Review:** Read the full source before chunking. For explanatory documents, establish the major aspects and their relationships before a deep dive. Plan increasing depth across the subject while retaining this skill's two-tier Markdown layout. The progressive-documentation skill can help with that planning if available; it is optional. Preserve executable order in procedures and required lookup structures.
+2. **Boundary Segmentation:** Split the planned document into discrete execution chunks along primary Markdown headings (`##` / `###`).
+3. **Lexicon Extraction:** Build an internal Global Entity Lexicon containing system names, environment variables, roles, and acronyms to guarantee consistent terminology across all chunks.
 
 ### Phase 2: Chunk-by-Chunk Synthesis
 
@@ -82,4 +85,6 @@ Process each segmented section independently:
 2. Validate Markdown heading depth and continuity (`#` $\rightarrow$ `##` $\rightarrow$ `###`).
 3. Re-attach protected assets (code fences, schema definitions, and tables) adjacent to their related declarative bullets.
 
-Emit the final, fully assembled Markdown document.
+Compare the assembled document with the full source. Check preserved facts, conditions, uncertainty, warnings, protected assets, and cross-section dependencies. Check that each anchor contains only un-bolded, single-thought child bullets. Emit the final, fully assembled Markdown document.
+
+Compare protected assets byte-for-byte with the source after saving, including whitespace, fence labels, and table separators. Inspect the saved file after hooks or other post-processing; checking the submitted edit alone is insufficient. If Prettier changes a protected Markdown block, an allowed `<!-- prettier-ignore -->` comment before the block can protect it without changing its contents. If extra comments are forbidden, use a non-mutating delivery path or report the formatting conflict. Never claim exact preservation without comparing the final artifact.

@@ -1,24 +1,30 @@
 #!/usr/bin/env bash
-# Antigravity 2.0 PreToolUse hook script: inspects run_command for destructive operations.
+# Supplement native approvals with conservative checks for common destructive forms.
 set -euo pipefail
-
-# Read stdin JSON payload
-PAYLOAD=$(cat)
-
-# Extract CommandLine from toolCall.args
-CMD=$(echo "$PAYLOAD" | python3 -c "
-import sys, json
+# GUI hosts do not load the user's shell profile.
+export PATH="${PATH:-}:$HOME/.local/bin:/opt/homebrew/bin:/usr/local/bin"
+exec python3 -c '
+import json, re, shlex, sys
 try:
     data = json.load(sys.stdin)
-    cmd = data.get('toolCall', {}).get('args', {}).get('CommandLine', '')
-    print(cmd)
-except Exception:
-    print('')
-")
-
-# Check for high-risk destructive patterns (case-insensitive)
-if echo "$CMD" | grep -Eiq '(git\s+push\s+.*(-f\b|--force)|git\s+push\s+.*--delete|git\s+reset\s+--hard|rm\s+-[a-zA-Z]*r[a-zA-Z]*f[a-zA-Z]*\s+[/~]|rm\s+-[a-zA-Z]*f[a-zA-Z]*r[a-zA-Z]*\s+[/~]|DROP\s+DATABASE|DROP\s+TABLE)'; then
-  echo '{"decision": "force_ask", "reason": "Destructive command pattern detected. Explicit user approval required."}'
-else
-  echo '{"decision": "allow"}'
-fi
+    command = data["toolCall"]["args"]["CommandLine"]
+    if not isinstance(command, str) or not command.strip():
+        raise ValueError("CommandLine must be a nonempty string")
+    tokens = shlex.split(command)
+    dangerous = bool(re.search(r"\bgit\s+(?:[^\n;&|]*\s)?(?:push\b[^\n;&|]*(?:--force(?:-with-lease)?\b|--delete\b|(?:^|\s)-[a-zA-Z]*f\b)|reset\s+--hard\b)|\bDROP\s+(?:DATABASE|TABLE)\b", command, re.I))
+    for index, token in enumerate(tokens):
+        if token == "rm" or token.endswith("/rm"):
+            flags = []
+            for item in tokens[index + 1:]:
+                if item == "--":
+                    break
+                if item.startswith("-"):
+                    flags.append(item)
+            recursive = any(item in ("--recursive",) or (item.startswith("-") and not item.startswith("--") and "r" in item.lower()) for item in flags)
+            forced = any(item == "--force" or (item.startswith("-") and not item.startswith("--") and "f" in item) for item in flags)
+            dangerous |= recursive and forced
+    decision = {"decision": "force_ask", "reason": "Destructive command pattern detected. Review with native approvals."} if dangerous else {"decision": "allow"}
+except (ValueError, KeyError, TypeError):
+    decision = {"decision": "force_ask", "reason": "Cannot inspect malformed command payload."}
+print(json.dumps(decision))
+'

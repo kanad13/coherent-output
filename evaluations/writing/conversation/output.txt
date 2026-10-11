@@ -1,0 +1,80 @@
+# Documents Library: Decisions and Release Conditions
+
+## Purpose and current outcome
+
+The documents library will ingest files, store originals, and retrieve documents through search. Upload, text extraction, and indexing occur in separate stages. A successful upload therefore does not guarantee immediate search availability.
+
+The agreed design uses a separate index for each customer, retains originals for 60 days, and rotates access keys every 30 days. Personal data must remain in the customer's region. Backups must remain in that same region.
+
+The release decision depends on a successful backup restore test and a regional-storage check. Restore remains untested. Production search timing, deletion ordering, deletion delay, costs, and delivery deadlines remain unresolved.
+
+## Ingestion, storage, and search
+
+[Added for completeness] An index is a searchable representation of document content. The original file and its index entry are distinct stored artifacts.
+
+The proposed processing flow is:
+
+1. Upload stores the original file.
+2. A worker extracts text from the original.
+3. A separate index receives an update.
+4. Retrieval checks authorization before querying the customer's index.
+
+These stages explain the gap between upload success and search availability. The local sample showed extracted text becoming visible; the transcript did not establish when the document became searchable.
+
+Originals have a 60-day retention requirement. The discussion did not define a retention period for extracted text or index entries.
+
+### Local evidence and timing limits
+
+One local sample ran this exact command:
+
+```sh
+docctl upload "notes v2.pdf"
+```
+
+The command returned:
+
+```text
+queued: d17
+```
+
+Extracted text became visible after 4 seconds in that single local test. Production timing was not tested. The earlier proposed 2-second promise was withdrawn because the sample did not support it. The library has no agreed search-availability promise.
+
+## Customer isolation and access control
+
+The initial shared-index proposal was replaced by a separate index for each customer. A shared index was expected to cost less operationally, but no cost measurements exist. Its identified risk was that a missing tenant filter could expose another customer's documents. A tenant filter restricts a query to one customer's data.
+
+Separate indexes reduce that specific risk. Each request still needs authorization. Retrieval must perform the authorization check before querying the customer's index; index separation alone does not grant access.
+
+Access keys must rotate every 30 days. The discussion did not specify the rotation mechanism.
+
+## Region, backups, and deletion
+
+Personal data must stay in the customer's region throughout the library's operation. Backups must also stay in that same region. The required regional-storage check must establish that the design meets these requirements before the release decision.
+
+Backup restoration remains untested. A successful restore test is a release condition; the discussion contains no evidence that this condition has been met.
+
+Deletion must remove both the original file and the index entry. The team has not decided which artifact to delete first and has not measured the delay. Deletion ordering remains explicitly open, and the library must not promise instant deletion.
+
+## CSV import decision
+
+The prototype's CSV (comma-separated values) importer lost quoted line breaks. The team discarded that importer because it failed to preserve the source content.
+
+CSV import may return later if an implementation can preserve line breaks. This remains conditional future work, with no agreed deadline.
+
+## Ownership and remaining work
+
+| Work      | Owner | Deadline   |
+| --------- | ----- | ---------- |
+| Ingestion | Nina  | Not agreed |
+| Indexing  | Ravi  | Not agreed |
+
+The following work remains open:
+
+- Complete a successful restore test and a regional-storage check to support the release decision.
+- Decide deletion ordering and measure deletion delay before making timing claims.
+- Test production processing and search availability before defining a latency commitment.
+- Measure costs before treating the expected shared-index cost advantage as established evidence.
+- Agree ingestion and indexing deadlines.
+- If CSV import returns, verify preservation of quoted line breaks.
+
+The transcript does not assign owners or deadlines for restore validation, regional validation, deletion decisions, cost measurement, or future CSV work.

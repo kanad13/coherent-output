@@ -1,6 +1,6 @@
 ---
 name: conversation-notes
-description: Synthesizes multi-turn conversations into comprehensive, self-contained, book-like notes capturing all decisions, explanations, code snippets, and rationale adhering to ASD-STE100 plain language. Use when wrapping up a session, summarizing a long discussion, or compiling project documentation from chat history. Do not use for mid-conversation status updates or brief meeting minutes.
+description: Synthesizes multi-turn conversations into comprehensive, self-contained, book-like notes capturing all decisions, explanations, code snippets, and rationale in clear, progressively developed explanations. Use when wrapping up a session, summarizing a long discussion, or compiling project documentation from chat history. Do not use for mid-conversation status updates or brief meeting minutes.
 ---
 
 # Conversation to Comprehensive Notes
@@ -34,7 +34,7 @@ Execute the following five phases sequentially:
 ### Phase 2: Conceptual Index & Gap Deduction
 
 - Reorganize chronological turns into an optimal conceptual learning dependency order.
-- Merge fragmented discussions from separate turns into unified thematic sections.
+- Merge fragmented discussions from separate turns into a coherent account of the whole subject. Introduce each major aspect and its role before exploring one aspect in depth. Revisit aspects when a mechanism, relationship, or consequence adds understanding.
 - Position rejected alternatives and failure analyses directly beside the final chosen decisions.
 - **Deduce Understanding Gaps Before Blueprinting:**
   - Identify logical leaps, unstated prerequisites, missing definitions, or unexplained background details assumed during conversation.
@@ -44,23 +44,24 @@ Execute the following five phases sequentially:
 ### Phase 3: Structural Blueprint & Micro-Formatting
 
 - Construct a clean, shallow heading hierarchy ($H_2 / H_3$) incorporating both the audited discussion items and the deduced gap-fillers into their canonical positions.
-- Establish standard section structure:
+- Use the following coverage checklist to plan sections, rather than imposing a fixed chapter order. Open with the purpose, final outcome, main aspects, their relationships, and decision-critical limits. Then deepen mechanisms, decisions, and implementation. Keep rejected alternatives beside the decisions they explain instead of duplicating them in a separate chapter. The progressive-documentation skill can support this planning if available; the rules here suffice without it.
+- Cover:
   1. **Executive Purpose & Scope:** High-level problem statement and final outcome.
   2. **System Context & Prerequisites:** Background concepts and environment assumptions.
   3. **Architecture & Decisions:** Ordered technical choices and trade-offs.
   4. **Implementation Artifacts:** Exact code diffs, CLI commands, and configuration keys.
   5. **Discarded Alternatives:** Explicit record of rejected options and failure rationales.
   6. **Unresolved Gaps & Next Steps:** Concrete future work items.
-- Plan Bullet-First micro-formatting: bold category anchors for technical specifications, parameters, and analysis.
+- Choose connected paragraphs for explanations, lists for parallel facts, steps for procedures, and tables for comparisons. Keep all exact artifacts intact. Keep the atomic ledger outside the reader-facing notes unless requested.
 
-### Phase 4: Draft Comprehensive Notes (ASD-STE100 Standard)
+### Phase 4: Draft Comprehensive Notes
 
-Draft the full documentation adhering strictly to ASD-STE100 plain language principles:
+Use selected STE100 and Google developer-documentation principles as plain-language guidance. Treat a Gunning Fog aim near 10 as an informal diagnostic; do not claim a measured score or full conformance without assessment.
 
 - **Active Voice & Affirmative Sentences:** State mechanisms and data flows directly. Avoid passive voice and roundabout constructions.
 - **Short Sentences:** Restrict sentences to one primary technical idea.
 - **Explicit Terminology:** Define technical terms and acronyms on first use. Use a single consistent word for a given technical concept; never rotate synonyms for stylistic variation.
-- **Unambiguous Referents:** Replace ambiguous pronouns (`it`, `this`, `they`) with explicit entity names. Purge conversational filler, hollow affirmations, and corporate buzzwords.
+- **Unambiguous Referents:** Replace ambiguous pronouns with entity names. Use clear pronouns when they improve flow. Remove conversational filler and corporate buzzwords.
 - **Exact Technical Fidelity:** Preserve exact command flags, configuration keys, file paths, code snippets, and error strings verbatim.
 
 ### Phase 5: Completeness & Traceability Audit
@@ -69,7 +70,8 @@ Before finalizing the deliverable, verify that:
 
 - 100% of decisions, tool discoveries, code changes, and rationales from the Phase 1 ledger are accurately represented without silent omission.
 - All deduced understanding gaps from Phase 2 reside in their appropriate blueprint sections.
-- All prose adheres to the ASD-STE100 plain language standard with zero walls of dense narrative text.
+- The opening explains the whole subject, and later sections add relationships, mechanisms, decisions, or detail rather than repeating the summary.
+- The prose uses clear terms and readable paragraphs or task-appropriate lists. Required chronology, procedures, uncertainty, and exact artifacts remain intact.
 
 ---
 

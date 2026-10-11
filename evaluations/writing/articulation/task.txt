@@ -1,0 +1,13 @@
+Review the document below and add alternatives beside worthwhile passages. Save the complete review to output.md. You can use only this skill and the supplied document; no other evaluator skill is available. Do not resolve the alternatives yet.
+
+# Service status
+
+The gateway accepts requests and it writes them to this before the workers act. [LOOKOUT: explain what accepted means and what it does not promise.]
+
+Workers write queued events to the durable store. Queue acknowledgment follows a successful store write. A separate indexer updates the search index.
+
+It might take some time. [LOOKOUT: do not make a timing promise; we have no production measurement.]
+
+More workers definitely make search immediate. [LOOKOUT: correct the unsupported claim. More workers can reduce queue delay but do not guarantee lower index lag.]
+
+Keep this command unchanged: `statusctl inspect --tenant demo`

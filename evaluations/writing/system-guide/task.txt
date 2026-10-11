@@ -1,0 +1,13 @@
+Write a 650–850 word guide for an engineer joining this project. Use only the facts below. The reader knows HTTP and queues but has not worked on this service. Save the finished guide to output.md in your assigned directory.
+
+Relay ingests customer events through an HTTP gateway. A accepted request receives HTTP 202 after the event is appended to a durable queue. Acceptance does not mean the event is searchable.
+Gateway event limit is 256 KiB. A tenant API key identifies the tenant. Gateway rejects missing tenant keys and oversized events before queueing.
+Workers consume the queue, normalize timestamps to UTC, and attach a schema version. Events with invalid timestamps move to a quarantine queue. Operators inspect quarantine records; automatic correction is not supported.
+The durable store contains normalized events for 30 days. Tenant ID is part of each storage key. A failed store write is retried; a worker acknowledges its queue message only after a successful store write.
+A separate indexer reads stored events and updates a search index. The measured indexing lag in last week's staging run was 2 to 8 seconds; production lag has not been measured. A store write does not ensure an immediate index update.
+Search requests require a tenant API key. Search filters by tenant ID before returning results. Cross-tenant search is unsupported.
+The gateway and search service scale separately. More workers can reduce queue delay but do not necessarily reduce indexing lag.
+Retried deliveries can produce duplicates. A customer-supplied event_id is the deduplication key. Events without event_id can be stored more than once. Deduplication applies within a tenant for the 30-day retention period.
+Deleting an event removes it from the durable store first; the indexer later removes its index entry. Until that update, a deleted event can remain in search results. Do not use search absence as proof of durable deletion.
+Operators monitor queue age, store-write failures, quarantine size, and index lag. There are no documented alert thresholds yet.
+No pricing or production throughput measurements are available.

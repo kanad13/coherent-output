@@ -1,0 +1,17 @@
+#  Event delivery
+
+The gateway accepts an event and puts it in the queue. A worker reads queued events and writes them to the event store. The indexer reads the event store and updates the search index. Search queries read the search index. Queue acceptance does not mean that an event is searchable.
+
+|Stage|Completion means|
+|---|---|
+|Gateway|Queue accepted the event|
+|Worker|Event stored|
+|Indexer|Search index updated|
+
+##  Limits
+
+The gateway rejects events larger than 128 KiB. Search delay was five seconds in a local test; production delay is unknown. Event identifiers suppress duplicates for seven days.
+
+```bash
+relay inspect --tenant north --event sample-7
+```

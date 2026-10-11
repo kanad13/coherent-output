@@ -1,0 +1,6 @@
+# Native hook check
+
+```mermaid
+flowchart LR
+  A-->B
+```

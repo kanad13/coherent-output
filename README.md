@@ -1,149 +1,89 @@
 # Coherent Output
 
-This repository maintains shared agent instructions, operational rules, modular skills, and deterministic hooks across multiple Macs. Git synchronizes the source files between devices. Each Mac runs the installer to link its local applications to its own repository checkout.
+This repository maintains a personal library of agent instructions, skills, and hooks across Macs. Git carries the sources between devices; the installer links each Mac's applications to its local checkout.
 
----
+There are two useful installation paths. The personal installer deploys the whole library, instructions, rules, and host adapters. A portable skills installer copies selected skills into a project for other agents. Skills provide model-directed workflows; hooks provide feedback on supported tool events; the verification command checks the resulting files and configuration.
 
-## 1. Quickstart
+## 1. Personal installation
 
-Run deployment from this checkout:
+Use Node.js 22.13.0 or later and Python 3. Provision the pinned formatter and diagram renderer, preview the mappings, then install:
+
+```bash
+npm ci
+./scripts/deploy.sh --dry-run
+./scripts/deploy.sh
+./scripts/verify.sh
+```
+
+The dependencies include Puppeteer, which provisions the browser used by Mermaid CLI. The lockfile pins dependencies and the package manifest approves its specific install script. Hooks use provisioned tools and do not download packages while checking an edit.
+
+For an Antigravity-only installation, use the same checkout and provisioned dependencies:
+
+```bash
+./scripts/deploy.sh --tool antigravity --dry-run
+./scripts/deploy.sh --tool antigravity
+./scripts/verify.sh --tool antigravity
+```
+
+This installs global instructions, rules, all skills and their bundled helpers, and the three Antigravity hook registrations. Commands resolve the recipient's checkout; generated machine-local paths are not committed. Use `--tool codex` for a Codex-only installation. Each selection generates and validates only its host artifacts, while checking shared skill metadata.
+
+Unknown destination files cause deployment to stop before writes. Use `./scripts/deploy.sh --backup-conflicts` when adopting them: the installer preserves originals and a restore manifest under `~/.local/state/coherent-output/backups/`. Codex hook adoption also retains unrelated handlers and settings in the generated configuration.
+
+Start a fresh chat after deployment. Codex reviews new or changed hook entries through its native trust flow; installation does not approve trust entries. Its generated checker command uses the installer's absolute Python path. Redeploy after changing the Python installation. Shell entry points and checkers add standard user and Homebrew runtime directories for GUI sessions that do not load a shell profile.
+
+## 2. Install selected skills in a project
+
+From the target project, use the established [Skills CLI](https://github.com/vercel-labs/skills):
+
+```bash
+npx --yes skills@1.7.2 add kanad13/coherent-output --list
+npx --yes skills@1.7.2 add kanad13/coherent-output \
+  --skill cognitive-clarity-refactor \
+  --agent codex claude-code gemini-cli --yes
+```
+
+For unpublished changes, replace `kanad13/coherent-output` with the absolute path to this checkout. This route installs skill folders and their bundled helpers. It does not deploy this repository's global instructions, rules, hooks, or formatter dependencies. A copied skill is a snapshot; editing the source checkout does not update that copy.
+
+The CLI's host mapping places canonical project copies in `.agents/skills` and creates host links where needed. Codex, Claude Code, and Gemini CLI project installation was exercised during the audit; full Claude/Gemini runtime execution was not tested. Antigravity IDE and Gemini CLI have different configuration conventions. See the [adapter guide](adapters/README.md).
+
+Use the project route alongside this repository's personal installation. The personal installer owns the entire global `~/.agents/skills` symlink. A different installer writing through that global path can modify the source checkout. Do not combine global installation methods at that path.
+
+The repository has no declared license. Choose a license before presenting it as an openly reusable public package.
+
+## 3. How the parts work together
+
+| Source                          | Role                                                           |
+| ------------------------------- | -------------------------------------------------------------- |
+| [AGENTS.md](AGENTS.md)          | Short baseline for communication, workflow, and skill routing  |
+| [skills/](skills/README.md)     | Situational playbooks with discoverable name and description   |
+| [rules/](rules/)                | Optional scoped policies; there are currently no written rules |
+| [adapters/](adapters/README.md) | Host mappings, hook templates, and payload normalization       |
+| [scripts/](scripts/README.md)   | Installation, behavior tests, and final verification           |
+| [package.json](package.json)    | Pinned fallback formatter and diagram renderer                 |
+
+A host discovers skill metadata in its supported directories. The agent reads a skill body when the task or user invocation calls for it, and invokes bundled helpers when needed. A skill's instructions do not guarantee execution of every step.
+
+The installer composes Codex instructions from `AGENTS.md` and written rules, with natural-language conditions for glob rules. Antigravity uses its rules directory. Generated files live in ignored `.generated/`; device-owned authentication, histories, databases, and plugin caches stay local.
+
+Codex and Antigravity use different hook payloads. Their adapters normalize edited paths into shared document checks. The checks format supported files and compile Mermaid fences, with errors returned to the host. Post-edit hooks cannot undo an edit. Shell and unsupported-tool writes need the standalone verification gate.
+
+## 4. Writing and skill maintenance
+
+Use [progressive-documentation](skills/progressive-documentation/SKILL.md) to introduce a substantial explanation as a coherent whole, then deepen mechanisms, relationships, consequences, and detail. Use [cognitive-clarity-refactor](skills/cognitive-clarity-refactor/SKILL.md) for dense text that needs its strict, scannable bullet hierarchy.
+
+The [authoring contract](skills/README.md#2-skill-authoring-contract) defines the shared writing policy, artifact-specific structure, dependency rules, and validation requirements. Each writing skill includes its local writing guidance; required workflow dependencies are documented separately. Emails, procedures, reference material, and short answers keep the structures their readers need.
+
+## 5. Working across Macs
+
+On the source Mac, edit the library, deploy, and verify. Commit and push when that workflow is requested. On another Mac, pull the changes, run `npm ci`, deploy, verify, and start fresh chats.
+
+After changing skills, rules, adapters, or deployment behavior:
 
 ```bash
 ./scripts/deploy.sh
 ./scripts/verify.sh
 ```
 
-- `./scripts/deploy.sh` links shared sources to application configuration paths and renders local machine templates.
-- `./scripts/verify.sh` verifies link health, runs the test suite, and checks formatting compliance.
+Behavior changes to skills also require a task trial with only the skill and input material. The [testing guide](scripts/README.md#3-verification-strategy) distinguishes automated checks, independent writing trials, and native host checks.
 
----
-
-## 2. Source Layout
-
-| Location                        | Purpose                                                                             |
-| :------------------------------ | :---------------------------------------------------------------------------------- |
-| [AGENTS.md](AGENTS.md)          | Universal baseline directive: persona, workflow loop, boundaries, and policy router |
-| [skills/](skills/README.md)     | Situational child playbooks formatted to the Agent Skills open standard             |
-| [rules/](rules/)                | Scoped file-pattern policies activated conditionally via glob triggers              |
-| [adapters/](adapters/README.md) | Tool-specific configuration blueprints, hook templates, and runtime bridges         |
-| [scripts/](scripts/README.md)   | Deployment, synchronization, and automated verification scripts                     |
-| [.prettierrc](.prettierrc)      | Repository formatting standards                                                     |
-
-Local templates are generated into `.generated/` during installation and are excluded from Git.
-
----
-
-## 3. Architecture: Universal Directives vs. Contextual Execution
-
-This repository structures agent steering across two complementary operational dimensions: **Universal Directives** and **Contextual Execution**.
-
-A parent equips a child with universal, non-negotiable principles: stay safe, maintain hydration, and seek adult guidance when facing danger. The child applies these principles in any environment—whether at home, school, or the playground. The parent does not micromanage or anticipate every isolated hazard in advance; instead, the parent prepares the child to assess and navigate changing circumstances responsibly.
-
-Similarly, instructions in this repository divide into universal baselines and situational playbooks:
-
-```
-┌────────────────────────────────────────────────────────────────────────┐
-│ UNIVERSAL DIRECTIVE: AGENTS.md (System Baseline)                       │
-│ "Stay safe, communicate clearly, and follow the 4-step workflow."       │
-│ • Universal Communication Register (ASD-STE100, active voice)          │
-│ • The 4-Step Workflow Progression (Ground ➔ Plan ➔ Execute ➔ Verify)   │
-│ • Escalation Boundaries (Autonomous by default; 3 explicit pause gates) │
-│ • Decision Rationale ("Why, Not What")                                 │
-│ • Domain-Agnostic: Governs coding, research, writing, and chat         │
-└───────────────────────────────────┬────────────────────────────────────┘
-                                    │ Activates on demand:
-         ┌──────────────────────────┼──────────────────────────┐
-         ▼                          ▼                          ▼
-┌─────────────────┐        ┌─────────────────┐        ┌─────────────────┐
-│ Situational     │        │ Scoped Rules    │        │ Lifecycle Hooks │
-│ Skills          │        │ (rules/*.md)    │        │ (adapters/hooks)│
-│ • test-strategist│       │ • Glob triggers │        │ • Safety gates  │
-│ • project-      │        │   loaded only   │        │ • Formatters    │
-│   scaffolding   │        │   on file match │        │ • Validators    │
-│ • commit-scribe │        │                 │        │                 │
-└─────────────────┘        └─────────────────┘        └─────────────────┘
-```
-
-### The Two Layers of Universal vs. Contextual
-
-1. **System Layer (Directive vs. Playbook):**
-   - **Universal Directives (`AGENTS.md`):** High-level, positive, and domain-agnostic. It establishes operational posture across all tools and tasks. It defines the universal 4-step workflow, communication standards, safety boundaries, and policy routing (Section 5) that directs agents to specialized skills when encountering multi-step procedures.
-   - **Contextual Capabilities (`skills/`, `rules/`, `adapters/hooks`):** Activated only when context demands them:
-     - **Situational Skills (`skills/*/SKILL.md`):** Specialized playbooks following the [Agent Skills standard](skills/README.md). Harnesses pre-load lightweight metadata (`name` and `description`) into the system prompt (**Progressive Disclosure**), and the agent reads full procedural bodies only when activated via `AGENTS.md` policy routing or user slash commands (e.g., `/test-strategist`).
-     - **Scoped Rules (`rules/*.md`):** Loaded conditionally based on file-pattern triggers (`trigger: glob`, e.g. `*.py` or `*.tsx`) when the agent accesses matching paths.
-     - **Lifecycle Hooks (`adapters/antigravity/hooks`):** Deterministic guardrails executed by the harness on runtime tool events (`PreToolUse`, `PostToolUse`).
-
-2. **Skill Layer (Invariant Protocol vs. Project Artifact):**
-   - The universal/contextual separation also recurs within individual skills. A skill such as `test-strategist` or `project-scaffolding` does not attempt to anticipate every unique project topology or hardcode a static plan.
-   - Instead, the skill provides **an ordered workflow with universal invariants, required stage results, and verification criteria**. The agent uses discovered project requirements to make decisions, implement changes, and verify outcomes. Each stage supplies the information needed by the next.
-   - The **concrete contextual strategy** belongs to the target project itself (stored in that repository's `TESTING.md`, `README.md`, or architecture records). The skill provides the repeatable protocol to formulate, audit, and evolve that contextual strategy.
-
----
-
-## 4. Installed Mapping
-
-`<repo>` represents the absolute path to this checkout on the active Mac. `~` represents the user home directory.
-
-| Application     | Tool Configuration Path       | Target Source or Generated File            | Mechanics                                                          |
-| :-------------- | :---------------------------- | :----------------------------------------- | :----------------------------------------------------------------- |
-| **Codex**       | `~/.agents/skills`            | `<repo>/skills`                            | Direct directory symlink                                           |
-| **Codex**       | `~/.codex/AGENTS.md`          | `<repo>/.generated/codex/AGENTS.md`        | Composed instruction file merging `AGENTS.md` and any scoped rules |
-| **Antigravity** | `~/.gemini/AGENTS.md`         | `<repo>/AGENTS.md`                         | Direct file symlink                                                |
-| **Antigravity** | `~/.gemini/config/rules`      | `<repo>/rules`                             | Direct directory symlink                                           |
-| **Antigravity** | `~/.gemini/config/skills`     | `<repo>/skills`                            | Direct directory symlink                                           |
-| **Antigravity** | `~/.gemini/config/hooks.json` | `<repo>/.generated/antigravity/hooks.json` | Rendered JSON template inserting local checkout paths              |
-
----
-
-## 5. Multi-Mac Workflow
-
-```
-Primary Mac (Make Changes)                Secondary Mac (Receive Changes)
---------------------------                -------------------------------
-1. Edit skills, rules, or adapters        1. git pull
-2. ./scripts/deploy.sh                    2. ./scripts/deploy.sh
-3. ./scripts/verify.sh                    3. ./scripts/verify.sh
-4. git commit & git push                  4. Restart chat sessions
-```
-
-- **Conflict Handling:** The installer aborts before making changes if unknown existing files are found at destination paths. Use `./scripts/deploy.sh --backup-conflicts` to safely move conflicting files into `~/.local/state/coherent-output/backups/`.
-- **Local Isolation:** Machine-specific state (databases, authentication, session histories, and plugin caches) remains strictly local.
-
----
-
-## 6. AI Agent Operating Protocol
-
-When any AI coding agent modifies rules, skills, or adapters in this repository, the agent must adhere to the following two-step contract before concluding work:
-
-1. **Synchronize Local State:**
-
-   ```bash
-   ./scripts/deploy.sh
-   ```
-
-   Ensures that `.generated/codex/AGENTS.md` is re-composed from updated rules and that local hook templates match the active repository path.
-
-2. **Execute Full Verification:**
-
-   ```bash
-   ./scripts/verify.sh
-   ```
-
-   Validates symlink integrity, executes the deployment isolation test suite, and checks Prettier formatting across all files.
-
-## 7. Skills & Authoring Architecture
-
-Situational agent playbooks reside in [skills/](skills/README.md) and adhere to the [Agent Skills open standard](https://agentskills.io).
-
-To eliminate documentation drift and preserve single-source-of-truth integrity, canonical skill documentation is centralized:
-
-- **Skills Catalog & Categorized Inventory:** For the full list of available skills by operational domain, see [skills/README.md Section 3](skills/README.md#3-skills-inventory).
-- **Authoring Contract & Progressive Disclosure:** For frontmatter guidelines, directory conventions, and discovery mechanics, see [skills/README.md Section 2](skills/README.md#2-skill-authoring-contract).
-- **Autonomous Policy Routing:** For universal triggers directing agents to activate specific skills, see [AGENTS.md Section 5](AGENTS.md#5-situational-skills).
-
----
-
-## 8. Lifecycle Hooks and Local Settings
-
-- **Antigravity Hooks:** Implements a destructive command gate (`safety-gate.sh` on `PreToolUse` for `run_command`), a Prettier auto-formatter (`prettier-format.sh` on `PostToolUse` for file write operations), and a Mermaid syntax validator (`mermaid-validate.sh` on `PostToolUse` for Markdown writes). See [adapters/README.md](adapters/README.md) for contract details.
-- **Codex Approvals:** Codex retains its native command approval policies. Codex's hook contract does not support `force_ask`, so native prompts govern command execution.
+The [repository audit](REPO-AUDIT.md) records the original baseline and research. The [skill evaluation](SKILL-EVALUATION.md) records the implemented document guidance and independent trials.
