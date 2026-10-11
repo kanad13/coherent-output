@@ -5,7 +5,7 @@ description: Runs an adaptive discovery interview that turns an uncertain goal, 
 
 # Grill Me: Adaptive Discovery & Decision Protocol
 
-Follow this protocol to conduct an adaptive discovery interview. Turn ambiguous objectives, architectural forks, or unvalidated proposals into clear decisions and executable plans through single-question dialogue, autonomous research, and structured convergence.
+Follow this protocol to conduct an adaptive discovery interview. Turn ambiguous objectives, architectural forks, or unvalidated proposals into clear decisions and executable plans through single-question dialogue, autonomous research, rigorous steelmanning, and structured convergence.
 
 ---
 
@@ -18,12 +18,19 @@ Follow this protocol to conduct an adaptive discovery interview. Turn ambiguous 
 2. **Autonomous Research First:**
    - Investigate accessible repository files, local code, documentation, and external facts before asking the user.
    - Never ask the user for information discoverable in the workspace or public documentation.
-3. **Internal State Isolation:**
-   - Maintain the working decision ledger internally across turns. Do not dump working interpretation summaries or state scratchpads into user-facing prompts.
-4. **No Premature Action Without Scope:**
+3. **Steelman & Juice-Squeeze Everything:**
+   - Never rubber-stamp or blindly agree with user preferences.
+   - First, **steelman** the user's intent by interpreting it at its highest standard of rigor.
+   - Then, **juice-squeeze** every proposed mechanism, constraint, and preference: audit the real utility gained ("juice") against total lifetime friction, maintenance tax, lock-in, and operational blast radius ("squeeze").
+   - Surface non-obvious trade-offs and challenge anti-patterns directly before accepting a direction.
+4. **Durable Workspace Tracker:**
+   - Maintain the working decision ledger in a persistent repository file: `.grill-me-tracker.md`.
+   - Update `.grill-me-tracker.md` at each turn with goals, confirmed decisions, verified facts, assumptions, and open trade-offs.
+   - Keep the conversational chat focused strictly on the single question and its options; do not pollute chat turns with raw working notes.
+5. **No Premature Action Without Scope:**
    - Discovery authorization does not authorize destructive actions, purchases, external communications, or irreversible code modifications.
    - If the user's broader prompt explicitly authorized downstream execution, proceed to implementation only after resolving critical dependencies. Otherwise, terminate at the synthesis plan.
-5. **Respect User Boundaries:**
+6. **Respect User Boundaries:**
    - If the user requests to skip, stop, or conclude immediately, terminate discovery and synthesize the best possible plan with explicit assumptions.
    - If the user says "I don't know," provide a concrete recommendation with a labeled reversible default.
 
@@ -34,7 +41,7 @@ Follow this protocol to conduct an adaptive discovery interview. Turn ambiguous 
 ```
 ┌─────────────────┐     ┌───────────────────┐     ┌─────────────────────┐     ┌─────────────────┐
 │ Phase 1:        │ ──► │ Phase 2:          │ ──► │ Phase 3:            │ ──► │ Phase 4:        │
-│ Frame & Ground  │     │ Formulate & Ask   │     │ Research & Evaluate │     │ Converge & Plan │
+│ Frame & Ground  │     │ Formulate & Ask   │     │ Research & Squeeze  │     │ Converge & Plan │
 └─────────────────┘     └───────────────────┘     └─────────────────────┘     └─────────────────┘
 ```
 
@@ -45,11 +52,12 @@ Follow this protocol to conduct an adaptive discovery interview. Turn ambiguous 
    - Separate the **underlying problem** (core need) from the **proposed solution** (mechanism).
 2. **Immediate Exit Check:**
    - If the existing context already provides sufficient information for a robust recommendation, deliver the synthesis immediately. Do not invent questions to satisfy an arbitrary interview quota.
-3. **Initialize Internal Working State:**
-   - Track internally:
-     - **Goal & Constraints:** Hard requirements (budget, stack, deadlines, performance).
-     - **Verified Facts:** Confirmed workspace facts vs. unverified assumptions.
-     - **Active Forks:** The primary trade-off or architectural alternatives under consideration.
+3. **Initialize Durable Tracker:**
+   - Create or update `.grill-me-tracker.md` in the workspace root with:
+     - **Core Objective:** The underlying problem to solve.
+     - **Hard Constraints:** Non-negotiables (budget, stack, deadlines, performance).
+     - **Verified Facts:** Confirmed repository facts vs. working assumptions.
+     - **Active Forks:** Candidate options currently under evaluation.
 
 ### Phase 2: Formulate & Ask
 
@@ -66,18 +74,18 @@ Follow this protocol to conduct an adaptive discovery interview. Turn ambiguous 
 3. **Wait for User Response:**
    - Never simulate or assume the user's answer in the same turn. Wait for the user to reply.
 
-### Phase 3: Research & Evaluate
+### Phase 3: Research, Steelman & Juice-Squeeze
 
-1. **Evaluate User Input:**
-   - Update internal working state with confirmed decisions and constraints.
-   - Replace earlier assumptions when the user provides contradictory facts.
+1. **Ingest User Response:**
+   - Record confirmed user choices into `.grill-me-tracker.md`.
+   - Invalidate downstream assumptions if the user changes an earlier premise.
 2. **Autonomous Unknown Resolution:**
-   - If the user's answer surfaces technical, pricing, or library questions, activate `web-research` (or search tools) autonomously before responding.
-   - Cite authoritative primary sources for verified facts.
-3. **Challenge Anti-Patterns Proportionately:**
-   - If the user's chosen direction contradicts known constraints or introduces disproportionate maintenance burden, activate `worth-the-squeeze` principles.
-   - Highlight the specific trade-off or failure mode and provide a lightweight counter-proposal.
-   - Stop challenging once the user affirms a deliberate trade-off.
+   - When external validation is needed (pricing, API limits, compatibility), activate `web-research` or search tools autonomously before replying.
+3. **Juice-Squeeze Evaluation:**
+   - Audit the user's choice:
+     - Does the mechanism deliver true net utility ("juice") proportional to its implementation and operational burden ("squeeze")?
+     - If the approach introduces high friction, fragility, or unnecessary complexity, challenge it directly: explain the failure mode and provide a lightweight counter-proposal.
+     - Stop challenging once the user affirms a deliberate, informed trade-off.
 
 ### Phase 4: Converge & Plan
 
@@ -86,7 +94,9 @@ Follow this protocol to conduct an adaptive discovery interview. Turn ambiguous 
      - All critical dependencies for selecting a path are resolved.
      - Remaining uncertainties are low-risk and reversible.
      - The user requests a recommendation or plan.
-2. **Deliver Structured Synthesis Report:**
+2. **Finalize Tracker & Deliver Structured Synthesis:**
+   - Update `.grill-me-tracker.md` with final decisions and execution plan.
+   - Deliver the synthesis in the chat:
 
 ```markdown
 # Discovery Synthesis & Decision Plan
@@ -118,9 +128,9 @@ Follow this protocol to conduct an adaptive discovery interview. Turn ambiguous 
 
 ## 3. Edge-Case Handling
 
-| Situation                                                      | Action                                                                                             |
-| :------------------------------------------------------------- | :------------------------------------------------------------------------------------------------- |
-| **Conflicting constraints** (e.g., zero cost + enterprise SLA) | Surface the conflict directly. Ask which constraint has priority; do not silently drop one.        |
-| **User says "I don't know" or skips**                          | Supply a reasonable, reversible default. Explain why it is safe, note the assumption, and advance. |
-| **User changes earlier premise**                               | Invalidate downstream deductions. Re-evaluate affected options and confirm the revised branch.     |
-| **Tool / search unavailable**                                  | State unverified assumptions clearly. Provide a conditional plan branching on the unverified fact. |
+| Situation                                                      | Action                                                                                                                         |
+| :------------------------------------------------------------- | :----------------------------------------------------------------------------------------------------------------------------- |
+| **Conflicting constraints** (e.g., zero cost + enterprise SLA) | Surface the conflict directly. Ask which constraint has priority; do not silently drop one.                                    |
+| **User says "I don't know" or skips**                          | Supply a reasonable, reversible default. Explain why it is safe, record the assumption in `.grill-me-tracker.md`, and advance. |
+| **User changes earlier premise**                               | Invalidate downstream deductions. Re-evaluate affected options and confirm the revised branch.                                 |
+| **Tool / search unavailable**                                  | State unverified assumptions clearly in the tracker. Provide a conditional plan branching on the unverified fact.              |
