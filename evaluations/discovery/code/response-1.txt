@@ -1,9 +1,0 @@
-I’m using grill-me and worth-the-squeeze to separate the search failure from the proposed migration. My working goal is reliable search for your local notes, with additional features chosen around tasks you actually need.
-
-The supplied app has one user and 800 notes, with no reported latency problem. Its README requires notes to remain on this laptop. I reproduced the failure: `Field` finds “Field notes”; `FIELD` and `field` do not. The code uses a case-sensitive substring check on titles. That explains this failure, but does not establish whether other search problems exist.
-
-My initial verdict on the migration is **COUNTER-PROPOSAL**: keep search local and start with case-insensitive title matching. That directly addresses the demonstrated failure with a small change. A hosted service receiving note text or titles conflicts with the laptop-only requirement and introduces integration work without a demonstrated benefit yet. I have not verified vendor capabilities or prices; browsing is unavailable here.
-
-The first proposed success check is that all three capitalization variants find the same note while its contents remain local. Feature scope and a time budget are still open; neither has been decided.
-
-Beyond this capitalization failure, what is the most important search task you cannot complete today? Give one example query and the result you expected.

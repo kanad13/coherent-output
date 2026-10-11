@@ -1,3 +1,0 @@
-Saved and verified output.md with three unresolved alternatives per concern. Original text, comments, and command remain unchanged.
-
-The worth-the-squeeze evaluator was unavailable; its workflow was not performed.

@@ -2,7 +2,7 @@
 
 Audit date: 11 October 2026. Baseline: local `main` at `7216341`. Working branch: `repo-audit`.
 
-This is the original investigation and decision record, captured before implementation. Its findings describe the baseline at `7216341`. The subsequent authorized repairs and skill trials are recorded in [SKILL-EVALUATION.md](SKILL-EVALUATION.md); living instructions describe the current implementation.
+This is the original investigation and decision record, captured before implementation. Its findings describe the baseline at `7216341`. The [repository overview](README.md) and [testing guide](scripts/README.md) describe the current implementation and verification requirements.
 
 ## 1. Direct answer
 

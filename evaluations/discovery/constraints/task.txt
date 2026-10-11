@@ -1,1 +1,0 @@
-Use grill-me, web-research, and worth-the-squeeze to help plan a shared note app for three people in different cities. All edits must appear instantly on everyone's machines, even while the editing machine has no network connection. No changes to code yet. Ask me progressively and help me choose a workable approach.

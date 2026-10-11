@@ -1,1 +1,0 @@
-Use the supplied grill-me skill. I want to use SQLite FTS5 for a local Python note-search tool because it must find any substring inside words, ignoring case. I have 800 notes, one user, no latency problems, two hours to fix search, and notes must stay local. Do not implement yet. Please investigate whether my approach fits and give me a plan.

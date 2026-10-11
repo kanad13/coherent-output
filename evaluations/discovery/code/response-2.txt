@@ -1,9 +1,0 @@
-Keep the current local search and fix capitalization. Your confirmed scope is title substring search, every note staying on this laptop, no additional features, and a two-hour effort cap. The reproduced failure comes from the case-sensitive comparison in `fixture/search.py`; a hosted migration has no demonstrated benefit for this scope and would conflict with your storage constraint if it received note contents or titles.
-
-Recommended plan:
-
-1. Make a small change to `search`: use Python’s `casefold()` on both the query and each title for the substring comparison. Return the original titles and retain the existing database ordering. Leave the database schema and dependencies unchanged.
-2. Verify that `FIELD`, `Field`, and `field` all return “Field notes”. Also check a partial query such as `ield`, an unmatched query, multiple matching titles, and an empty query. Preserve the current empty-query behavior of returning all titles, and confirm returned spelling and ordering remain unchanged.
-3. Review the diff for this scope and run the checks locally. Stop when they pass; treat two hours as a cap, not time to fill with features. If another failure appears, record its reproduction and reassess whether it belongs within this fix.
-
-Done means the capitalization failure is resolved, existing substring behavior is preserved, and search requires no network connection or transfer of note data. This is the proposed implementation plan; no app code has been changed.

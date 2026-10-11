@@ -88,4 +88,4 @@ After changing skills, rules, adapters, or deployment behavior:
 
 Behavior changes to skills also require a task trial with only the skill and input material. The [testing guide](scripts/README.md#3-verification-strategy) distinguishes automated checks, independent writing trials, and native host checks.
 
-The [repository audit](REPO-AUDIT.md) records the original baseline and research. The [writing evaluation](SKILL-EVALUATION.md) records document guidance and independent trials. The [discovery evaluation](DISCOVERY-EVALUATION.md) records the interview skill, painter analogy, and their behavioral checks.
+Keep raw skill trials outside the checkout during review; publish reusable checks and concise findings when they provide recurring value. The [testing guide](scripts/README.md#3-verification-strategy) defines this retention policy. The [repository audit](REPO-AUDIT.md) records the original baseline and research.

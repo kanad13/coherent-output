@@ -79,10 +79,12 @@ When changing a skill:
 3. Preserve facts, protected assets, and artifact-specific requirements.
 4. Validate metadata, formatting, links, and helper behavior. Compare protected assets in the saved result after any hooks or post-processing, not only in the submitted edit.
 5. For a behavior change, run a fresh-agent trial with only the installed skill and task fixture. Include a normal case and a relevant boundary case; inspect actual outputs against explicit criteria.
-6. Record the skill snapshot, input, raw output, verdict, and limitations. A sample passing is evidence for that sample, not proof of universal adherence.
+6. Keep the skill snapshot, input, raw output, verdict, and limitations in a temporary directory outside the checkout while reviewing and improving the change. Summarize the tested behavior, outcome, and limits in the change description or commit message. A sample passing is evidence for that sample, not proof of universal adherence.
 7. Deploy and run the canonical verification command. Use native host checks before claiming hook event delivery.
 
-The [writing evaluation](../SKILL-EVALUATION.md) and [discovery evaluation](../DISCOVERY-EVALUATION.md) demonstrate this process. For interactive skills, test multiple turns, corrections, stopping, and unavailable tools as well as the final answer. Preserve each supplied answer and observed response. Historical audit evidence belongs in a dated report; living instructions describe the current contract.
+For interactive skills, test multiple turns, corrections, stopping, and unavailable tools as well as the final answer. Retain each supplied answer and observed response during review. Use the [testing strategy](../scripts/README.md#3-verification-strategy) to select cases and inspect results.
+
+Raw transcripts, duplicated skill snapshots, and historical evaluation reports stay outside the published library by default. Keep a local archive outside the checkout when later review is useful; ignored `evaluations/` is a scratch option, but ignore rules do not control every harness's context loading. Commit a small reusable fixture, explicit acceptance criteria, or an executable regression check only when it detects a concrete recurring failure and has a documented rerun path. Fold durable lessons into the current skill or testing guidance. An unchanged historical output or a checksum match does not establish current skill behavior.
 
 ## 3. Skills inventory
 

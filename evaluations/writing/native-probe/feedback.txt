@@ -1,7 +1,0 @@
-invalid.md 5ms (unchanged)
-Document check failed: Diagram 1 failed compilation (invalid diagram): Error: Parse error on line 3:
-flowchart LR  A-->
-------------------^
-Expecting 'AMP', 'COLON', 'PIPE', 'TESTSTR', 'DOWN', 'DEFAULT', 'NUM', 'COMMA', 'NODE_STRING', 'BRKT', 'MINUS', 'MULT', 'UNICODE_TEXT', got 'EOF'
-Parser.parseError (https://mermaid-cli-intercept.invalid/Users/kunal/Documents/all-my-repos/200-frequent/coherent-output/node_modules/mermaid/dist/chunks/mermaid.esm/chunk-T3ODRKFR.mjs:1561:21)
-Parser.parse (https://mermaid-cli-intercept.invalid/Users/kunal/Documents/all-my-repos/200-frequent/coherent-output/node_modules/mermaid/dist/chunks/mermaid.esm/chunk-T3ODRKFR.mjs:1633:16)

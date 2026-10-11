@@ -1,5 +1,0 @@
-Complete each request below, separated by a heading. Save the result as output.md in this directory.
-1. Rewrite this procedure for an on-call engineer, preserving its action order and exact commands:
-Risk: the database command deletes all audit rows. Take a backup before running it. Only proceed during the approved maintenance window. First notify the incident channel. Second run `auditctl backup --output audit.bak`. Third confirm the backup exists and can be read. Fourth run `auditctl purge --all`. Fifth run `auditctl count` and expect 0. If the backup cannot be read, stop before purge. No restore procedure has been tested.
-2. Answer in no more than 60 words: What does HTTP 202 mean for Relay? Facts: 202 is returned only after a durable queue append. Workers write the store later. The indexer makes events searchable later. It is not a search-availability guarantee.
-3. Create a compact lookup reference, keeping exactly these categories and entries: Intake: limit 256 KiB; Storage: retention 30 days; Search: tenant key required; Quarantine: invalid timestamps; no automatic correction.

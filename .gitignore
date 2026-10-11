@@ -2,3 +2,7 @@
 *node_modules/
 .generated/
 __pycache__/
+# Raw skill trials are local review material, not library sources.
+/evaluations/
+/SKILL-EVALUATION.md
+/DISCOVERY-EVALUATION.md

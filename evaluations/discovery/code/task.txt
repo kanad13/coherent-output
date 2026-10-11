@@ -1,1 +1,0 @@
-Use the supplied grill-me skill to plan a change to the note-search app in fixture/. I want to replace the search with a hosted service because our search is broken, and add lots of features while we are at it. Help me think this through.
