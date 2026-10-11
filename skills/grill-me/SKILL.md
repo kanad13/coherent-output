@@ -3,69 +3,124 @@ name: grill-me
 description: Runs an adaptive discovery interview that turns an uncertain goal, choice, or proposed change into an evidence-informed recommendation and next-step plan. Use when the user asks to be grilled, wants help thinking through a decision, or needs requirements uncovered through dialogue. Do not impose an interview on a clear execution request, a simple factual lookup, or an urgent need for immediate guidance.
 ---
 
-# Grill Me
+# Grill Me: Adaptive Discovery & Decision Protocol
 
-Help the user discover what matters, test the proposed approach, and decide what to do next. Alternate focused questions with investigation and useful advice. Keep the user's stated preferences and authority distinct from your recommendations. Match the depth to the consequence of the decision and the user's available time.
+Follow this protocol to conduct an adaptive discovery interview. Turn ambiguous objectives, architectural forks, or unvalidated proposals into clear decisions and executable plans through single-question dialogue, autonomous research, and structured convergence.
 
-## 1. Frame the Decision
+---
 
-Read the supplied context and accessible relevant artifacts before asking for information. Establish the desired outcome, current situation, constraints, and what a satisfactory result would enable. Distinguish the underlying need from a proposed solution; both can change as the interview progresses.
+## 1. Non-Negotiable Operational Invariants
 
-Briefly state your working interpretation when the request is broad or ambiguous. Do not demand approval of a summary before doing useful work. If the topic is absent, ask what the user wants to explore. If the context already supports a sound answer, give it without inventing a question quota.
+1. **Single-Question Invariant:**
+   - Ask exactly **one** focused question per turn.
+   - Never output questionnaires, surveys, or multi-question lists.
+   - _Exception:_ Bundling is permitted only when 2–3 options are strictly co-dependent and unlock the exact same immediate choice.
+2. **Autonomous Research First:**
+   - Investigate accessible repository files, local code, documentation, and external facts before asking the user.
+   - Never ask the user for information discoverable in the workspace or public documentation.
+3. **Internal State Isolation:**
+   - Maintain the working decision ledger internally across turns. Do not dump working interpretation summaries or state scratchpads into user-facing prompts.
+4. **No Premature Action Without Scope:**
+   - Discovery authorization does not authorize destructive actions, purchases, external communications, or irreversible code modifications.
+   - If the user's broader prompt explicitly authorized downstream execution, proceed to implementation only after resolving critical dependencies. Otherwise, terminate at the synthesis plan.
+5. **Respect User Boundaries:**
+   - If the user requests to skip, stop, or conclude immediately, terminate discovery and synthesize the best possible plan with explicit assumptions.
+   - If the user says "I don't know," provide a concrete recommendation with a labeled reversible default.
 
-Keep a compact working record of:
+---
 
-- User-stated goals, preferences, constraints, and decisions.
-- Verified facts and their sources, distinguished from assumptions and estimates.
-- Material options, unresolved questions, and what would change the recommendation.
+## 2. Four-Phase Discovery Protocol
 
-Update this record as answers arrive. A later correction replaces an earlier assumption; revisit affected conclusions and dependent questions. Keep the record in conversation unless the user requests a file or durable capture. Do not create a transcript or memory file by default.
+```
+┌─────────────────┐     ┌───────────────────┐     ┌─────────────────────┐     ┌─────────────────┐
+│ Phase 1:        │ ──► │ Phase 2:          │ ──► │ Phase 3:            │ ──► │ Phase 4:        │
+│ Frame & Ground  │     │ Formulate & Ask   │     │ Research & Evaluate │     │ Converge & Plan │
+└─────────────────┘     └───────────────────┘     └─────────────────────┘     └─────────────────┘
+```
 
-## 2. Choose the Next Useful Question
+### Phase 1: Frame & Ground
 
-Identify the unresolved issue most likely to change the choice or next step. Ask the user about intentions, preferences, lived experience, or constraints you cannot establish yourself. Investigate accessible code, documents, and external facts rather than asking the user to do your research.
+1. **Ingest Context:**
+   - Inspect user prompt, active workspace, files, and recent conversation history.
+   - Separate the **underlying problem** (core need) from the **proposed solution** (mechanism).
+2. **Immediate Exit Check:**
+   - If the existing context already provides sufficient information for a robust recommendation, deliver the synthesis immediately. Do not invent questions to satisfy an arbitrary interview quota.
+3. **Initialize Internal Working State:**
+   - Track internally:
+     - **Goal & Constraints:** Hard requirements (budget, stack, deadlines, performance).
+     - **Verified Facts:** Confirmed workspace facts vs. unverified assumptions.
+     - **Active Forks:** The primary trade-off or architectural alternatives under consideration.
 
-Ask one focused question at a time by default. A small bundle is useful only when its answers are independent and jointly unlock the same next step. Settle prerequisites before asking questions that depend on them. Avoid an upfront questionnaire, repeated questions, and collecting personal information unrelated to the decision.
+### Phase 2: Formulate & Ask
 
-Make the question easy to answer. Offer plausible options when helpful, including room for the user's own answer. Give a recommendation only when evidence or stated preferences support one, with a short reason. Do not invent a preference or make every question a leading request to accept your recommendation.
+1. **Identify the Highest-Leverage Unknown:**
+   - Determine the single unresolved parameter most likely to shift the recommendation or eliminate options.
+   - Sequence prerequisites first: settle architecture before discussing configuration details.
+2. **Format and Dispatch Question:**
+   - State the decision context in 1–2 direct sentences.
+   - Offer 2–4 distinct, viable options with a brief trade-off rationale.
+   - State a recommended option when evidence supports one, clearly labeled as `(Recommended)`.
+   - Tool selection:
+     - If the host provides an interactive question tool (e.g., `ask_question`), use it with structured options and write-in support.
+     - Otherwise, output direct conversational Markdown with clear bullet options.
+3. **Wait for User Response:**
+   - Never simulate or assume the user's answer in the same turn. Wait for the user to reply.
 
-Use the host's question mechanism when available and suitable, or a direct conversational question when permitted by the host. A tool's existence does not establish that it works in the current mode or fits the question. Wait for an answer before taking steps that depend on it. Continue independent investigation while waiting when useful. A preselected option, elapsed time, or silence is not an answer or approval.
+### Phase 3: Research & Evaluate
 
-An answer such as "I don't know" calls for a concrete example, a small comparison, or a reversible default labeled as your suggestion. Respect a request to skip or stop. If constraints conflict, explain the conflict and ask which constraint can move; do not silently discard one.
+1. **Evaluate User Input:**
+   - Update internal working state with confirmed decisions and constraints.
+   - Replace earlier assumptions when the user provides contradictory facts.
+2. **Autonomous Unknown Resolution:**
+   - If the user's answer surfaces technical, pricing, or library questions, activate `web-research` (or search tools) autonomously before responding.
+   - Cite authoritative primary sources for verified facts.
+3. **Challenge Anti-Patterns Proportionately:**
+   - If the user's chosen direction contradicts known constraints or introduces disproportionate maintenance burden, activate `worth-the-squeeze` principles.
+   - Highlight the specific trade-off or failure mode and provide a lightweight counter-proposal.
+   - Stop challenging once the user affirms a deliberate trade-off.
 
-## 3. Investigate Decision-Relevant Unknowns
+### Phase 4: Converge & Plan
 
-Research when the result could materially affect the decision: current availability or prices, external product behavior, disputed claims, unfamiliar dependencies, or consequential factual uncertainty. Gather enough context to make the search useful, and revisit research when answers change the requirements. Purely local code facts and stable trivial operations do not require web searches.
+1. **Convergence Gate:**
+   - Terminate questioning when:
+     - All critical dependencies for selecting a path are resolved.
+     - Remaining uncertainties are low-risk and reversible.
+     - The user requests a recommendation or plan.
+2. **Deliver Structured Synthesis Report:**
 
-`web-research` is an optional workflow dependency. When available and research is needed, read and apply it. Otherwise use this local fallback: search authoritative primary sources; check dates, scope, and applicability; look for contrary evidence; cite the supporting page near the claim; and separate verified facts, source claims, inference, and unresolved gaps. Do not treat search snippets or unavailable pages as completed verification.
+```markdown
+# Discovery Synthesis & Decision Plan
 
-If browsing or a needed source is unavailable, say which claim remains unverified. Complete useful local analysis and give a conditional recommendation or a verification step. Never invent sources, current facts, or completed tool calls. Report an unavailable sibling workflow as unavailable if the user requested its execution; local analysis does not establish that the named skill ran.
+## 1. Frame & Governing Constraints
 
-## 4. Compare and Challenge Proportionately
+- **Core Objective:** [Single-sentence statement of the true underlying goal]
+- **Hard Constraints:** [Budget, stack, deadlines, performance, or team requirements]
 
-After an answer or investigation, explain what changed and offer the useful finding, implication, or suggestion before selecting the next question. Avoid full recaps when only one part changed.
+## 2. Recommendation & Trade-Offs
 
-Compare the viable options against the user's goals and constraints. Consider likely benefit, cost, time, risk, reversibility, maintenance where relevant, and the opportunity cost of doing something else. Include a simpler option or the current approach when it is a real alternative. Eliminate options that fail hard constraints; do not rank them as acceptable compromises. Label estimates and do not fabricate numerical scores or certainty.
+- **Selected Direction:** [Direct recommendation]
+- **Key Trade-Off:** [What is gained vs. what is sacrificed compared to alternatives]
+- **Rejected Alternatives:** [Why other candidate options were discarded]
 
-`worth-the-squeeze` is an optional workflow dependency for material engineering proposals, refactors, or additions. When available and applicable, read and apply its evaluation before recommending a direction. Its domain is engineering; for other decisions use the comparison above without imposing its technical report format or verdict vocabulary. If the skill is unavailable, use the local comparison and disclose that limitation when its execution was requested.
+## 3. Decision Ledger
 
-Supporting workflows contribute their investigation and evaluation methods to this interview. Preserve the user's question limits and requested deliverable; integrate the evidence and judgment instead of appending each sibling's default report unless requested. If the user has ended questioning, handle unresolved research parameters with explicit assumptions or a conditional plan rather than reopening the interview.
+- **Confirmed User Decisions:** [Decisions explicitly chosen by the user]
+- **Assumed Defaults:** [Reversible defaults suggested by the agent for open non-blockers]
 
-Challenge a premise when the evidence suggests that it is mistaken or that the proposed mechanism does not serve the need. Explain the specific conflict and offer a better route. Probe "why" or "why not" only when the answer could change the decision; stop pushing a settled preference without new evidence. Rigorous questioning should improve the decision, not require the user to defend every taste or rehearse every imaginable failure.
+## 4. Execution Plan
 
-## 5. Converge on a Useful Next Step
+1. [Ordered action step 1 with completion criteria]
+2. [Ordered action step 2 with completion criteria]
+3. [Ordered action step 3 with completion criteria]
+```
 
-Repeat the question–investigation–comparison loop until the outcome and material constraints are clear enough to choose a useful next step, remaining uncertainty is bounded, and another question is unlikely to change that step. Explore branches that affect the decision; do not exhaust every possible branch. Stop sooner when the user asks to conclude or give a recommendation now, reaches their time limit, or chooses to end the interview. A request for an eventual recommendation can still authorize discovery questions.
+---
 
-Deliver a concise synthesis at the depth the task needs:
+## 3. Edge-Case Handling
 
-- The understood objective and constraints that govern the choice.
-- The recommendation, its rationale, and the material alternative or trade-off.
-- Decisions the user actually made, separately from suggested defaults or assumptions.
-- Ordered next steps, with checks for success and unresolved blockers or facts to verify.
-
-If a critical answer is missing, provide a conditional plan and identify the dependency. Do not present a tentative recommendation as a user-approved decision. Leave noncritical preferences open when they do not block a reversible next step.
-
-Invocation authorizes the discovery workflow, not booking, purchasing, sending messages, or implementing changes by itself. Preserve any execution authorization already given in the conversation; do not add a blanket final confirmation gate. Act when the broader request authorizes the concrete next step and its necessary dependencies are settled. Otherwise finish with a usable plan.
-
-Before delivery, check that the recommendation fits stated constraints, citations support factual claims, assumptions remain labeled, and the plan can be followed. Use direct verbs, consistent terms, and enough explanation to connect the whole decision before details. Keep an easy choice brief; do not claim standards compliance or a measured readability score without an assessment.
+| Situation                                                      | Action                                                                                             |
+| :------------------------------------------------------------- | :------------------------------------------------------------------------------------------------- |
+| **Conflicting constraints** (e.g., zero cost + enterprise SLA) | Surface the conflict directly. Ask which constraint has priority; do not silently drop one.        |
+| **User says "I don't know" or skips**                          | Supply a reasonable, reversible default. Explain why it is safe, note the assumption, and advance. |
+| **User changes earlier premise**                               | Invalidate downstream deductions. Re-evaluate affected options and confirm the revised branch.     |
+| **Tool / search unavailable**                                  | State unverified assumptions clearly. Provide a conditional plan branching on the unverified fact. |
