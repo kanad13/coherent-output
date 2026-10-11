@@ -1,0 +1,18 @@
+import sqlite3
+c = sqlite3.connect(':memory:')
+print('Synthetic probe; SQLite runtime:', sqlite3.sqlite_version)
+c.execute('CREATE VIRTUAL TABLE words USING fts5(text)')
+c.execute("INSERT INTO words VALUES ('Hello')")
+for q in ('ell', 'hel*'):
+    print('default MATCH', repr(q), c.execute('SELECT text FROM words WHERE words MATCH ?', (q,)).fetchall())
+try:
+    c.execute("CREATE VIRTUAL TABLE tri USING fts5(text, tokenize='trigram')")
+    c.executemany('INSERT INTO tri VALUES (?)', [('Hello',), ('ÆBC',), ('Straße',)])
+    for q in ('e', 'el', 'ELL', 'æbc', 'strasse'):
+        print('trigram MATCH', repr(q), c.execute('SELECT text FROM tri WHERE tri MATCH ?', (q,)).fetchall())
+    for q in ('%e%', '%el%', '%ell%', '%æbc%'):
+        print('trigram LIKE', repr(q), c.execute('SELECT text FROM tri WHERE text LIKE ?', (q,)).fetchall())
+except sqlite3.OperationalError as e:
+    print('Trigram capability probe failed:', str(e))
+for q, text in [('e', 'Hello'), ('el', 'Hello'), ('ELL', 'Hello'), ('æbc', 'ÆBC'), ('STRASSE', 'Straße'), ('%', '100%'), ('_', 'a_b')]:
+    print('Python casefold containment', repr(q), repr(text), q.casefold() in text.casefold())

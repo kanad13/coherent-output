@@ -1,0 +1,9 @@
+Workflows actually read: skill.txt (grill-me), web-research.txt, worth-the-squeeze.txt, all in this task folder. Applied their methods within the user's 250-word limit; did not append their default report templates.
+Primary pages actually opened:
+- https://www.sqlite.org/fts5.html#the_trigram_tokenizer (resolved to https://www.sqlite.org/fts5.html; also used find for trigram restrictions)
+- https://www.sqlite.org/lang_expr.html#like (resolved to https://www.sqlite.org/lang_expr.html; also used find for ASCII and ESCAPE behavior)
+- https://www.sqlite.org/fts5.html#external_content_tables (same FTS5 page; find read responsibility, triggers, and consistency pitfalls)
+- https://www.unicode.org/faq/casemap_charprop.html (also used find for case folding definition)
+Searches actually executed: official SQLite FTS5 trigram/short-query behavior; official SQLite LIKE Unicode behavior; official Unicode case folding.
+Unperformed checks: repository, real notes, current search implementation, runtime/language/SQLite version and FTS5 availability, runtime case-folding support, total note bytes, local latency, correctness fixtures, synchronization behavior, and implementation. These were not needed for the requested recommendation and were outside authorized inspection/change scope. No questions asked. No code changes made.
+Judgment: COUNTER-PROPOSAL. User requirements retained; Unicode folding labeled a suggested default; performance unmeasured; two-hour plan is a proposed time budget, not a completion estimate or completed work.

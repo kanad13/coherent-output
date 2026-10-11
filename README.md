@@ -73,6 +73,8 @@ Use [progressive-documentation](skills/progressive-documentation/SKILL.md) to in
 
 The [authoring contract](skills/README.md#2-skill-authoring-contract) defines the shared writing policy, artifact-specific structure, dependency rules, and validation requirements. Each writing skill includes its local writing guidance; required workflow dependencies are documented separately. Emails, procedures, reference material, and short answers keep the structures their readers need.
 
+Use [grill-me](skills/grill-me/SKILL.md) for an uncertain decision or a requested discovery interview. It alternates focused questions with investigation and option comparison, then produces a practical plan. It applies `web-research` and `worth-the-squeeze` when available and relevant, with local fallbacks for standalone installation. It does not require every routine task to become an interview.
+
 ## 5. Working across Macs
 
 On the source Mac, edit the library, deploy, and verify. Commit and push when that workflow is requested. On another Mac, pull the changes, run `npm ci`, deploy, verify, and start fresh chats.
@@ -86,4 +88,4 @@ After changing skills, rules, adapters, or deployment behavior:
 
 Behavior changes to skills also require a task trial with only the skill and input material. The [testing guide](scripts/README.md#3-verification-strategy) distinguishes automated checks, independent writing trials, and native host checks.
 
-The [repository audit](REPO-AUDIT.md) records the original baseline and research. The [skill evaluation](SKILL-EVALUATION.md) records the implemented document guidance and independent trials.
+The [repository audit](REPO-AUDIT.md) records the original baseline and research. The [writing evaluation](SKILL-EVALUATION.md) records document guidance and independent trials. The [discovery evaluation](DISCOVERY-EVALUATION.md) records the interview skill, painter analogy, and their behavioral checks.

@@ -1,0 +1,23 @@
+**Recommendation: use a local Python substring scan first. Verdict on adding FTS5: COUNTER-PROPOSAL.** Your search requirement is real, but with 800 notes, one user, no latency problem, and two hours available, an index adds work without a demonstrated benefit.
+
+I interpret “any substring” as including one- and two-character queries and treating search input literally.
+
+| Verified finding | Implication | Primary source |
+| --- | --- | --- |
+| Default FTS5 searches tokens; prefix queries match token beginnings. | Searching `ell` does not find `Hello`. | [SQLite FTS5](https://www.sqlite.org/fts5.html) |
+| FTS5’s trigram tokenizer supports internal substrings and defaults to case-insensitive matching. Its full-text queries do not match substrings shorter than three Unicode characters. | Trigram `MATCH` alone fails your “any substring” requirement. | [SQLite trigram documentation](https://www.sqlite.org/fts5.html#the_trigram_tokenizer) |
+| Trigram tables support `LIKE`, with a scan fallback for patterns without usable trigrams. SQLite’s default `LIKE` folds ASCII case only; `%` and `_` are wildcards. | `LIKE` can cover short queries, but literal input and Unicode case handling need care. | [SQLite FTS5](https://www.sqlite.org/fts5.html), [SQLite expressions](https://www.sqlite.org/lang_expr.html#like) |
+| Python `str.casefold()` supports caseless matching, including converting `ß` to `ss`. | Casefolding both the query and note text provides an explicit Unicode matching rule. | [Python string documentation](https://docs.python.org/3/library/stdtypes.html#str.casefold) |
+
+Synthetic, in-memory checks on SQLite 3.53.4 confirmed these distinctions: trigram `MATCH` found `ELL` in `Hello`, missed `e` and `el`, and did not equate `strasse` with `Straße`. Python casefolded containment matched all those examples. These checks establish behavior in this test runtime, not performance on your notes or compatibility with your app’s runtime.
+
+The trade-off is straightforward: a scan supports arbitrary query lengths with one matching path and keeps processing local. Trigram FTS5 offers potential speed for longer queries, but adds index setup, update consistency, query handling, and short-query behavior to maintain. Given your constraints, correctness has higher immediate value than indexing. Scan performance remains an inference until measured against the actual corpus.
+
+**Suggested two-hour plan, for later implementation:**
+
+1. **15 minutes — define matching examples.** Include `ell` → `Hello`, one- and two-character queries, mixed case, literal punctuation, and nonmatches. My suggested default is Unicode casefolding, preserving accents; `STRASSE` would match `Straße`. This is a recommendation, not a preference you have already chosen. Define empty-query behavior explicitly.
+2. **45 minutes — replace only the search predicate.** Keep the existing note storage. Scan the intended fields locally using casefolded literal containment. Preserve original text for display. Avoid adding an index or cache unless measurements justify it.
+3. **40 minutes — verify correctness and freshness.** Check the examples, accents and non-ASCII case, literal `%`, `_`, and quotes, plus newly created, edited, and deleted notes. Require the expected note IDs with no stale results.
+4. **20 minutes — measure complete searches across all 800 notes.** Include loading and casefolding costs. If latency remains acceptable, stop. Revisit trigram FTS5 only if a measured problem appears; then verify support in the app’s actual Python runtime and retain identical short-query and Unicode semantics.
+
+The remaining gaps are the existing search code, total corpus size, and your preferred Unicode equivalences. They do not block this recommendation. No app code or real notes were inspected or changed.

@@ -1,6 +1,6 @@
 # Scripts
 
-The installer deploys this checkout without copying device-owned state. Verification checks both configuration and observable behavior. Independent writing trials are separate evidence for skills whose output depends on model judgment.
+The installer deploys this checkout without copying device-owned state. Verification checks both configuration and observable behavior. Independent skill trials are separate evidence for workflows whose output depends on model judgment.
 
 ## 1. Commands and prerequisites
 
@@ -47,24 +47,27 @@ The Mermaid helper returns `0` for verified diagrams or no fences, `1` for inval
 
 ## 3. Verification strategy
 
-| Workflow                             | Required observable result                                              | Evidence                                                                                     |
-| ------------------------------------ | ----------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
-| Install on another Mac               | Correct links and generated files; recoverable unknown files            | Isolated homes and checkouts with spaces/apostrophes                                         |
-| Install only one host                | Unselected host templates and rule restrictions do not block deployment | Native Antigravity manual/model rules and unrelated invalid template cases                   |
-| Start hooks from a GUI environment   | Provisioned Python and Node are found before checks run                 | Generated Codex command and all three installed Antigravity commands under a restricted PATH |
-| Adopt Codex hook configuration       | Owned handler updates once; unrelated handlers/settings survive         | Merge, backup, malformed-schema, and repeat tests                                            |
-| Edit through a supported host tool   | Actual resulting file is formatted                                      | Real Prettier calls through both payload adapters                                            |
-| Project-specific formatting          | Project configuration governs output                                    | Isolated project configuration test                                                          |
-| Write invalid Markdown diagrams      | Host receives a failure                                                 | Real Mermaid compilation with valid and invalid sources                                      |
-| Missing tooling or malformed payload | Failed check with diagnostics                                           | Controlled unavailable dependencies and malformed input                                      |
-| Invoke bundled helper elsewhere      | Works outside repository cwd; no temporary files remain                 | Raw diagram compilation from an isolated directory                                           |
-| Use a writing skill alone            | Requested structure and content survive                                 | Fresh agents with only the skill and fixture; [evaluation record](../SKILL-EVALUATION.md)    |
-| Preserve trial evidence              | Historical snapshots, inputs, and outputs retain recorded bytes         | Archive manifest completeness and checksum test                                              |
-| Native event delivery                | Host actually fires and surfaces the configured hook                    | Manual native tool event; JSON contract tests alone are insufficient                         |
+| Workflow                             | Required observable result                                                                   | Evidence                                                                                                        |
+| ------------------------------------ | -------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| Install on another Mac               | Correct links and generated files; recoverable unknown files                                 | Isolated homes and checkouts with spaces/apostrophes                                                            |
+| Install only one host                | Unselected host templates and rule restrictions do not block deployment                      | Native Antigravity manual/model rules and unrelated invalid template cases                                      |
+| Start hooks from a GUI environment   | Provisioned Python and Node are found before checks run                                      | Generated Codex command and all three installed Antigravity commands under a restricted PATH                    |
+| Adopt Codex hook configuration       | Owned handler updates once; unrelated handlers/settings survive                              | Merge, backup, malformed-schema, and repeat tests                                                               |
+| Edit through a supported host tool   | Actual resulting file is formatted                                                           | Real Prettier calls through both payload adapters                                                               |
+| Project-specific formatting          | Project configuration governs output                                                         | Isolated project configuration test                                                                             |
+| Write invalid Markdown diagrams      | Host receives a failure                                                                      | Real Mermaid compilation with valid and invalid sources                                                         |
+| Missing tooling or malformed payload | Failed check with diagnostics                                                                | Controlled unavailable dependencies and malformed input                                                         |
+| Invoke bundled helper elsewhere      | Works outside repository cwd; no temporary files remain                                      | Raw diagram compilation from an isolated directory                                                              |
+| Use a writing skill alone            | Requested structure and content survive                                                      | Fresh agents with only the skill and fixture; [evaluation record](../SKILL-EVALUATION.md)                       |
+| Use an interview skill across turns  | Questions adapt to answers; research, corrections, constraints, and stopping govern the plan | Fresh agents, controlled user replies, and a live research case; [discovery record](../DISCOVERY-EVALUATION.md) |
+| Preserve trial evidence              | Historical snapshots, inputs, and outputs retain recorded bytes                              | Archive manifest completeness and checksum test                                                                 |
+| Native event delivery                | Host actually fires and surfaces the configured hook                                         | Manual native tool event; JSON contract tests alone are insufficient                                            |
 
-Run `verify.sh` after deployment, hook, helper, or metadata changes. Run independent writing trials after changing a skill's output contract, structure, preservation rules, or routing boundary. Pure wording fixes need proportionate inspection.
+Run `verify.sh` after deployment, hook, helper, or metadata changes. Run independent skill trials after changing a skill's output contract, structure, preservation rules, or routing boundary. Pure wording fixes need proportionate inspection.
 
 Trials use isolated skill copies and task fixtures. Do not provide the desired answer or reviewer rubric to the producing agent. Inspect outputs for facts, uncertainty, protected assets, task format, and the behavior being changed. Keep input, skill snapshot, raw output, and verdict so the result is reviewable.
+
+For interactive workflows, supply one user answer per turn and retain every prompt and response. Test a correction and a request to stop, and distinguish live tool execution from offline simulation. Register new archive folders in `test_evaluations.py`; each folder's manifest hashes the original skill, task, output, and additional evidence. The archive check preserves historical bytes; it does not rerun model behavior or require old snapshots to match current skills.
 
 The automated suite does not prove all hosts fire hooks or all model runs follow a skill. Codex native shell delivery was observed after the missing checker was repaired. Native Codex patch delivery was also exercised with an actually formatted valid document and feedback from an invalid diagram. Antigravity event delivery remains unverified; Gemini and Claude hook execution is outside the maintained adapter scope.
 

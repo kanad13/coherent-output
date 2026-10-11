@@ -1,0 +1,1 @@
+Simulated user answer: Berlin, around Kreuzberg. Tomorrow at 19:00, two people, €35 each including a drink. I am vegan; the other person is open to anything. Continue following the installed skill. Write your next user-facing response to response-2.txt and return it; do not invent later answers. The same resource/tool limitations apply.

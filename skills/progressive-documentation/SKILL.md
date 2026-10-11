@@ -7,6 +7,8 @@ description: Creates or restructures explanatory documents so readers understand
 
 Build the reader's understanding of the whole subject in successive layers. Establish a useful, accurate mental model first, then deepen that model through mechanisms, relationships, consequences, and implementation detail. Preserve the source's facts, uncertainty, and artifact requirements.
 
+Think of a painter establishing the whole composition before refining its shapes, relationships, and detail. The first pass is simpler, not less accurate. This analogy guides information order; it does not call for poetic prose, decorative repetition, or withholding essential conclusions. The operational rules below govern the result.
+
 ## 1. Choose the Reading Path
 
 Identify the reader, purpose, source material, required format, and what the reader should understand or decide. Distinguish an explanatory document from a procedure, chronological account, or reference.

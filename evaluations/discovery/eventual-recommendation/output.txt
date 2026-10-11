@@ -1,0 +1,12 @@
+I recommend a **newsletter**. You want credibility with software engineers, enjoy writing, and have two hours a week. A newsletter lets you develop technical ideas in a medium you like. A podcast would make recording and editing—tasks you dislike—central to the project.
+
+Your goal is exploration, so judge the project by useful technical exchanges and sustainable effort. Subscriber growth can remain secondary.
+
+For a starting experiment, I suggest a **six-week pilot: three short issues, published every two weeks**. This cadence is my suggested default; you have not committed to it.
+
+1. Choose three engineering questions from your own experience. Keep each narrow enough to explain with one concrete example.
+2. In the first week of each cycle, spend your two hours drafting: the question, your current view, an example, and the trade-off or uncertainty.
+3. In the second week, spend one hour checking technical claims and revising, then use the remaining hour to publish and respond to readers. Invite replies with one focused question.
+4. After three issues, check whether you stayed within the time budget, enjoyed the work, and received substantive responses from engineers. Continue if the process works; adjust the topics or distribution if engagement is weak.
+
+The main trade-off is less live conversation than a podcast. Reader replies can provide some of that exchange without adding audio production. If setting up email delivery becomes a distraction, publish the same pieces as posts first and add a mailing list later.

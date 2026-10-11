@@ -54,6 +54,8 @@ Use this section as the canonical authoring policy. Give each portable skill a s
 
 Name sibling skills without filesystem links inside a skill body. Mark each dependency as required or optional. For an optional skill, include sufficient local instructions to proceed without it. For a required dependency that is unavailable, state the blocked step and complete the supported work; do not silently claim that step was performed.
 
+When composing workflows, identify which skill owns the requested result and how supporting methods contribute to it. Preserve the user's question limits and artifact requirements, keep required verification intact, and avoid appending multiple default reports unless the user asks for them.
+
 Resolve bundled resources relative to the discovered skill directory. Do not assume the caller's current directory or access to this source checkout. Keep internal resource links inside the bundle. Do not require an installed skill to read the repository's README or global instructions.
 
 Document helper prerequisites, versions, inputs, side effects, timeouts, cleanup, and failure meanings. Keep downloads in explicit provisioning steps. A missing required checker is an unavailable verification result, not success.
@@ -80,11 +82,11 @@ When changing a skill:
 6. Record the skill snapshot, input, raw output, verdict, and limitations. A sample passing is evidence for that sample, not proof of universal adherence.
 7. Deploy and run the canonical verification command. Use native host checks before claiming hook event delivery.
 
-The [evaluation record](../SKILL-EVALUATION.md) demonstrates this process. Historical audit evidence belongs in a dated report; living instructions describe the current contract.
+The [writing evaluation](../SKILL-EVALUATION.md) and [discovery evaluation](../DISCOVERY-EVALUATION.md) demonstrate this process. For interactive skills, test multiple turns, corrections, stopping, and unavailable tools as well as the final answer. Preserve each supplied answer and observed response. Historical audit evidence belongs in a dated report; living instructions describe the current contract.
 
 ## 3. Skills inventory
 
-The library provides 15 situational skills organized by operational domain:
+The library provides 16 situational skills organized by operational domain:
 
 ### Repository Operations & Git Hygiene
 
@@ -115,10 +117,11 @@ The library provides 15 situational skills organized by operational domain:
 
 ### Architecture, Design & Discovery
 
-| Skill                                               | Description                                                                                              |
-| :-------------------------------------------------- | :------------------------------------------------------------------------------------------------------- |
-| [project-scaffolding](project-scaffolding/SKILL.md) | Establish verified project foundations and practices for tracking progress, decisions, and verification. |
-| [mermaid-architect](mermaid-architect/SKILL.md)     | Design and insert compilable native Mermaid architecture and workflow diagrams.                          |
+| Skill                                               | Description                                                                                                  |
+| :-------------------------------------------------- | :----------------------------------------------------------------------------------------------------------- |
+| [project-scaffolding](project-scaffolding/SKILL.md) | Establish verified project foundations and practices for tracking progress, decisions, and verification.     |
+| [mermaid-architect](mermaid-architect/SKILL.md)     | Design and insert compilable native Mermaid architecture and workflow diagrams.                              |
+| [grill-me](grill-me/SKILL.md)                       | Discover requirements through focused dialogue, research, option comparison, and a practical next-step plan. |
 
 ### Learning & Pedagogy
 

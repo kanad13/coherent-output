@@ -68,6 +68,7 @@ Do not improvise complex, multi-step procedures. Activate the dedicated skill up
 - **When starting a new project, establishing repository foundations, or setting up development continuity:** Activate `project-scaffolding`.
 - **When auditing coverage, establishing harnesses, or debugging brittle tests:** Activate `test-strategist`.
 - **When evaluating proposals, architectural refactors, or dependency additions:** Activate `worth-the-squeeze`.
+- **When the user requests a discovery interview or wants to think through an uncertain decision:** Activate `grill-me`. Keep clear execution requests direct.
 - **When stress-testing claims, factual assertions, or technical strategies against evidence:** Activate `claim-validator`.
 - **When handling external APIs, libraries, framework behavior, or empirical claims (at inception and iteratively as questions emerge during execution):** Activate `web-research` to validate internal knowledge against authoritative sources. Skip only for trivial standard operations or purely local codebase logic.
 - **When creating or restructuring substantial explanations that need a whole-picture introduction and increasing depth across topics:** Activate `progressive-documentation`.

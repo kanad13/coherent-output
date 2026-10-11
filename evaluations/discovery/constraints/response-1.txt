@@ -1,0 +1,9 @@
+The requirements conflict: an offline machine cannot transmit its edits to the other two machines. Immediate local editing is possible; sharing those edits requires a connection.
+
+I’m using grill-me. The requested web-research and worth-the-squeeze skills are unavailable here, as are browsing and external sources. I can compare approaches locally, but current product capabilities remain unverified.
+
+Which constraint can move?
+
+- Allow offline editing, with everyone else receiving those edits after reconnection.
+- Require a connection for shared editing, so everyone can receive changes promptly.
+- Relax a different requirement—tell me which one.

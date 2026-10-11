@@ -2,6 +2,8 @@
 
 Date: 11 October 2026. Branch: `repo-audit`, created from local `main` at `7216341`.
 
+This record describes the writing and host-check implementation committed as `b73c440`. Subsequent interview and painter-analogy work is recorded in the [discovery evaluation](DISCOVERY-EVALUATION.md); the counts and raw trial snapshots below remain historical evidence.
+
 The new [progressive-documentation skill](skills/progressive-documentation/SKILL.md) builds a reader's understanding in successive passes. The opening explains the whole subject and the roles of its main parts. Later sections connect those parts through mechanisms, consequences, choices, and exact detail. The implementation also repairs hook failures and aligns writing guidance across the library.
 
 The independent trials support this approach on the tested tasks. They also exposed an integration failure: an exact table changed after a native file write. Fresh cognitive and Mermaid trials pass after their skills gained saved-file verification and concrete preservation paths. Automated checks pass, and native Codex patch delivery has been exercised. Live Antigravity event delivery and another Mac remain unverified.

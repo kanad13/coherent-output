@@ -1,0 +1,72 @@
+Completion evidence
+
+The original user-facing output.txt was retained unchanged. Its SHA-256 before this follow-up was:
+f2aeb17c9f9071b097227e07729277363e37b061a4e232b285e166bfd6b46368
+
+Supplied workflows actually read
+
+- skill.txt: the supplied grill-me workflow, read with task.txt in the original task.
+- web-research.txt: read in full in the original task and applied to the external SQLite and Python behavior questions.
+- worth-the-squeeze.txt: read in full in the original task and applied to the engineering comparison between FTS5 and a local scan.
+
+Primary URLs actually opened with web__run.open in the original task
+
+1. https://www.sqlite.org/fts5.html
+2. https://www.sqlite.org/lang_expr.html#like
+3. https://docs.python.org/3/library/stdtypes.html#str.casefold
+   The tool reported a redirect to https://docs.python.org/3/builtins/stdtypes.html.
+4. https://docs.python.org/3/library/sqlite3.html#sqlite3.sqlite_version
+5. https://www.sqlite.org/releaselog/3_34_0.html
+   This release page was opened during investigation; the final response did not rely on a minimum-version claim from it.
+
+Additional web__run.find calls inspected the already opened FTS5, Python string, Python sqlite3, and SQLite expression pages. Search results were also collected, but no other search-result URL was opened directly. The final response uses primary SQLite and Python documentation, not the secondary search results.
+
+Original synthetic probe
+
+The original probe ran through exec_command as a Python heredoc, with working directory:
+/var/folders/v9/hrhyrqw12hsfqdc3rrhgjtm00000gn/T/coherent-discovery-c38nowa4/live-research
+
+The original shell command had the form:
+python3 - <<'PY'
+[the exact Python body now saved in probe.py]
+PY
+
+probe.py preserves the exact Python body of that original execution. It creates only an in-memory SQLite database and uses synthetic strings. No real notes or repository files are inputs. The original script was not saved as a file before it ran; its observed output was retained in the tool result and is reproduced below.
+
+Original observed output:
+
+Synthetic probe; SQLite runtime: 3.53.4
+default MATCH 'ell' []
+default MATCH 'hel*' [('Hello',)]
+trigram MATCH 'e' []
+trigram MATCH 'el' []
+trigram MATCH 'ELL' [('Hello',)]
+trigram MATCH 'æbc' [('ÆBC',)]
+trigram MATCH 'strasse' []
+trigram LIKE '%e%' [('Hello',), ('Straße',)]
+trigram LIKE '%el%' [('Hello',)]
+trigram LIKE '%ell%' [('Hello',)]
+trigram LIKE '%æbc%' []
+Python casefold containment 'e' 'Hello' True
+Python casefold containment 'el' 'Hello' True
+Python casefold containment 'ELL' 'Hello' True
+Python casefold containment 'æbc' 'ÆBC' True
+Python casefold containment 'STRASSE' 'Straße' True
+Python casefold containment '%' '100%' True
+Python casefold containment '_' 'a_b' True
+
+Follow-up rerun, distinct from the original execution
+
+During this follow-up, probe.py was saved and then executed in the same isolated directory with:
+python3 probe.py > probe-output.txt
+
+The rerun exited with code 0. probe-output.txt contains this follow-up rerun's output, not the original tool output. The rerun reported SQLite 3.53.4 and produced the same lines as the original execution reproduced above.
+
+Unavailable or unperformed steps
+
+- Neither supplied sibling workflow was unavailable. Browsing, primary documentation access, Python, FTS5, and the trigram tokenizer were available for the recorded investigation and probe.
+- The actual note-search app, its Python/SQLite runtime, note sizes, corpus performance, storage contracts, and real-note behavior were not inspected or verified. The task explicitly prohibited inspecting real notes or repository files and prohibited implementation.
+- No app implementation, real-note benchmark, app test suite, or user preference confirmation was performed. The proposed Unicode casefolding behavior remains a suggested default, as stated in output.txt.
+- The original worth-the-squeeze assessment used the supplied constraints, primary documentation, and synthetic behavior probe. Its repository/telemetry inspection step could not be performed within the task boundaries; the response does not claim that it was.
+
+Artifacts from this follow-up are completion.txt, probe.py, and probe-output.txt. All are in the isolated task directory.
