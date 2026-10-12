@@ -3,7 +3,7 @@
 
 Preflight the selected host artifacts and shared skill metadata before writes.
 Generated commands resolve this checkout and its local runtime; conflicts stay
-recoverable through explicit backups rather than destructive replacement.
+recoverable through explicit backups.
 
 Three mechanisms fit three ownership cases: symlinks for files the application
 only reads, generated files for text composed from several sources, and merges
@@ -332,7 +332,7 @@ def parse_skill_graph(doc_text):
     """Read the call-graph table from the skills document.
 
     The table is the single record of roles and allowed calls, so it is parsed by
-    its header names rather than by position and column order can change safely.
+    its header names and column order can change safely.
 
     Args:
         doc_text: Markdown text that holds a table with Skill, Role, Required calls,
@@ -355,6 +355,7 @@ def parse_skill_graph(doc_text):
         raise ValueError(f"{GRAPH_DOC} has no call-graph table with columns: {', '.join(wanted)}")
 
     def names(cell):
+        """Split one table cell into skill names; "none" and blanks mean no entries."""
         return [] if cell.lower() in ("", "none", "-", "\u2014") else [item.strip() for item in cell.split(",")]
 
     graph = {}
@@ -422,6 +423,7 @@ def skill_graph_problems(graph, skill_texts):
     state = {}
 
     def visit(node, path):
+        """Depth-first walk that reports a cycle when it meets a node still being visited."""
         state[node] = "open"
         for callee in known.get(node, {}).get("required", []) + known.get(node, {}).get("optional", []):
             if callee not in known:

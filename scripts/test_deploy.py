@@ -416,32 +416,39 @@ class DeploymentTests(unittest.TestCase):
         self.assertIn(expected, result.stderr)
 
     def test_graph_rejects_unknown_callee(self):
+        """A row that names a skill with no folder stops the preflight."""
         self.edit_graph_cell("grill-me", "Optional calls", "web-research, ghost-skill")
         self.assert_graph_refused("unknown skill 'ghost-skill'")
 
     def test_graph_rejects_cycle(self):
+        """Two lenses that call each other form a cycle the preflight reports."""
         self.edit_graph_cell("web-research", "Optional calls", "claim-validator")
         self.assert_graph_refused("call cycle: claim-validator -> web-research -> claim-validator")
 
     def test_graph_rejects_called_workflow(self):
+        """A lens may not list a workflow as a callee."""
         self.edit_graph_cell("claim-validator", "Optional calls", "web-research, grill-me")
         self.assert_graph_refused("calls workflow 'grill-me'")
 
     def test_graph_rejects_undeclared_body_reference(self):
+        """A skill text that names another skill missing from its row is drift."""
         skill = self.repo / "skills/web-research/SKILL.md"
         skill.write_text(skill.read_text() + "\nAsk commit-scribe to save the findings.\n")
         self.assert_graph_refused("text names 'commit-scribe' but its table row does not list it")
 
     def test_graph_rejects_stale_table_entry(self):
+        """A row that lists a skill its text never names is stale."""
         self.edit_graph_cell("commit-scribe", "Optional calls", "web-research")
         self.assert_graph_refused("table lists 'web-research' but the text never names it")
 
     def test_graph_requires_callee_mode_line_in_calling_lens(self):
+        """A lens with calls needs the callee-mode line that bounds call depth."""
         skill = self.repo / "skills/claim-validator/SKILL.md"
         skill.write_text(skill.read_text().replace("Callee mode", "Nested use"))
         self.assert_graph_refused("has no 'Callee mode' line")
 
     def test_graph_rejects_skill_missing_from_table(self):
+        """A skill folder without a table row is refused."""
         document = self.repo / "docs/skills.md"
         document.write_text("\n".join(line for line in document.read_text().splitlines() if not line.startswith("| [grill-me]")) + "\n")
         self.assert_graph_refused("grill-me: missing from the call-graph table")
