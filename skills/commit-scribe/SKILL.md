@@ -33,7 +33,7 @@ A narrower instruction overrides a broader one (for example, "do not push until 
    - Audit the candidate diff for temporary residue before staging:
      - **Commented-Out Code:** Eradicate commented-out code blocks entirely; rely on Git version history for retrieval.
      - **Debug Residue:** Purge temporary debugging statements (`console.log`, `print`, `debugger`, dumps).
-     - **Attribution Stamps:** Purge assistant attribution stamps, author tags, and ticket annotations from files in the diff. Keep commit-message trailers that the host or the user's instructions require.
+     - **Attribution Stamps:** Purge assistant attribution stamps, author tags, and ticket annotations from files in the diff. Never add `Co-Authored-By` or assistant attribution trailers to the commit message unless the user asks for them; the user is the sole committer.
      - **Temporary Files:** Ensure untracked scratchpad notes, log dumps, and temp files are excluded or deleted.
 3. **Intent Comment Verification ("Why, Not What"):**
    - Confirm that non-obvious algorithms, edge cases, and design choices in the diff contain comments explaining the underlying rationale, constraints, or invariants rather than narrating syntax.
