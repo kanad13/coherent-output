@@ -44,7 +44,7 @@ Execute the following five phases sequentially:
 ### Phase 3: Structural Blueprint & Micro-Formatting
 
 - Construct a clean, shallow heading hierarchy ($H_2 / H_3$) incorporating both the audited discussion items and the deduced gap-fillers into their canonical positions.
-- Use the following coverage checklist to plan sections, rather than imposing a fixed chapter order. Open with the purpose, final outcome, main aspects, their relationships, and decision-critical limits. Then deepen mechanisms, decisions, and implementation. Keep rejected alternatives beside the decisions they explain instead of duplicating them in a separate chapter. The progressive-documentation skill can support this planning if available; the rules here suffice without it.
+- Use the following coverage checklist to plan sections, rather than imposing a fixed chapter order. Open with the purpose, final outcome, main aspects, their relationships, and decision-critical limits. Then deepen mechanisms, decisions, and implementation. Keep rejected alternatives beside the decisions they explain instead of duplicating them in a separate chapter. The progressive-documentation skill can support this planning if available; the rules here suffice without it. **Callee mode:** when another skill invoked this one, make no further skill calls; the local rules suffice.
 - Cover:
   1. **Executive Purpose & Scope:** High-level problem statement and final outcome.
   2. **System Context & Prerequisites:** Background concepts and environment assumptions.

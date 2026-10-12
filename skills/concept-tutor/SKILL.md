@@ -49,5 +49,5 @@ Structure the explanation trajectory before drafting:
 ### Step 4: Scaffolded First-Principles Exposition
 
 - Draft the explanation following the Step 3 plan. Use connected paragraphs for reasoning, steps for executable procedures, lists for parallel facts, and tables for comparisons. Keep a brief explanation brief.
-- The progressive-documentation skill can help plan a substantial explanation if available. Use cognitive-clarity-refactor only when the requested artifact calls for its scannable bullet hierarchy. Neither sibling skill is required; the local rules above suffice.
+- The progressive-documentation skill can help plan a substantial explanation if available. Use cognitive-clarity-refactor only when the requested artifact calls for its scannable bullet hierarchy. Neither sibling skill is required; the local rules above suffice. **Callee mode:** when another skill invoked this one, make no further skill calls; the local rules suffice.
 - Verify that the opening gives a useful model, each later section adds understanding, prerequisites appear before use, and examples preserve the concept's limits. Keep unresolved facts explicit.

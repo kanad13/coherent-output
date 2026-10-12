@@ -64,7 +64,7 @@ Execute refactoring using this three-phase operational pipeline. For files excee
 
 ### Phase 1: Pre-Flight Ingestion & Asset Isolation
 
-1. **Whole-Document Review:** Read the full source before chunking. For explanatory documents, establish the major aspects and their relationships before a deep dive. Plan increasing depth across the subject while retaining this skill's two-tier Markdown layout. The progressive-documentation skill can help with that planning if available; it is optional. Preserve executable order in procedures and required lookup structures.
+1. **Whole-Document Review:** Read the full source before chunking. For explanatory documents, establish the major aspects and their relationships before a deep dive. Plan increasing depth across the subject while retaining this skill's two-tier Markdown layout. The progressive-documentation skill can help with that planning if available; it is optional. **Callee mode:** when another skill invoked this one, make no further skill calls; the local rules suffice. Preserve executable order in procedures and required lookup structures.
 2. **Boundary Segmentation:** Split the planned document into discrete execution chunks along primary Markdown headings (`##` / `###`).
 3. **Lexicon Extraction:** Build an internal Global Entity Lexicon containing system names, environment variables, roles, and acronyms to guarantee consistent terminology across all chunks.
 
