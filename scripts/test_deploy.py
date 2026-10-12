@@ -298,6 +298,7 @@ class DeploymentTests(unittest.TestCase):
         self.assertIs(installed["switchModelsOnFlag"], False)
         self.assertEqual(installed["hooks"]["PostToolUse"][0], original["hooks"]["PostToolUse"][0])
         self.assertEqual(installed["hooks"]["PostToolUse"][1]["matcher"], "Write|Edit|MultiEdit")
+        self.assertEqual(installed["hooks"]["PreToolUse"][0]["matcher"], "Bash")
         self.assertEqual(settings.stat().st_mode & 0o777, 0o600)
         self.assertEqual(len(list((self.target / ".local/state/coherent-output/backups").glob("*/merged-settings.json"))), 1)
         before = settings.read_text()
@@ -327,6 +328,18 @@ class DeploymentTests(unittest.TestCase):
         self.assertEqual(result.returncode, 2)
         self.assertEqual(result.stdout, "")
         self.assertIn("failed compilation", result.stderr)
+
+    def test_claude_installed_safety_gate_asks_before_destructive_commands(self):
+        self.run_deploy("--tool", "claude")
+        command = json.loads((self.target / ".claude/settings.json").read_text())["hooks"]["PreToolUse"][0]["hooks"][0]["command"]
+        for sample, asks in (("git reset --hard", True), ("pwd", False)):
+            result = subprocess.run(
+                ["/bin/bash", "-c", command],
+                input=json.dumps({"tool_name": "Bash", "tool_input": {"command": sample}}),
+                cwd=self.root, capture_output=True, text=True, timeout=30,
+            )
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertEqual(bool(result.stdout), asks)
 
     def test_invalid_claude_settings_abort_before_writing(self):
         settings = self.target / ".claude/settings.json"

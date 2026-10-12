@@ -29,7 +29,7 @@ After any change to a skill, instruction, adapter, or script:
 ./scripts/verify.sh      # drift check, tests, Prettier, Mermaid
 ```
 
-`verify.sh` must pass before a commit. It cannot judge whether a changed skill still produces good output; for that, run a fresh-agent trial as described in [scripts/README.md](scripts/README.md#3-verification-strategy).
+`verify.sh` must pass before a commit. A pre-commit hook in `.githooks/` runs the fast subset (`deploy.sh` enables it for the clone), and CI repeats the checks on push. None of these can judge whether a changed skill still produces good output; for that, run a fresh-agent trial as described in [scripts/README.md](scripts/README.md#3-verification-strategy).
 
 ## Writing style
 

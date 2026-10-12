@@ -35,6 +35,7 @@ Codex and Claude composition supports `always_on` and `glob` rules. Glob rules r
 | Antigravity PreToolUse, `run_command`                          | `toolCall.args.CommandLine`                | Ask for native review of common destructive forms or malformed input |
 | Antigravity PostToolUse, `write_to_file\|replace_file_content` | `toolCall.args.TargetFile`                 | Separate formatting and Mermaid checks                               |
 | Codex PostToolUse, `apply_patch\|Edit\|Write\|Bash`            | `tool_name`, `tool_input`, `cwd`           | Extract patch/write paths and run both document checks               |
+| Claude PreToolUse, `Bash`                                      | `tool_input.command`                       | Ask for native review of common destructive forms or malformed input |
 | Claude PostToolUse, `Write\|Edit\|MultiEdit`                   | `tool_name`, `tool_input.file_path`, `cwd` | Run both document checks on the edited file                          |
 
 The Codex matcher covers the existing supported tool names. Its command uses the installer's absolute Python executable so bootstrap does not depend on a GUI PATH containing Python. Redeploy after changing that Python installation; native review applies to changed commands. Antigravity shell launchers add standard user and Homebrew runtime directories before locating Python. Bash payloads are an explicit no-op because arbitrary shell code cannot reliably identify edited paths. Patch moves check the destination. These hooks cover configured tool events, not every way a file can change.
@@ -45,7 +46,7 @@ Mermaid checks use the helper bundled with the mermaid-architect skill. A Markdo
 
 On success, document hooks return `{}` on stdout. Diagnostics go to stderr. On failure, the shared checker exits `2`. Codex also receives `decision: block` feedback. Claude Code receives only stderr, because it ignores JSON when the exit code is `2`. PostToolUse feedback cannot reverse the preceding edit. For exact Markdown assets, an allowed `<!-- prettier-ignore -->` comment before the protected block avoids reformatting. Inspect the saved file after hooks; a submitted edit alone does not prove preservation. Formatter errors, invalid diagrams, missing dependencies, and timeouts remain visible rather than becoming successful results.
 
-The Antigravity safety gate is a conservative pattern check. It recognizes common Git, SQL, and recursive forced removal forms, including split flags and relative paths. It is not a shell interpreter or a security boundary. Native permissions remain necessary.
+The Antigravity and Claude Code safety gates share one pattern list in [safety-gate.py](shared/safety-gate.py). Antigravity replies `force_ask` or `allow`; Claude Code receives a `permissionDecision: ask` reply for a match and silence otherwise, so its own permission rules stay in charge. The gate is a conservative pattern check. It recognizes common Git, SQL, and recursive forced removal forms, including split flags and relative paths. It is not a shell interpreter or a security boundary. Native permissions remain necessary.
 
 ## 3. Ownership and migration
 

@@ -15,6 +15,7 @@ from pathlib import Path
 import re
 import shlex
 import shutil
+import subprocess
 import sys
 import tempfile
 
@@ -54,12 +55,12 @@ def frontmatter(path):
     return metadata, parts[2].lstrip("\n")
 
 
-def merge_post_tool_hooks(template_path, host, destination):
-    """Replace only this checkout's handler while preserving unrelated user state.
+def merge_hooks(template_path, host, destination):
+    """Replace only this checkout's handlers while preserving unrelated user state.
 
     Args:
         template_path: Repository-relative hook template for the host.
-        host: Value of the owned checker's ``--host`` argument.
+        host: Value of an owned script's ``--host`` argument.
         destination: Existing host configuration file to merge into, or None.
 
     Returns:
@@ -70,11 +71,16 @@ def merge_post_tool_hooks(template_path, host, destination):
         OSError: An existing configuration or source template cannot be read.
     """
     template = json.loads(REPO.joinpath(template_path).read_text())
-    checker = str(REPO / "adapters/shared/document-check.py")
-    for group in template["hooks"]["PostToolUse"]:
-        for handler in group["hooks"]:
-            handler["command"] = handler["command"].replace("{{python_executable}}", shlex.quote(sys.executable))
-            handler["command"] = handler["command"].replace("{{document_check}}", shlex.quote(checker))
+    scripts = {
+        "{{document_check}}": str(REPO / "adapters/shared/document-check.py"),
+        "{{safety_gate}}": str(REPO / "adapters/shared/safety-gate.py"),
+    }
+    for groups in template["hooks"].values():
+        for group in groups:
+            for handler in group["hooks"]:
+                handler["command"] = handler["command"].replace("{{python_executable}}", shlex.quote(sys.executable))
+                for token, path in scripts.items():
+                    handler["command"] = handler["command"].replace(token, shlex.quote(path))
     label = host.capitalize()
     try:
         current = json.loads(destination.read_text()) if destination and destination.is_file() else {}
@@ -83,40 +89,41 @@ def merge_post_tool_hooks(template_path, host, destination):
     if not isinstance(current, dict) or not isinstance(current.get("hooks", {}), dict):
         raise ValueError(f"{label} configuration must contain a hooks object; nothing installed.")
     events = current.setdefault("hooks", {})
-    groups = events.get("PostToolUse", [])
-    if not isinstance(groups, list):
-        raise ValueError(f"{label} PostToolUse must be an array; nothing installed.")
-    preserved = []
-    for group in groups:
-        if not isinstance(group, dict) or not isinstance(group.get("hooks"), list):
-            raise ValueError(f"Invalid {label} PostToolUse group; nothing installed.")
-        handlers = []
-        for handler in group["hooks"]:
-            if not isinstance(handler, dict):
-                raise ValueError(f"Invalid {label} hook handler; nothing installed.")
-            try:
-                tokens = shlex.split(handler.get("command", ""))
-            except ValueError:
-                tokens = []
-            owned = len(tokens) == 4 and tokens[1:] == [checker, "--host", host]
-            if not owned:
-                handlers.append(handler)
-        if handlers:
-            preserved.append({**group, "hooks": handlers})
-    events["PostToolUse"] = preserved + template["hooks"]["PostToolUse"]
+    for event, template_groups in template["hooks"].items():
+        groups = events.get(event, [])
+        if not isinstance(groups, list):
+            raise ValueError(f"{label} {event} must be an array; nothing installed.")
+        preserved = []
+        for group in groups:
+            if not isinstance(group, dict) or not isinstance(group.get("hooks"), list):
+                raise ValueError(f"Invalid {label} {event} group; nothing installed.")
+            handlers = []
+            for handler in group["hooks"]:
+                if not isinstance(handler, dict):
+                    raise ValueError(f"Invalid {label} hook handler; nothing installed.")
+                try:
+                    tokens = shlex.split(handler.get("command", ""))
+                except ValueError:
+                    tokens = []
+                owned = len(tokens) == 4 and tokens[1] in scripts.values() and tokens[2:] == ["--host", host]
+                if not owned:
+                    handlers.append(handler)
+            if handlers:
+                preserved.append({**group, "hooks": handlers})
+        events[event] = preserved + template_groups
     return json.dumps(current, indent=2) + "\n"
 
 
 def codex_hooks(codex_home):
     """Merge the Codex handler into the destination's existing hooks."""
     destination = codex_home / "hooks.json" if codex_home else None
-    return merge_post_tool_hooks("adapters/codex/hooks.template.json", "codex", destination)
+    return merge_hooks("adapters/codex/hooks.template.json", "codex", destination)
 
 
 def claude_settings(claude_home):
     """Merge the Claude Code handler into the user's settings, which the app also writes."""
     destination = claude_home / "settings.json" if claude_home else None
-    return merge_post_tool_hooks("adapters/claude/settings.template.json", "claude", destination)
+    return merge_hooks("adapters/claude/settings.template.json", "claude", destination)
 
 
 def composed_instructions():
@@ -407,6 +414,9 @@ def main():
                 os.unlink(temporary)
     if redundant:
         local_skills.unlink()
+    if (REPO / ".git").exists():
+        # Per-clone setting, so deployment is the one step every checkout already runs.
+        subprocess.run(["git", "-C", str(REPO), "config", "core.hooksPath", ".githooks"], check=False)
     print(f"Installed {', '.join(selected)}: {len(skill_files)} shared skills. Start fresh app chats after deployment.")
     return 0
 

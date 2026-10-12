@@ -60,7 +60,7 @@ Follow this protocol to design, verify, and insert native Mermaid diagrams into 
     `<skill_dir>/scripts/verify-mmdc.sh <diagram_file.mmd>`
   - Markdown batch verification:
     `python3 <skill_dir>/scripts/verify-markdown.py <target_document.md>`
-    _(Resolve `<skill_dir>` to this skill's folder, e.g. `~/.gemini/config/skills/mermaid-architect` or `skills/mermaid-architect`)_.
+    _(Resolve `<skill_dir>` to this skill's folder, e.g. `skills/mermaid-architect` in this checkout, or `mermaid-architect` inside the agent's installed skills directory)_.
 
 - Provision `@mermaid-js/mermaid-cli@12.0.0` before validation. In this checkout, use `npm ci` at the repository root. For a separately installed skill, install that exact CLI version in the skill folder or make `mmdc` available on PATH; `COHERENT_MMDC_BIN` can select an explicit executable. The helper checks its version and never downloads during verification.
 - Exit `0` means compilation succeeded (or a Markdown document had no Mermaid fences); `1` means invalid syntax; `2` means verification could not run, including missing tooling or browser dependencies. Report that gap instead of claiming success. Each renderer call has a timeout and its temporary files are removed.

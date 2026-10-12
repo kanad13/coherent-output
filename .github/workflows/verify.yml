@@ -1,0 +1,33 @@
+name: verify
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: npm ci
+      # Ubuntu runners restrict the unprivileged user namespaces Chrome's sandbox needs.
+      - name: Allow headless Chrome on the runner
+        run: echo '{"args":["--no-sandbox"]}' > "$RUNNER_TEMP/puppeteer.json"
+      - name: Behavior tests
+        run: npm test
+        env:
+          COHERENT_PUPPETEER_CONFIG: ${{ runner.temp }}/puppeteer.json
+      - run: npm run format:check
+      # deploy.py --check compares against a machine's installed state, which CI does not have.
+      - run: python3 scripts/deploy.py --dry-run --backup-conflicts
+      - name: Mermaid diagrams
+        run: python3 scripts/check_diagrams.py .
+        env:
+          COHERENT_PUPPETEER_CONFIG: ${{ runner.temp }}/puppeteer.json

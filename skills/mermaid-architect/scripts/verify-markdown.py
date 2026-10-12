@@ -64,8 +64,12 @@ def compile_diagrams(diagrams):
                 source = Path(directory) / f"diagram-{index}.mmd"
                 output = source.with_suffix(".svg")
                 source.write_text(code, encoding="utf-8")
+                command = [binary, "-i", str(source), "-o", str(output), "-e", "svg", "--quiet"]
+                # CI runners need browser flags such as --no-sandbox that the library cannot guess.
+                if os.environ.get("COHERENT_PUPPETEER_CONFIG"):
+                    command += ["-p", os.environ["COHERENT_PUPPETEER_CONFIG"]]
                 result = subprocess.run(
-                    [binary, "-i", str(source), "-o", str(output), "-e", "svg", "--quiet"],
+                    command,
                     capture_output=True, text=True, timeout=60,
                 )
                 if result.returncode or not output.is_file():

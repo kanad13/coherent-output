@@ -83,7 +83,7 @@ Where the files land:
 
 | Agent           | Instructions                      | Skills                    | Hooks                                                                      |
 | --------------- | --------------------------------- | ------------------------- | -------------------------------------------------------------------------- |
-| Claude Code     | `~/.claude/CLAUDE.md` (generated) | `~/.claude/skills`        | `PostToolUse` entry merged into `~/.claude/settings.json`                  |
+| Claude Code     | `~/.claude/CLAUDE.md` (generated) | `~/.claude/skills`        | Safety gate and document check merged into `~/.claude/settings.json`       |
 | Codex           | `~/.codex/AGENTS.md` (generated)  | `~/.agents/skills`        | `PostToolUse` entry merged into `~/.codex/hooks.json`                      |
 | Antigravity IDE | `~/.gemini/AGENTS.md`             | `~/.gemini/config/skills` | Safety gate, formatter, and diagram check in `~/.gemini/config/hooks.json` |
 
@@ -116,7 +116,7 @@ Always finish with `./scripts/verify.sh`. It reports any difference between the 
 
 After an agent edits a file, [document-check.py](adapters/shared/document-check.py) formats it with the target project's Prettier configuration, or this repository's if the project has none. For Markdown, it also compiles each Mermaid diagram. On failure it returns the error to the agent so the agent can fix it.
 
-Hooks run after the edit, so they cannot undo it. They do not see files changed by shell commands; `verify.sh` covers those. Antigravity also has a pre-command gate that asks for review before destructive Git, SQL, and `rm` forms. It is a pattern check, not a security boundary.
+Hooks run after the edit, so they cannot undo it. They do not see files changed by shell commands; `verify.sh` covers those. Antigravity and Claude Code also have a pre-command gate that asks for review before destructive Git, SQL, and `rm` forms. It is a pattern check, not a security boundary.
 
 ## Installer safety
 
@@ -128,7 +128,7 @@ Hooks run after the edit, so they cannot undo it. They do not see files changed 
 
 ## Verification status
 
-`./scripts/verify.sh` runs the installed-state check, the behavior tests, a Prettier check, and a Mermaid compile of every diagram in the repository.
+`./scripts/verify.sh` runs the installed-state check, the behavior tests, a Prettier check, and a Mermaid compile of every diagram in the repository. Two automatic gates run the same checks without you: a Git pre-commit hook (`.githooks/`, enabled by `deploy.sh`) runs the fast ones, and the [GitHub Actions workflow](.github/workflows/verify.yml) runs everything except the installed-state check on each push.
 
 Native delivery is confirmed in live sessions for Codex and Claude Code: skills and instructions load, and the hook fires after an edit. Antigravity delivery is not yet observed. The [verification guide](scripts/README.md#3-verification-strategy) lists how each case is checked.
 

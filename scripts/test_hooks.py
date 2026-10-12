@@ -248,6 +248,22 @@ class SafetyGateTests(unittest.TestCase):
         result = subprocess.run(["bash", str(script)], input="not-json", text=True, capture_output=True)
         self.assertEqual(json.loads(result.stdout)["decision"], "force_ask")
 
+    def test_claude_gate_asks_for_destructive_commands_and_stays_silent_otherwise(self):
+        """Silence matters: any verdict on a safe command would override Claude's own permission rules."""
+        script = SOURCE / "adapters/shared/safety-gate.py"
+        for command, asks in (("pwd", False), ("git status", False), ("git push --force origin main", True), ("rm -rf ./build", True)):
+            with self.subTest(command=command):
+                result = subprocess.run([sys.executable, str(script), "--host", "claude"],
+                                        input=json.dumps({"tool_name": "Bash", "tool_input": {"command": command}}), text=True, capture_output=True)
+                self.assertEqual(result.returncode, 0, result.stderr)
+                if asks:
+                    output = json.loads(result.stdout)["hookSpecificOutput"]
+                    self.assertEqual((output["hookEventName"], output["permissionDecision"]), ("PreToolUse", "ask"))
+                else:
+                    self.assertEqual(result.stdout, "")
+        result = subprocess.run([sys.executable, str(script), "--host", "claude"], input="{}", text=True, capture_output=True)
+        self.assertEqual(json.loads(result.stdout)["hookSpecificOutput"]["permissionDecision"], "ask")
+
 
 if __name__ == "__main__":
     unittest.main()
