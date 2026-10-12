@@ -54,6 +54,8 @@ Use this section as the canonical authoring policy. Give each portable skill a s
 
 Name sibling skills without filesystem links inside a skill body. Mark each dependency as required or optional. For an optional skill, include sufficient local instructions to proceed without it. For a required dependency that is unavailable, state the blocked step and complete the supported work; do not silently claim that step was performed.
 
+Record every reference in the [call graph](#4-routing-and-call-graph).
+
 When composing workflows, identify which skill owns the requested result and how supporting methods contribute to it. Preserve the user's question limits and artifact requirements, keep required verification intact, and avoid appending multiple default reports unless the user asks for them.
 
 Resolve bundled resources relative to the discovered skill directory. Do not assume the caller's current directory or access to this source checkout. Keep internal resource links inside the bundle. Do not require an installed skill to read the repository's README or global instructions.
@@ -133,6 +135,44 @@ The library provides 16 situational skills organized by operational domain:
 
 ---
 
-## 4. Maintenance and validation
+## 4. Routing and call graph
+
+Each skill is either a **lens** or a **workflow**. A lens has a narrow input and a fixed output, and it never calls a workflow. A workflow runs a multi-step procedure and calls lenses. The user or [instructions/global.md](../instructions/global.md#5-situational-skills) routes a task to its entry skill; this table records only which skill may call which.
+
+| Mode         | Meaning                                                                                     |
+| :----------- | :------------------------------------------------------------------------------------------ |
+| **Required** | The caller cannot finish without it. If it is missing, report the step as not performed.    |
+| **Optional** | The caller has an inline fallback of at most three sentences and proceeds without it.       |
+| **Redirect** | The skill names another skill only to say the task belongs there. A redirect is not a call. |
+
+Rules that every skill follows:
+
+- **Named callee and stated return:** a call names one skill, and the caller uses the callee's documented output (the Returns column).
+- **Callee mode:** a skill that another skill invoked makes no further skill calls. It uses its inline fallback and reports gaps as unverified. This keeps call depth at one edge from the skill the user invoked.
+- **No cycles, no called workflows:** required and optional edges form a directed acyclic graph, and a workflow is never a callee.
+- **One Git owner:** only commit-scribe decides whether to stage, commit, or push. Other skills hand it the change set and the user's Git words.
+
+| Skill                                                                       | Role     | Required calls                 | Optional calls                                                                                     | Redirects                                       | Returns                                                   |
+| :-------------------------------------------------------------------------- | :------- | :----------------------------- | :------------------------------------------------------------------------------------------------- | :---------------------------------------------- | :-------------------------------------------------------- |
+| [commit-scribe](../skills/commit-scribe/SKILL.md)                           | lens     | none                           | none                                                                                               | none                                            | Level used, hash, files, pushed or not, tree status       |
+| [web-research](../skills/web-research/SKILL.md)                             | lens     | none                           | none                                                                                               | none                                            | Answer, tiered sources table, gaps                        |
+| [claim-validator](../skills/claim-validator/SKILL.md)                       | lens     | none                           | web-research                                                                                       | worth-the-squeeze                               | Verdict per hypothesis, evidence, failure modes           |
+| [worth-the-squeeze](../skills/worth-the-squeeze/SKILL.md)                   | lens     | none                           | claim-validator                                                                                    | none                                            | One of five verdicts and a juice/squeeze ledger           |
+| [test-strategist](../skills/test-strategist/SKILL.md)                       | lens     | none                           | web-research, worth-the-squeeze                                                                    | none                                            | Updated testing document, check results by status         |
+| [progressive-documentation](../skills/progressive-documentation/SKILL.md)   | lens     | none                           | none                                                                                               | none                                            | The same facts restructured into four layers              |
+| [cognitive-clarity-refactor](../skills/cognitive-clarity-refactor/SKILL.md) | lens     | none                           | progressive-documentation                                                                          | none                                            | Two-tier bullet document, facts preserved                 |
+| [mermaid-architect](../skills/mermaid-architect/SKILL.md)                   | lens     | none                           | none                                                                                               | none                                            | The document plus verified diagrams, insertion-only       |
+| [markdown-audit](../skills/markdown-audit/SKILL.md)                         | lens     | none                           | none                                                                                               | articulation-review, cognitive-clarity-refactor | Findings table and correction plan                        |
+| [email-rewrite](../skills/email-rewrite/SKILL.md)                           | lens     | none                           | none                                                                                               | cognitive-clarity-refactor                      | Brief, ledger, three candidate emails                     |
+| [concept-tutor](../skills/concept-tutor/SKILL.md)                           | lens     | none                           | progressive-documentation, cognitive-clarity-refactor                                              | none                                            | One calibrated explanation                                |
+| [conversation-notes](../skills/conversation-notes/SKILL.md)                 | lens     | none                           | progressive-documentation                                                                          | none                                            | One standalone notes document                             |
+| [repo-evergreen-sync](../skills/repo-evergreen-sync/SKILL.md)               | workflow | test-strategist, commit-scribe | markdown-audit, progressive-documentation, cognitive-clarity-refactor                              | none                                            | Drift ledger outcome, check results, commit-scribe report |
+| [project-scaffolding](../skills/project-scaffolding/SKILL.md)               | workflow | none                           | test-strategist, web-research, worth-the-squeeze, commit-scribe                                    | none                                            | Verified foundations and a cold-start result              |
+| [grill-me](../skills/grill-me/SKILL.md)                                     | workflow | none                           | web-research, worth-the-squeeze                                                                    | none                                            | Decision plan and a tracker file                          |
+| [articulation-review](../skills/articulation-review/SKILL.md)               | workflow | worth-the-squeeze              | web-research, cognitive-clarity-refactor, progressive-documentation, markdown-audit, commit-scribe | none                                            | Review with three options per issue, then final text      |
+
+`./scripts/deploy.sh` reads this table. It fails when a listed skill does not exist, when the graph has a cycle, when a workflow is called, when a lens calls a workflow, when a lens with calls lacks a callee-mode line, or when a skill's text names another skill that its row does not list (or lists one it never names). Edit the row in the same change that adds or removes a reference.
+
+## 5. Maintenance and validation
 
 Follow the acceptance steps in [the authoring contract](#2-skill-authoring-contract) for every skill change. Deploy the updated sources and run `./scripts/verify.sh`. Record independent behavior trials when the output contract changes.
