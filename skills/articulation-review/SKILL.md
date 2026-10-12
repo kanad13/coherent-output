@@ -11,7 +11,7 @@ Help the user elevate document clarity, logical sequencing, and structural ergon
 
 - Read the full document before proposing local changes. Identify its purpose, audience, governing instructions, and relevant repository context.
 - Identify the requested stage: initial review, another round of options, or finalization of selections. A request for options keeps the original text; a request to apply preferences produces final content.
-- Inspect uncommitted changes before editing. When commits are part of the agreed workflow, use the commit-scribe skill to preserve the annotated draft first. Rely on Git or designated scratchpad paths rather than untracked workspace copies.
+- Inspect uncommitted changes before editing. When commits are part of the agreed workflow, preserve the annotated draft first (see Commit Points). Rely on Git or designated scratchpad paths rather than untracked workspace copies.
 - For a finalization request, read the earlier concerns and the new selections, then continue at Step 6. Do not generate another set of options unless requested.
 
 ## 2. Understand Feedback and Audit Related Text
@@ -58,7 +58,7 @@ Useful inventory instructions include:
 ## 5. Save the Review and Return It to the User
 
 - Check that every pursued issue has three options, the source and comments remain intact, and each option satisfies the inventory.
-- When commits are part of the agreed workflow, use the commit-scribe skill to commit the review before presenting it. Follow the established upstream policy.
+- When commits are part of the agreed workflow, commit the review before presenting it (see Commit Points).
 - Link the review documents and summarize the substantive concerns. Return the options for deliberation; leave them in place until the user selects wording or delegates the choice.
 
 ## 6. Apply Selections and Further Feedback
@@ -73,11 +73,12 @@ Useful inventory instructions include:
 ## 7. Verify, Synchronize, and Commit Final Content
 
 - Compare the result with the baseline and selections. Confirm that every comment is resolved, unchanged facts and constraints remain, and the final wording satisfies the inventory.
-- After accepted multi-file changes, use the repo-evergreen-sync skill to check for actual drift within the authorized scope. Apply the same value test to related edits and retain unaffected material.
+- After accepted multi-file changes, check related files for drift and apply the same value test to related edits. Retain unaffected material. Tell the user that a repository-wide drift check is available; do not start one unasked.
 - Check formatting, links, protected elements, and remaining review residue. Use markdown-audit when navigation or link changes warrant it; run other available checks in proportion to the change.
-- Use commit-scribe when final commits are requested or required. Report the changed files, key decisions, verification results, and commit status.
+- Report the changed files, key decisions, verification results, and commit status.
 
-## Supporting Skills & Scope Discipline
+## Commit Points & Scope Discipline
 
-- Read a named supporting skill from the available skills catalog when its step applies. Skill names are instructions to activate that workflow, not automatic tool commands. If an optional structural skill is absent, use the local preservation and artifact-specific rules above. If a required evaluator is absent, name it in the completion report and state that its workflow was not performed. Keep this disclosure outside the reviewed document. Perform only the review that the local rules support.
-- Keep invocation within the user's authorized task. A review request does not authorize publication, external messages, or edits across unrelated repositories.
+- **Commit points:** the draft before editing, the review before presenting, and the final content. At each one, activate commit-scribe with the user's Git instructions in their own words; it decides whether to commit or push. Without it, report that nothing was committed.
+- **Supporting skills:** read a named skill from the available catalog when its step applies. A missing optional skill falls back to the local rules above. A missing worth-the-squeeze is named in the completion report as not performed.
+- **Authority:** a review request does not authorize publication, external messages, or edits across unrelated repositories.
