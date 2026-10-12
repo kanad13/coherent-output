@@ -5,98 +5,65 @@ description: Runs an adaptive discovery interview that turns an uncertain goal, 
 
 # Grill Me: Adaptive Discovery & Decision Protocol
 
-Follow this protocol to conduct an adaptive discovery interview. Turn ambiguous objectives, architectural forks, or unvalidated proposals into clear decisions and executable plans through single-question dialogue, autonomous research, rigorous steelmanning, and structured convergence.
+Conduct an adaptive discovery interview that turns an ambiguous objective, architectural fork, or unvalidated proposal into a clear decision and an executable plan. Use single-question dialogue, research before asking, steelmanning, and structured convergence.
 
 ---
 
-## 1. Non-Negotiable Operational Invariants
+## 1. Operational Invariants
 
-1. **Single-Question Invariant:**
-   - Ask exactly **one** focused question per turn.
-   - Never output questionnaires, surveys, or multi-question lists.
-   - _Exception:_ Bundling is permitted only when 2–3 options are strictly co-dependent and unlock the exact same immediate choice.
-2. **Autonomous Research First:**
-   - Investigate accessible repository files, local code, documentation, and external facts before asking the user.
-   - Never ask the user for information discoverable in the workspace or public documentation.
-3. **Steelman & Juice-Squeeze Everything:**
-   - Never rubber-stamp or blindly agree with user preferences.
-   - First, **steelman** the user's intent by interpreting it at its highest standard of rigor.
-   - Then, **juice-squeeze** every proposed mechanism, constraint, and preference: audit the real utility gained ("juice") against total lifetime friction, maintenance tax, lock-in, and operational blast radius ("squeeze").
-   - Surface non-obvious trade-offs and challenge anti-patterns directly before accepting a direction.
-4. **Durable Workspace Tracker:**
-   - Maintain the working decision ledger in a persistent repository file: `.grill-me-tracker.md`.
-   - Update `.grill-me-tracker.md` at each turn with goals, confirmed decisions, verified facts, assumptions, and open trade-offs.
-   - Keep the conversational chat focused strictly on the single question and its options; do not pollute chat turns with raw working notes.
-5. **No Premature Action Without Scope:**
-   - Discovery authorization does not authorize destructive actions, purchases, external communications, or irreversible code modifications.
-   - If the user's broader prompt explicitly authorized downstream execution, proceed to implementation only after resolving critical dependencies. Otherwise, terminate at the synthesis plan.
-6. **Respect User Boundaries:**
-   - If the user requests to skip, stop, or conclude immediately, terminate discovery and synthesize the best possible plan with explicit assumptions.
-   - If the user says "I don't know," provide a concrete recommendation with a labeled reversible default.
+1. **One question per turn.**
+   - Ask one focused question. Never output questionnaires or multi-question lists.
+   - Exception: bundle 2–3 options only when they are strictly co-dependent and unlock the same immediate choice.
+2. **Research before asking.**
+   - Inspect accessible files, code, documentation, and public facts first. Never ask the user for what the workspace or public sources can answer.
+3. **Steelman, then challenge.**
+   - Interpret the user's intent at its highest standard of rigor before evaluating it. Never rubber-stamp a preference.
+   - Weigh each proposed mechanism's real utility ("juice") against its lifetime friction, maintenance tax, lock-in, and blast radius ("squeeze"). Surface non-obvious trade-offs and name anti-patterns before accepting a direction.
+4. **Durable tracker in the repository.**
+   - Keep the working ledger in `.grill-me-tracker.md` at the workspace root, updated each turn with the objective, constraints, confirmed decisions, verified facts, assumptions, and open forks.
+   - Keep chat turns for the question and its options; keep raw notes in the file.
+   - The tracker is a deliberate workspace file. At convergence, tell the user it exists and ask whether to keep it, commit it, or delete it. Never stage it unasked.
+5. **Respect the user's boundaries.**
+   - If the user asks to skip, stop, or conclude, end discovery and synthesize the best plan with explicit assumptions.
+   - If the user says "I don't know," give a concrete recommendation with a labeled, reversible default and record the assumption.
+   - Discovery authorizes no execution. Proceed to implementation only when the user's request explicitly asked for it and critical dependencies are resolved; otherwise end at the plan.
 
 ---
 
-## 2. Four-Phase Discovery Protocol
+## 2. Four-Phase Protocol
 
-```
-┌─────────────────┐     ┌───────────────────┐     ┌─────────────────────┐     ┌─────────────────┐
-│ Phase 1:        │ ──► │ Phase 2:          │ ──► │ Phase 3:            │ ──► │ Phase 4:        │
-│ Frame & Ground  │     │ Formulate & Ask   │     │ Research & Squeeze  │     │ Converge & Plan │
-└─────────────────┘     └───────────────────┘     └─────────────────────┘     └─────────────────┘
-```
+Frame and ground, then formulate and ask, then research and squeeze, then converge and plan. Phases 2 and 3 repeat until the convergence gate opens.
 
 ### Phase 1: Frame & Ground
 
-1. **Ingest Context:**
-   - Inspect user prompt, active workspace, files, and recent conversation history.
-   - Separate the **underlying problem** (core need) from the **proposed solution** (mechanism).
-2. **Immediate Exit Check:**
-   - If the existing context already provides sufficient information for a robust recommendation, deliver the synthesis immediately. Do not invent questions to satisfy an arbitrary interview quota.
-3. **Initialize Durable Tracker:**
-   - Create or update `.grill-me-tracker.md` in the workspace root with:
-     - **Core Objective:** The underlying problem to solve.
-     - **Hard Constraints:** Non-negotiables (budget, stack, deadlines, performance).
-     - **Verified Facts:** Confirmed repository facts vs. working assumptions.
-     - **Active Forks:** Candidate options currently under evaluation.
+1. **Ingest context:** read the prompt, workspace, and recent conversation. Separate the underlying problem from the proposed solution.
+2. **Immediate exit check:** if existing context already supports a robust recommendation, deliver the synthesis now. Never invent questions to fill an interview.
+3. **Initialize the tracker** with four headings: **Core Objective**, **Hard Constraints** (budget, stack, deadline, performance), **Verified Facts** (confirmed versus assumed), **Active Forks**.
 
 ### Phase 2: Formulate & Ask
 
-1. **Identify the Highest-Leverage Unknown:**
-   - Determine the single unresolved parameter most likely to shift the recommendation or eliminate options.
-   - Sequence prerequisites first: settle architecture before discussing configuration details.
-2. **Format and Dispatch Question:**
-   - State the decision context in 1–2 direct sentences.
-   - Offer 2–4 distinct, viable options with a brief trade-off rationale.
-   - State a recommended option when evidence supports one, clearly labeled as `(Recommended)`.
-   - Tool selection:
-     - If the host provides an interactive question tool (e.g., `ask_question`), use it with structured options and write-in support.
-     - Otherwise, output direct conversational Markdown with clear bullet options.
-3. **Wait for User Response:**
-   - Never simulate or assume the user's answer in the same turn. Wait for the user to reply.
+1. **Find the highest-leverage unknown:** the one unresolved parameter most likely to change the recommendation or eliminate options. Settle prerequisites first. When several unknowns compete, take them in this order: goal, hard constraints, success measure, reversibility, who decides, then details.
+2. **Dispatch the question:**
+   - State the decision context in 1–2 sentences.
+   - Offer 2–4 distinct, viable options with a one-line trade-off each. Mark one `(Recommended)` when evidence supports it.
+   - Use the host's interactive question tool when one exists, with structured options and a write-in choice. Otherwise ask in plain Markdown with bulleted options.
+3. **Wait for the reply.** Never simulate or assume the user's answer.
 
-### Phase 3: Research, Steelman & Juice-Squeeze
+### Phase 3: Research, Steelman & Squeeze
 
-1. **Ingest User Response:**
-   - Record confirmed user choices into `.grill-me-tracker.md`.
-   - Invalidate downstream assumptions if the user changes an earlier premise.
-2. **Autonomous Unknown Resolution:**
-   - When external validation is needed (pricing, API limits, compatibility), activate `web-research` or search tools autonomously before replying.
-3. **Juice-Squeeze Evaluation:**
-   - Audit the user's choice:
-     - Does the mechanism deliver true net utility ("juice") proportional to its implementation and operational burden ("squeeze")?
-     - If the approach introduces high friction, fragility, or unnecessary complexity, challenge it directly: explain the failure mode and provide a lightweight counter-proposal.
-     - Stop challenging once the user affirms a deliberate, informed trade-off.
+1. **Ingest the answer:** record it in the tracker. If the user changes an earlier premise, invalidate every downstream deduction, re-evaluate the affected options, and confirm the revised branch.
+2. **Resolve unknowns autonomously:** when pricing, limits, compatibility, or other external facts matter, activate `web-research` before replying. Without it, search directly, prefer primary sources, and label anything unverified.
+3. **Squeeze the choice:**
+   - Does the mechanism deliver value proportional to its build and operating burden?
+   - If it adds high friction, fragility, or needless complexity, challenge it: explain the failure mode and offer a lighter alternative.
+   - Once the user affirms an informed trade-off, stop challenging it.
+   - When a concrete proposal survives to the plan, activate `worth-the-squeeze` for a final verdict. Without it, state the strongest reason against and the cheapest way to test it.
+4. **Pre-mortem:** before converging, ask or answer one question: "If this choice turned out badly in six months, what is the most likely reason?" Fold the answer into the plan.
 
 ### Phase 4: Converge & Plan
 
-1. **Convergence Gate:**
-   - Terminate questioning when:
-     - All critical dependencies for selecting a path are resolved.
-     - Remaining uncertainties are low-risk and reversible.
-     - The user requests a recommendation or plan.
-2. **Finalize Tracker & Deliver Structured Synthesis:**
-   - Update `.grill-me-tracker.md` with final decisions and execution plan.
-   - Deliver the synthesis in the chat:
+1. **Convergence gate:** stop questioning when all path-selecting dependencies are resolved, the remaining uncertainties are low-risk and reversible, or the user asks for a plan. Interviews usually settle within about seven questions; past that, offer to converge with labeled defaults.
+2. **Finalize the tracker** and deliver the synthesis:
 
 ```markdown
 # Discovery Synthesis & Decision Plan
@@ -109,28 +76,29 @@ Follow this protocol to conduct an adaptive discovery interview. Turn ambiguous 
 ## 2. Recommendation & Trade-Offs
 
 - **Selected Direction:** [Direct recommendation]
-- **Key Trade-Off:** [What is gained vs. what is sacrificed compared to alternatives]
+- **Key Trade-Off:** [What is gained versus sacrificed compared to alternatives]
 - **Rejected Alternatives:** [Why other candidate options were discarded]
+- **Main Risk:** [Result of the pre-mortem]
 
 ## 3. Decision Ledger
 
 - **Confirmed User Decisions:** [Decisions explicitly chosen by the user]
 - **Assumed Defaults:** [Reversible defaults suggested by the agent for open non-blockers]
+- **Revisit When:** [Observable conditions that would change this recommendation]
 
 ## 4. Execution Plan
 
-1. [Ordered action step 1 with completion criteria]
+1. [First reversible step, with completion criteria]
 2. [Ordered action step 2 with completion criteria]
 3. [Ordered action step 3 with completion criteria]
 ```
 
 ---
 
-## 3. Edge-Case Handling
+## 3. Edge Cases
 
-| Situation                                                      | Action                                                                                                                         |
-| :------------------------------------------------------------- | :----------------------------------------------------------------------------------------------------------------------------- |
-| **Conflicting constraints** (e.g., zero cost + enterprise SLA) | Surface the conflict directly. Ask which constraint has priority; do not silently drop one.                                    |
-| **User says "I don't know" or skips**                          | Supply a reasonable, reversible default. Explain why it is safe, record the assumption in `.grill-me-tracker.md`, and advance. |
-| **User changes earlier premise**                               | Invalidate downstream deductions. Re-evaluate affected options and confirm the revised branch.                                 |
-| **Tool / search unavailable**                                  | State unverified assumptions clearly in the tracker. Provide a conditional plan branching on the unverified fact.              |
+| Situation                                                      | Action                                                                                                      |
+| :------------------------------------------------------------- | :---------------------------------------------------------------------------------------------------------- |
+| **Conflicting constraints** (e.g., zero cost + enterprise SLA) | Surface the conflict. Ask which constraint has priority; never silently drop one.                           |
+| **Tool or search unavailable**                                 | Record unverified assumptions in the tracker. Give a conditional plan that branches on the unverified fact. |
+| **User asks you to just decide**                               | Choose the reversible default, state the assumption and the revisit condition, and deliver the synthesis.   |
