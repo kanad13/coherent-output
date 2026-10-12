@@ -24,7 +24,7 @@ Puppeteer supplies the browser used by Mermaid CLI. The manifest approves its pi
 | [check_diagrams.py](check_diagrams.py) | Repository-wide Mermaid gate using the bundled skill checker                |
 | [verify.sh](verify.sh)                 | Installed-state check, all tests, repository formatting, diagram validation |
 
-Use `--tool codex` or `--tool antigravity` for one host. Unselected host configuration does not participate in generation or validation. Use `--target-home <temporary-home>` to exercise installation without changing the real home. Codex also accepts `--codex-home` and `CODEX_HOME`. The verification runner forwards these installer selection and target flags to its installed-state check; the source behavior suite, formatting, and diagram checks still run.
+Use `--tool claude`, `--tool codex`, or `--tool antigravity` for one host. Unselected host configuration does not participate in generation or validation. Use `--target-home <temporary-home>` to exercise installation without changing the real home. Codex also accepts `--codex-home` and `CODEX_HOME`; Claude Code accepts `--claude-home` and `CLAUDE_CONFIG_DIR`. The verification runner forwards these installer selection and target flags to its installed-state check; the source behavior suite, formatting, and diagram checks still run.
 
 For example, install and verify Antigravity without requiring a Codex installation:
 
@@ -51,7 +51,7 @@ The Mermaid helper returns `0` for verified diagrams or no fences, `1` for inval
 | Install on another Mac               | Correct links and generated files; recoverable unknown files                                 | Isolated homes and checkouts with spaces/apostrophes                                           |
 | Install only one host                | Unselected host templates and rule restrictions do not block deployment                      | Native Antigravity manual/model rules and unrelated invalid template cases                     |
 | Start hooks from a GUI environment   | Provisioned Python and Node are found before checks run                                      | Generated Codex command and all three installed Antigravity commands under a restricted PATH   |
-| Adopt Codex hook configuration       | Owned handler updates once; unrelated handlers/settings survive                              | Merge, backup, malformed-schema, and repeat tests                                              |
+| Adopt Codex or Claude hook config    | Owned handler updates once; unrelated handlers/settings survive                              | Merge, backup, malformed-schema, and repeat tests                                              |
 | Edit through a supported host tool   | Actual resulting file is formatted                                                           | Real Prettier calls through both payload adapters                                              |
 | Project-specific formatting          | Project configuration governs output                                                         | Isolated project configuration test                                                            |
 | Write invalid Markdown diagrams      | Host receives a failure                                                                      | Real Mermaid compilation with valid and invalid sources                                        |
@@ -71,7 +71,7 @@ Keep raw inputs, skill snapshots, outputs, and reviewer notes in a temporary dir
 
 Publish a small fixture with explicit acceptance criteria and a documented rerun procedure only when it protects against a concrete recurring failure. Prefer executable regression checks for deterministic behavior. A saved model answer is useful evidence for its run; preserving its checksum does not test the current skill. Update the current skill or this guide with durable lessons rather than retaining a growing transcript archive.
 
-The automated suite does not prove all hosts fire hooks or all model runs follow a skill. Codex native shell delivery was observed after the missing checker was repaired. Native Codex patch delivery was also exercised with an actually formatted valid document and feedback from an invalid diagram. Antigravity event delivery remains unverified; Gemini and Claude hook execution is outside the maintained adapter scope.
+The automated suite does not prove all hosts fire hooks or all model runs follow a skill. Codex native shell delivery was observed after the missing checker was repaired. Native Codex patch delivery was also exercised with an actually formatted valid document and feedback from an invalid diagram. Claude Code delivery is covered by contract tests; record a native observation after a fresh session edits a file. Antigravity event delivery remains unverified; Gemini CLI hook execution is outside the maintained adapter scope.
 
 ## 4. Maintaining the checks
 

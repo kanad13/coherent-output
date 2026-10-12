@@ -23,7 +23,7 @@ def edited_paths(payload, host):
 
     Args:
         payload: Native hook event as a JSON object.
-        host: Host contract, either ``codex`` or ``antigravity``.
+        host: Host contract: ``codex``, ``claude``, or ``antigravity``.
 
     Returns:
         Resolved paths with supported extensions; failed Antigravity events and
@@ -54,7 +54,7 @@ def edited_paths(payload, host):
             return []  # Shell writes need the standalone verification gate.
         args = payload.get("tool_input", {})
         if not isinstance(args, dict):
-            raise ValueError("Codex tool_input must be an object.")
+            raise ValueError(f"{host.capitalize()} tool_input must be an object.")
         if name == "apply_patch":
             command = args.get("command")
             if not isinstance(command, str):
@@ -62,12 +62,12 @@ def edited_paths(payload, host):
             paths = re.findall(r"^\*\*\* (?:Add File|Update File|Move to): (.+)$", command, re.MULTILINE)
             moved = set(re.findall(r"^\*\*\* Update File: (.+)\n\*\*\* Move to:", command, re.MULTILINE))
             paths = [item for item in paths if item not in moved]
-        elif name in ("Edit", "Write"):
+        elif name in ("Edit", "Write", "MultiEdit"):
             paths = [args.get("file_path")]
             if not isinstance(paths[0], str) or not paths[0]:
-                raise ValueError("Codex Edit/Write input requires file_path.")
+                raise ValueError(f"{host.capitalize()} {name} input requires file_path.")
         else:
-            raise ValueError(f"Unsupported Codex tool: {name!r}")
+            raise ValueError(f"Unsupported {host.capitalize()} tool: {name!r}")
     normalized = []
     for raw in paths:
         if len(raw) >= 2 and raw[0] == raw[-1] and raw[0] in ("'", '"'):
@@ -167,7 +167,7 @@ def main():
         Zero after successful checks, or two with visible failure feedback.
     """
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--host", required=True, choices=("codex", "antigravity"))
+    parser.add_argument("--host", required=True, choices=("codex", "claude", "antigravity"))
     parser.add_argument("--checks", choices=("all", "format", "mermaid"), default="all")
     args = parser.parse_args()
     try:
@@ -178,6 +178,8 @@ def main():
         print(reason, file=sys.stderr)
         if args.host == "codex":
             print(json.dumps({"decision": "block", "reason": reason}))
+        elif args.host == "claude":
+            pass  # Claude Code treats exit 2 plus stderr as feedback; JSON would be ignored.
         else:
             print("{}")
         return 2

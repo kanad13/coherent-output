@@ -1,91 +1,151 @@
 # Coherent Output
 
-This repository maintains a personal library of agent instructions, skills, and hooks across Macs. Git carries the sources between devices; the installer links each Mac's applications to its local checkout.
+Coherent Output is one library of instructions, skills, and hooks that you write once and use in several AI coding agents. It currently supports Claude Code (CLI and desktop app), Codex, and Antigravity. The aim is that every agent communicates plainly, follows the same working method, and checks its own output, no matter which one you open.
 
-There are two useful installation paths. The personal installer deploys the whole library, instructions, rules, and host adapters. A portable skills installer copies selected skills into a project for other agents. Skills provide model-directed workflows; hooks provide feedback on supported tool events; the verification command checks the resulting files and configuration.
+Each agent keeps its configuration in a different place and in a different format. This repository holds the single source and an installer that connects it to each agent on a given machine. Edit once, and every agent sees the change.
 
-## 1. Personal installation
+## The whole picture
 
-Use Node.js 22.13.0 or later and Python 3. Provision the pinned formatter and diagram renderer, preview the mappings, then install:
+The library has three kinds of content:
+
+- **Instructions** ([instructions/global.md](instructions/global.md)): a short baseline that sets how an agent communicates, plans, verifies, and decides when to ask.
+- **Skills** ([skills/](docs/skills.md)): 16 task playbooks, such as writing commit messages, researching with sources, drafting Mermaid diagrams, and rewriting emails. An agent reads a skill only when the task needs it.
+- **Hooks** ([adapters/](adapters/README.md)): checks that run after an agent edits a file. They format the file with Prettier and compile any Mermaid diagrams. They return errors to the agent.
+
+The installer, [scripts/deploy.py](scripts/README.md), reads these sources and writes into each agent's home directory.
+
+**Diagram: One source feeds every agent through the installer**
+
+```mermaid
+flowchart LR
+  classDef default fill:#64748B1F,stroke:#64748B,stroke-width:1.5px;
+  classDef c1 fill:#2563EB24,stroke:#3B82F6,stroke-width:2px;
+  classDef c2 fill:#7C3AED24,stroke:#8B5CF6,stroke-width:1.5px;
+  classDef c5 fill:#DC262624,stroke:#EF4444,stroke-width:2px;
+
+  subgraph Repo ["This repository"]
+    I["instructions/global.md"]:::c1
+    S["skills/"]:::c1
+    H["adapters/ hook templates"]:::c1
+  end
+  D["scripts/deploy.py"]:::c2
+  subgraph Home ["Your home directory"]
+    C["~/.claude"]:::c5
+    X["~/.codex and ~/.agents"]:::c5
+    A["~/.gemini"]:::c5
+  end
+  I --> D
+  S --> D
+  H --> D
+  D --> C
+  D --> X
+  D --> A
+  style Repo fill:#64748B12,stroke:#64748B,stroke-width:1px,stroke-dasharray:4 4
+  style Home fill:#64748B12,stroke:#64748B,stroke-width:1px,stroke-dasharray:4 4
+```
+
+## Quick start
+
+Requirements: Node.js 22.13.0 or later and Python 3, on macOS or Linux.
 
 ```bash
+git clone https://github.com/kanad13/coherent-output.git
+cd coherent-output
 npm ci
-./scripts/deploy.sh --dry-run
-./scripts/deploy.sh
-./scripts/verify.sh
+./scripts/deploy.sh --dry-run   # preview every link and file
+./scripts/deploy.sh             # install for all supported agents
+./scripts/verify.sh             # confirm the result
 ```
 
-The dependencies include Puppeteer, which provisions the browser used by Mermaid CLI. The lockfile pins dependencies and the package manifest approves its specific install script. Hooks use provisioned tools and do not download packages while checking an edit.
+Start a new chat in each agent afterward, because agents read instructions, skills, and hooks at session start. Add `--tool claude`, `--tool codex`, or `--tool antigravity` to install for one agent only.
 
-For an Antigravity-only installation, use the same checkout and provisioned dependencies:
-
-```bash
-./scripts/deploy.sh --tool antigravity --dry-run
-./scripts/deploy.sh --tool antigravity
-./scripts/verify.sh --tool antigravity
-```
-
-This installs global instructions, rules, all skills and their bundled helpers, and the three Antigravity hook registrations. Commands resolve the recipient's checkout; generated machine-local paths are not committed. Use `--tool codex` for a Codex-only installation. Each selection generates and validates only its host artifacts, while checking shared skill metadata.
-
-Unknown destination files cause deployment to stop before writes. Use `./scripts/deploy.sh --backup-conflicts` when adopting them: the installer preserves originals and a restore manifest under `~/.local/state/coherent-output/backups/`. Codex hook adoption also retains unrelated handlers and settings in the generated configuration.
-
-Start a fresh chat after deployment. Codex reviews new or changed hook entries through its native trust flow; installation does not approve trust entries. Its generated checker command uses the installer's absolute Python path. Redeploy after changing the Python installation. Shell entry points and checkers add standard user and Homebrew runtime directories for GUI sessions that do not load a shell profile.
-
-## 2. Install selected skills in a project
-
-From the target project, use the established [Skills CLI](https://github.com/vercel-labs/skills):
+To copy a few skills into one project without the global setup, use the [Skills CLI](https://github.com/vercel-labs/skills):
 
 ```bash
 npx --yes skills@1.7.2 add kanad13/coherent-output --list
 npx --yes skills@1.7.2 add kanad13/coherent-output \
-  --skill cognitive-clarity-refactor \
-  --agent codex claude-code gemini-cli --yes
+  --skill commit-scribe --agent claude-code codex gemini-cli --yes
 ```
 
-For unpublished changes, replace `kanad13/coherent-output` with the absolute path to this checkout. This route installs skill folders and their bundled helpers. It does not deploy this repository's global instructions, rules, hooks, or formatter dependencies. A copied skill is a snapshot; editing the source checkout does not update that copy.
+This route copies only the selected skill folders. It installs no instructions or hooks, and a copy does not follow later changes here.
 
-The CLI's host mapping places canonical project copies in `.agents/skills` and creates host links where needed. Codex, Claude Code, and Gemini CLI project installation was exercised during the audit; full Claude/Gemini runtime execution was not tested. Antigravity IDE and Gemini CLI have different configuration conventions. See the [adapter guide](adapters/README.md).
+## How one source reaches every agent
 
-Use the project route alongside this repository's personal installation. The personal installer owns the entire global `~/.agents/skills` symlink. A different installer writing through that global path can modify the source checkout. Do not combine global installation methods at that path.
+The installer uses three mechanisms, chosen by how each agent treats the target file.
 
-The repository has no declared license. Choose a license before presenting it as an openly reusable public package.
+| Mechanism    | Used for                                       | Why                                                                                                    |
+| ------------ | ---------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| **Symlink**  | Skills, and Antigravity's instructions         | The agent reads the repository's files directly, so an edit is live at the next session with no deploy |
+| **Generate** | Codex and Claude Code instructions, hook files | The content is composed from several sources and holds this machine's absolute paths                   |
+| **Merge**    | Hook entries in Claude Code and Codex settings | The agent also writes these files, so the installer changes only its own entry                         |
 
-## 3. How the parts work together
+Where the files land:
 
-| Source                          | Role                                                           |
-| ------------------------------- | -------------------------------------------------------------- |
-| [AGENTS.md](AGENTS.md)          | Short baseline for communication, workflow, and skill routing  |
-| [skills/](skills/README.md)     | Situational playbooks with discoverable name and description   |
-| [rules/](rules/)                | Optional scoped policies; there are currently no written rules |
-| [adapters/](adapters/README.md) | Host mappings, hook templates, and payload normalization       |
-| [scripts/](scripts/README.md)   | Installation, behavior tests, and final verification           |
-| [package.json](package.json)    | Pinned fallback formatter and diagram renderer                 |
+| Agent           | Instructions                      | Skills                    | Hooks                                                                      |
+| --------------- | --------------------------------- | ------------------------- | -------------------------------------------------------------------------- |
+| Claude Code     | `~/.claude/CLAUDE.md` (generated) | `~/.claude/skills`        | `PostToolUse` entry merged into `~/.claude/settings.json`                  |
+| Codex           | `~/.codex/AGENTS.md` (generated)  | `~/.agents/skills`        | `PostToolUse` entry merged into `~/.codex/hooks.json`                      |
+| Antigravity IDE | `~/.gemini/AGENTS.md`             | `~/.gemini/config/skills` | Safety gate, formatter, and diagram check in `~/.gemini/config/hooks.json` |
 
-A host discovers skill metadata in its supported directories. The agent reads a skill body when the task or user invocation calls for it, and invokes bundled helpers when needed. A skill's instructions do not guarantee execution of every step.
+Claude Code covers both the CLI and the Claude desktop app's Code tab, because they share `~/.claude`.
 
-The installer composes Codex instructions from `AGENTS.md` and written rules, with natural-language conditions for glob rules. Antigravity uses its rules directory. Generated files live in ignored `.generated/`; device-owned authentication, histories, databases, and plugin caches stay local.
+### Global and per-repository instructions
 
-Codex and Antigravity use different hook payloads. Their adapters normalize edited paths into shared document checks. The checks format supported files and compile Mermaid fences, with errors returned to the host. Post-edit hooks cannot undo an edit. Shell and unsupported-tool writes need the standalone verification gate.
+Every agent loads its global file first, then the `AGENTS.md` of the repository you are working in. The global file comes from [instructions/global.md](instructions/global.md). This repository's own [AGENTS.md](AGENTS.md) holds only the rules for working on this library, so the two never overlap.
 
-## 4. Writing and skill maintenance
+### Several machines
 
-Use [progressive-documentation](skills/progressive-documentation/SKILL.md) to introduce a substantial explanation as a coherent whole, then deepen mechanisms, relationships, consequences, and detail. Use [cognitive-clarity-refactor](skills/cognitive-clarity-refactor/SKILL.md) for dense text that needs its strict, scannable bullet hierarchy.
+Git carries the sources between machines. Generated files hold absolute paths, so they stay out of Git (`.generated/` is ignored) and each machine runs its own `deploy.sh`. The workflow on any machine is: pull, `npm ci`, deploy, verify, start new chats.
 
-The [authoring contract](skills/README.md#2-skill-authoring-contract) defines the shared writing policy, artifact-specific structure, dependency rules, and validation requirements. Each writing skill includes its local writing guidance; required workflow dependencies are documented separately. Emails, procedures, reference material, and short answers keep the structures their readers need.
+### Platforms
 
-Use [grill-me](skills/grill-me/SKILL.md) for an uncertain decision or a requested discovery interview. It alternates focused questions with investigation and option comparison, then produces a practical plan. It applies `web-research` and `worth-the-squeeze` when available and relevant, with local fallbacks for standalone installation. It does not require every routine task to become an interview.
+The installer needs only Python, POSIX symlinks, and home-relative paths. It is developed and tested on macOS. Linux uses the same code path, but this repository has not been run on Linux. Windows is not supported. Two tests that simulate a macOS GUI environment skip on other systems.
 
-## 5. Working across Macs
+## What changes when you edit
 
-On the source Mac, edit the library, deploy, and verify. Commit and push when that workflow is requested. On another Mac, pull the changes, run `npm ci`, deploy, verify, and start fresh chats.
+| You edit                      | Then run              | Takes effect                      |
+| ----------------------------- | --------------------- | --------------------------------- |
+| A skill's contents            | Nothing               | Next chat, in every agent         |
+| A skill's name or a new skill | `./scripts/deploy.sh` | Next chat; validates the metadata |
+| `instructions/global.md`      | `./scripts/deploy.sh` | Next chat, after regeneration     |
+| A hook template or adapter    | `./scripts/deploy.sh` | Next chat, after trust review     |
 
-After changing skills, rules, adapters, or deployment behavior:
+Always finish with `./scripts/verify.sh`. It reports any difference between the repository and the installed state. A change to what a skill produces also needs a trial: run a fresh agent with only that skill and a sample input, then inspect the result.
 
-```bash
-./scripts/deploy.sh
-./scripts/verify.sh
-```
+## What the hooks check
 
-Behavior changes to skills also require a task trial with only the skill and input material. The [testing guide](scripts/README.md#3-verification-strategy) distinguishes automated checks, independent writing trials, and native host checks.
+After an agent edits a file, [document-check.py](adapters/shared/document-check.py) formats it with the target project's Prettier configuration, or this repository's if the project has none. For Markdown, it also compiles each Mermaid diagram. On failure it returns the error to the agent so the agent can fix it.
 
-Keep raw skill trials outside the checkout during review; publish reusable checks and concise findings when they provide recurring value. The [testing guide](scripts/README.md#3-verification-strategy) defines this retention policy.
+Hooks run after the edit, so they cannot undo it. They do not see files changed by shell commands; `verify.sh` covers those. Antigravity also has a pre-command gate that asks for review before destructive Git, SQL, and `rm` forms. It is a pattern check, not a security boundary.
+
+## Installer safety
+
+- **Unknown files stop the install.** If a destination holds a file the installer does not own, nothing is written. Rerun with `--backup-conflicts` to move the original into `~/.local/state/coherent-output/backups/` with a restore manifest.
+- **Merged settings keep your other settings.** In `settings.json` and `hooks.json`, the installer adds or updates only its own hook entry. Your other keys and hooks stay as they are. Before it rewrites a file, it saves a copy in the backup directory.
+- **Broken settings are never touched.** If an existing settings file is not valid JSON, the installer stops before any write and names the file. Fix the file yourself, then rerun. The installer does not guess what you meant.
+
+`./scripts/deploy.sh --check` reports drift without writing.
+
+## Verification status
+
+`./scripts/verify.sh` runs the installed-state check, the behavior tests, a Prettier check, and a Mermaid compile of every diagram in the repository.
+
+Native delivery is confirmed in live sessions for Codex and Claude Code: skills and instructions load, and the hook fires after an edit. Antigravity delivery is not yet observed. The [verification guide](scripts/README.md#3-verification-strategy) lists how each case is checked.
+
+## Repository layout
+
+| Path                                    | Contents                                                          |
+| --------------------------------------- | ----------------------------------------------------------------- |
+| [instructions/](instructions/global.md) | Template for the global instructions installed into every agent   |
+| [AGENTS.md](AGENTS.md)                  | Rules for working on this repository                              |
+| [skills/](docs/skills.md)               | Skill folders; [docs/skills.md](docs/skills.md) has the inventory |
+| [docs/](docs/skills.md)                 | Skill authoring contract and maintenance steps                    |
+| [adapters/](adapters/README.md)         | Per-agent link maps, hook templates, and the shared checker       |
+| [scripts/](scripts/README.md)           | Installer, tests, and the verification runner                     |
+| [rules/](rules/)                        | Optional scoped policies (none written yet)                       |
+
+To support a new agent or add a hook, follow [adapters/README.md](adapters/README.md#4-adding-an-application-or-a-hook).
+
+## License
+
+[MIT](LICENSE)

@@ -1,4 +1,4 @@
-# Agent Skills Library
+# Skills Library
 
 This library contains portable, task-specific playbooks for AI agents. A host discovers each skill's name and description, the agent reads its body when needed, and bundled resources support the workflow. Installation makes a skill available; behavior still needs to be checked against the requested result.
 
@@ -6,7 +6,7 @@ This library contains portable, task-specific playbooks for AI agents. A host di
 
 The [Agent Skills specification](https://agentskills.io/specification) separates lightweight metadata, the instruction body, and optional resources. Hosts choose their discovery paths, invocation syntax, consent, and caching behavior.
 
-- Global policy in `AGENTS.md` can route a task to a named skill.
+- Global policy in [instructions/global.md](../instructions/global.md) (installed as `AGENTS.md` or `CLAUDE.md` per application) can route a task to a named skill.
 - A user's explicit invocation requests the skill's workflow.
 - The agent must read the discovered `SKILL.md` and follow its applicable steps.
 - A helper runs only when called. A lifecycle hook runs only for supported events with an active, trusted configuration.
@@ -46,7 +46,7 @@ Use selected STE100 and Google developer-documentation principles: direct verbs,
 
 For substantial explanations, introduce the purpose, major aspects, and their relationships before deep implementation detail. Later sections must add mechanisms, consequences, choices, or actionable detail. Keep decision-critical limits and safety warnings early. Choose connected paragraphs, lists, tables, and diagrams for the content. Preserve executable procedure order, required chronology, lookup access, explicit templates, and short-answer limits.
 
-[progressive-documentation](progressive-documentation/SKILL.md) owns whole-document progression. [cognitive-clarity-refactor](cognitive-clarity-refactor/SKILL.md) owns dense-text conversion into its strict two-tier bullet hierarchy. They can cooperate when both contracts apply. Neither layout is the default for every artifact.
+[progressive-documentation](../skills/progressive-documentation/SKILL.md) owns whole-document progression. [cognitive-clarity-refactor](../skills/cognitive-clarity-refactor/SKILL.md) owns dense-text conversion into its strict two-tier bullet hierarchy. They can cooperate when both contracts apply. Neither layout is the default for every artifact.
 
 Use this section as the canonical authoring policy. Give each portable skill a short local version of the principles needed to execute on its own. Retain artifact-specific requirements: emails preserve recipient tone and modality; notes preserve comprehensive context; explanations preserve prerequisite order. Update those local versions together when the central policy changes.
 
@@ -92,44 +92,44 @@ The library provides 16 situational skills organized by operational domain:
 
 ### Repository Operations & Git Hygiene
 
-| Skill                                               | Description                                                                                     |
-| :-------------------------------------------------- | :---------------------------------------------------------------------------------------------- |
-| [commit-scribe](commit-scribe/SKILL.md)             | Structured Git commits (problem, solution, decisions, implementation, notes) and upstream push. |
-| [repo-evergreen-sync](repo-evergreen-sync/SKILL.md) | Propagate recent changes across the repository to eliminate drift, split-brain, and stale docs. |
-| [markdown-audit](markdown-audit/SKILL.md)           | Audit documentation numbering, index coverage, and link integrity.                              |
+| Skill                                                         | Description                                                                                     |
+| :------------------------------------------------------------ | :---------------------------------------------------------------------------------------------- |
+| [commit-scribe](../skills/commit-scribe/SKILL.md)             | Structured Git commits (problem, solution, decisions, implementation, notes) and upstream push. |
+| [repo-evergreen-sync](../skills/repo-evergreen-sync/SKILL.md) | Propagate recent changes across the repository to eliminate drift, split-brain, and stale docs. |
+| [markdown-audit](../skills/markdown-audit/SKILL.md)           | Audit documentation numbering, index coverage, and link integrity.                              |
 
 ### Engineering Strategy & Quality Assurance
 
-| Skill                                           | Description                                                                                            |
-| :---------------------------------------------- | :----------------------------------------------------------------------------------------------------- |
-| [test-strategist](test-strategist/SKILL.md)     | Audit behavior, implement verification strategies, execute checks, and maintain test instructions.     |
-| [claim-validator](claim-validator/SKILL.md)     | Stress-test claims, proposals, and strategies against verified evidence.                               |
-| [worth-the-squeeze](worth-the-squeeze/SKILL.md) | Audit proposals, migrations, and refactors against empirical ROI and friction without compliance bias. |
-| [web-research](web-research/SKILL.md)           | Conduct multi-source web research with strict source hierarchy and citation trails.                    |
+| Skill                                                     | Description                                                                                            |
+| :-------------------------------------------------------- | :----------------------------------------------------------------------------------------------------- |
+| [test-strategist](../skills/test-strategist/SKILL.md)     | Audit behavior, implement verification strategies, execute checks, and maintain test instructions.     |
+| [claim-validator](../skills/claim-validator/SKILL.md)     | Stress-test claims, proposals, and strategies against verified evidence.                               |
+| [worth-the-squeeze](../skills/worth-the-squeeze/SKILL.md) | Audit proposals, migrations, and refactors against empirical ROI and friction without compliance bias. |
+| [web-research](../skills/web-research/SKILL.md)           | Conduct multi-source web research with strict source hierarchy and citation trails.                    |
 
 ### Content Refactoring & Writing
 
-| Skill                                                             | Description                                                                                           |
-| :---------------------------------------------------------------- | :---------------------------------------------------------------------------------------------------- |
-| [articulation-review](articulation-review/SKILL.md)               | Review document wording from user feedback, offer three inline alternatives, and apply selections.    |
-| [progressive-documentation](progressive-documentation/SKILL.md)   | Whole-picture explanations that deepen relationships, mechanisms, and detail.                         |
-| [cognitive-clarity-refactor](cognitive-clarity-refactor/SKILL.md) | Refactor text into low-cognitive-load, scannable Markdown with 100% semantic fidelity.                |
-| [conversation-notes](conversation-notes/SKILL.md)                 | Synthesize multi-turn conversations into self-contained, book-like documentation.                     |
-| [email-rewrite](email-rewrite/SKILL.md)                           | Transform rough drafts into three clear candidate emails via atomic audit and radical reorganization. |
+| Skill                                                                       | Description                                                                                           |
+| :-------------------------------------------------------------------------- | :---------------------------------------------------------------------------------------------------- |
+| [articulation-review](../skills/articulation-review/SKILL.md)               | Review document wording from user feedback, offer three inline alternatives, and apply selections.    |
+| [progressive-documentation](../skills/progressive-documentation/SKILL.md)   | Whole-picture explanations that deepen relationships, mechanisms, and detail.                         |
+| [cognitive-clarity-refactor](../skills/cognitive-clarity-refactor/SKILL.md) | Refactor text into low-cognitive-load, scannable Markdown with 100% semantic fidelity.                |
+| [conversation-notes](../skills/conversation-notes/SKILL.md)                 | Synthesize multi-turn conversations into self-contained, book-like documentation.                     |
+| [email-rewrite](../skills/email-rewrite/SKILL.md)                           | Transform rough drafts into three clear candidate emails via atomic audit and radical reorganization. |
 
 ### Architecture, Design & Discovery
 
-| Skill                                               | Description                                                                                                  |
-| :-------------------------------------------------- | :----------------------------------------------------------------------------------------------------------- |
-| [project-scaffolding](project-scaffolding/SKILL.md) | Establish verified project foundations and practices for tracking progress, decisions, and verification.     |
-| [mermaid-architect](mermaid-architect/SKILL.md)     | Design and insert compilable native Mermaid architecture and workflow diagrams.                              |
-| [grill-me](grill-me/SKILL.md)                       | Discover requirements through focused dialogue, research, option comparison, and a practical next-step plan. |
+| Skill                                                         | Description                                                                                                  |
+| :------------------------------------------------------------ | :----------------------------------------------------------------------------------------------------------- |
+| [project-scaffolding](../skills/project-scaffolding/SKILL.md) | Establish verified project foundations and practices for tracking progress, decisions, and verification.     |
+| [mermaid-architect](../skills/mermaid-architect/SKILL.md)     | Design and insert compilable native Mermaid architecture and workflow diagrams.                              |
+| [grill-me](../skills/grill-me/SKILL.md)                       | Discover requirements through focused dialogue, research, option comparison, and a practical next-step plan. |
 
 ### Learning & Pedagogy
 
-| Skill                                   | Description                                                                                               |
-| :-------------------------------------- | :-------------------------------------------------------------------------------------------------------- |
-| [concept-tutor](concept-tutor/SKILL.md) | Teach technical concepts through self-contained explanations, steelmanned premises, and structured paths. |
+| Skill                                             | Description                                                                                               |
+| :------------------------------------------------ | :-------------------------------------------------------------------------------------------------------- |
+| [concept-tutor](../skills/concept-tutor/SKILL.md) | Teach technical concepts through self-contained explanations, steelmanned premises, and structured paths. |
 
 ---
 

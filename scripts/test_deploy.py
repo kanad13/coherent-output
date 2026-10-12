@@ -28,9 +28,8 @@ class DeploymentTests(unittest.TestCase):
         self.root = Path(self.temporary.name).resolve()
         self.repo = self.root / "checkout with space's"
         self.repo.mkdir()
-        for name in ("skills", "rules", "adapters", "scripts"):
+        for name in ("skills", "rules", "adapters", "scripts", "instructions"):
             shutil.copytree(SOURCE / name, self.repo / name, ignore=shutil.ignore_patterns("__pycache__"))
-        shutil.copyfile(SOURCE / "AGENTS.md", self.repo / "AGENTS.md")
         shutil.copyfile(SOURCE / ".prettierrc", self.repo / ".prettierrc")
         (self.repo / "node_modules").symlink_to(SOURCE / "node_modules", target_is_directory=True)
         self.target = self.root / "user home"
@@ -105,7 +104,7 @@ class DeploymentTests(unittest.TestCase):
 
     def test_generated_content_drift_is_detected(self):
         self.run_deploy()
-        with (self.repo / "AGENTS.md").open("a") as stream:
+        with (self.repo / "instructions/global.md").open("a") as stream:
             stream.write("\nA new shared instruction.\n")
         self.run_deploy("--check", status=1)
         self.run_deploy()
@@ -282,6 +281,60 @@ class DeploymentTests(unittest.TestCase):
         self.assertEqual(first.read_text(), before)
         self.assertNotIn("Stop", json.loads(second.read_text())["hooks"])
         self.run_deploy("--tool", "codex", "--check")
+
+    def test_claude_install_links_skills_instructions_and_merges_settings(self):
+        """Claude Code owns settings.json, so unrelated keys and hooks must survive the merge."""
+        settings = self.target / ".claude/settings.json"
+        settings.parent.mkdir(parents=True)
+        unrelated = {"type": "command", "command": "echo personal"}
+        original = {"switchModelsOnFlag": False, "hooks": {"PostToolUse": [{"matcher": "Bash", "hooks": [unrelated]}]}}
+        settings.write_text(json.dumps(original))
+        settings.chmod(0o600)
+        self.run_deploy("--tool", "claude")
+        self.run_deploy("--tool", "claude", "--check")
+        self.assertEqual((self.target / ".claude/skills").resolve(), self.repo / "skills")
+        self.assertEqual((self.target / ".claude/CLAUDE.md").read_text(), (self.repo / "instructions/global.md").read_text().rstrip() + "\n")
+        installed = json.loads(settings.read_text())
+        self.assertIs(installed["switchModelsOnFlag"], False)
+        self.assertEqual(installed["hooks"]["PostToolUse"][0], original["hooks"]["PostToolUse"][0])
+        self.assertEqual(installed["hooks"]["PostToolUse"][1]["matcher"], "Write|Edit|MultiEdit")
+        self.assertEqual(settings.stat().st_mode & 0o777, 0o600)
+        self.assertEqual(len(list((self.target / ".local/state/coherent-output/backups").glob("*/merged-settings.json"))), 1)
+        before = settings.read_text()
+        self.run_deploy("--tool", "claude")
+        self.assertEqual(settings.read_text(), before)
+        self.assertFalse((self.target / ".codex").exists())
+        self.assertFalse((self.target / ".gemini").exists())
+
+    def test_claude_installed_hook_formats_edits_and_reports_failure(self):
+        self.run_deploy("--tool", "claude")
+        command = json.loads((self.target / ".claude/settings.json").read_text())["hooks"]["PostToolUse"][0]["hooks"][0]["command"]
+        sample = self.target / "sample.md"
+        sample.write_text("#  Header\n\n-  item\n")
+        result = subprocess.run(
+            ["/bin/bash", "-c", command],
+            input=json.dumps({"tool_name": "Edit", "tool_input": {"file_path": str(sample)}}),
+            cwd=self.root, capture_output=True, text=True, timeout=100,
+        )
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(sample.read_text(), "# Header\n\n- item\n")
+        sample.write_text("```mermaid\nflowchart LR\n A-->\n```\n")
+        result = subprocess.run(
+            ["/bin/bash", "-c", command],
+            input=json.dumps({"tool_name": "Write", "tool_input": {"file_path": str(sample)}}),
+            cwd=self.root, capture_output=True, text=True, timeout=100,
+        )
+        self.assertEqual(result.returncode, 2)
+        self.assertEqual(result.stdout, "")
+        self.assertIn("failed compilation", result.stderr)
+
+    def test_invalid_claude_settings_abort_before_writing(self):
+        settings = self.target / ".claude/settings.json"
+        settings.parent.mkdir(parents=True)
+        settings.write_text("{not json")
+        self.run_deploy("--tool", "claude", status=1)
+        self.assertFalse((self.repo / ".generated").exists())
+        self.assertEqual(settings.read_text(), "{not json")
 
     def test_skill_identity_and_description_limits_are_enforced(self):
         skill = self.repo / "skills/worth-the-squeeze/SKILL.md"

@@ -14,6 +14,7 @@ import os
 from pathlib import Path
 import re
 import shlex
+import shutil
 import sys
 import tempfile
 
@@ -53,46 +54,51 @@ def frontmatter(path):
     return metadata, parts[2].lstrip("\n")
 
 
-def codex_hooks(codex_home):
+def merge_post_tool_hooks(template_path, host, destination):
     """Replace only this checkout's handler while preserving unrelated user state.
 
     Args:
-        codex_home: Optional destination home whose existing hooks are merged.
+        template_path: Repository-relative hook template for the host.
+        host: Value of the owned checker's ``--host`` argument.
+        destination: Existing host configuration file to merge into, or None.
 
     Returns:
-        Serialized hooks using the installer's absolute Python executable.
+        Serialized configuration using the installer's absolute Python executable.
 
     Raises:
         ValueError: Existing JSON or supported hook-container shapes are invalid.
         OSError: An existing configuration or source template cannot be read.
     """
-    template = json.loads(REPO.joinpath("adapters/codex/hooks.template.json").read_text())
+    template = json.loads(REPO.joinpath(template_path).read_text())
     checker = str(REPO / "adapters/shared/document-check.py")
     for group in template["hooks"]["PostToolUse"]:
         for handler in group["hooks"]:
             handler["command"] = handler["command"].replace("{{python_executable}}", shlex.quote(sys.executable))
             handler["command"] = handler["command"].replace("{{document_check}}", shlex.quote(checker))
-    destination = codex_home / "hooks.json" if codex_home else None
-    current = json.loads(destination.read_text()) if destination and destination.is_file() else {}
+    label = host.capitalize()
+    try:
+        current = json.loads(destination.read_text()) if destination and destination.is_file() else {}
+    except json.JSONDecodeError as error:
+        raise ValueError(f"{label} configuration is not valid JSON ({error}); nothing installed.") from error
     if not isinstance(current, dict) or not isinstance(current.get("hooks", {}), dict):
-        raise ValueError("Codex hooks.json must contain a hooks object; nothing installed.")
+        raise ValueError(f"{label} configuration must contain a hooks object; nothing installed.")
     events = current.setdefault("hooks", {})
     groups = events.get("PostToolUse", [])
     if not isinstance(groups, list):
-        raise ValueError("Codex PostToolUse must be an array; nothing installed.")
+        raise ValueError(f"{label} PostToolUse must be an array; nothing installed.")
     preserved = []
     for group in groups:
         if not isinstance(group, dict) or not isinstance(group.get("hooks"), list):
-            raise ValueError("Invalid Codex PostToolUse group; nothing installed.")
+            raise ValueError(f"Invalid {label} PostToolUse group; nothing installed.")
         handlers = []
         for handler in group["hooks"]:
             if not isinstance(handler, dict):
-                raise ValueError("Invalid Codex hook handler; nothing installed.")
+                raise ValueError(f"Invalid {label} hook handler; nothing installed.")
             try:
                 tokens = shlex.split(handler.get("command", ""))
             except ValueError:
                 tokens = []
-            owned = len(tokens) == 4 and tokens[1:] == [checker, "--host", "codex"]
+            owned = len(tokens) == 4 and tokens[1:] == [checker, "--host", host]
             if not owned:
                 handlers.append(handler)
         if handlers:
@@ -101,22 +107,36 @@ def codex_hooks(codex_home):
     return json.dumps(current, indent=2) + "\n"
 
 
-def codex_instructions():
+def codex_hooks(codex_home):
+    """Merge the Codex handler into the destination's existing hooks."""
+    destination = codex_home / "hooks.json" if codex_home else None
+    return merge_post_tool_hooks("adapters/codex/hooks.template.json", "codex", destination)
+
+
+def claude_settings(claude_home):
+    """Merge the Claude Code handler into the user's settings, which the app also writes."""
+    destination = claude_home / "settings.json" if claude_home else None
+    return merge_post_tool_hooks("adapters/claude/settings.template.json", "claude", destination)
+
+
+def composed_instructions():
     """Compose supported policies without silently activating native-only triggers.
 
+    Codex and Claude Code have no native trigger modes, so both receive this text.
+
     Returns:
-        Codex instruction text within its default discovery size limit.
+        Instruction text within its default discovery size limit.
 
     Raises:
         ValueError: A rule cannot be composed or the result exceeds 32 KiB.
         OSError: An instruction source cannot be read.
     """
-    instructions = REPO.joinpath("AGENTS.md").read_text().rstrip() + "\n"
+    instructions = REPO.joinpath("instructions/global.md").read_text().rstrip() + "\n"
     for rule in sorted(REPO.joinpath("rules").glob("*.md")):
         metadata, body = frontmatter(rule)
         trigger = metadata.get("trigger")
         if trigger not in ("always_on", "glob"):
-            raise ValueError(f"Codex composition does not support trigger {trigger!r}: {rule}")
+            raise ValueError(f"Composed instructions do not support trigger {trigger!r}: {rule}")
         instructions += f"\n---\n\n## Shared policy: {rule.name}\n\n"
         if trigger == "glob":
             pattern = metadata.get("globs") or metadata.get("glob")
@@ -130,7 +150,7 @@ def codex_instructions():
         if trigger == "glob":
             instructions += "\n<!-- END CONDITIONAL POLICY -->\n"
     if len(instructions.encode()) > 32768:
-        raise ValueError("Generated Codex instructions exceed the default 32 KiB discovery limit.")
+        raise ValueError("Composed instructions exceed the 32 KiB discovery limit.")
     return instructions
 
 
@@ -164,7 +184,10 @@ def antigravity_hooks():
     return json.dumps(hooks, indent=2) + "\n"
 
 
-def generated_files(codex_home=None, selected=("codex", "antigravity")):
+TOOLS = ("codex", "claude", "antigravity")
+
+
+def generated_files(codex_home=None, selected=TOOLS, claude_home=None):
     """Scope preflight to selected hosts while leaving unselected state untouched.
 
     Args:
@@ -176,11 +199,22 @@ def generated_files(codex_home=None, selected=("codex", "antigravity")):
     """
     generated = {}
     if "codex" in selected:
-        generated[REPO / ".generated/codex/AGENTS.md"] = codex_instructions()
+        generated[REPO / ".generated/codex/AGENTS.md"] = composed_instructions()
         generated[REPO / f".generated/codex/{codex_home_id(codex_home)}/hooks.json"] = codex_hooks(codex_home)
+    if "claude" in selected:
+        generated[REPO / ".generated/claude/CLAUDE.md"] = composed_instructions()
     if "antigravity" in selected:
         generated[REPO / ".generated/antigravity/hooks.json"] = antigravity_hooks()
     return generated
+
+
+def merged_files(claude_home, selected):
+    """Name host files the application also writes, so they are merged, not linked.
+
+    Returns:
+        A mapping from destination paths to their intended merged contents.
+    """
+    return {claude_home / "settings.json": claude_settings(claude_home)} if "claude" in selected else {}
 
 
 def present(path):
@@ -222,12 +256,13 @@ def link_target(path):
     return (path.parent / os.readlink(path)).resolve()
 
 
-def write_atomic(path, content):
+def write_atomic(path, content, keep_mode=False):
     """Avoid partial generated files and unnecessary writes on repeat deployment.
 
     Args:
         path: Generated output path.
         content: Desired text contents.
+        keep_mode: Retain an existing file's permissions, as settings files may be private.
 
     Raises:
         OSError: The source, temporary file, or replacement cannot be accessed.
@@ -239,6 +274,8 @@ def write_atomic(path, content):
     try:
         with os.fdopen(descriptor, "w") as stream:
             stream.write(content)
+        if keep_mode and path.is_file():
+            os.chmod(temporary, path.stat().st_mode & 0o777)
         os.replace(temporary, path)
     finally:
         if os.path.lexists(temporary):
@@ -253,20 +290,24 @@ def main():
         installed-state drift. Entry-point error handling also reports one.
     """
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--tool", choices=("all", "codex", "antigravity"), default="all")
+    parser.add_argument("--tool", choices=("all", *TOOLS), default="all")
     modes = parser.add_mutually_exclusive_group()
     modes.add_argument("--dry-run", action="store_true", help="Preview without writing files")
     modes.add_argument("--check", action="store_true", help="Inspect installed links and generated content")
     parser.add_argument("--backup-conflicts", action="store_true", help="Preserve conflicting destinations before replacing them")
     parser.add_argument("--target-home", type=Path, help="Use a separate installation home, including for verification")
+    parser.add_argument("--claude-home", type=Path, help="Override the Claude Code home; otherwise use CLAUDE_CONFIG_DIR or ~/.claude")
     parser.add_argument("--codex-home", type=Path, help="Override the Codex home; otherwise use CODEX_HOME or ~/.codex")
     args = parser.parse_args()
     target_home = (args.target_home or Path.home()).expanduser().resolve()
     configured_codex = None if args.target_home else os.environ.get("CODEX_HOME")
     codex_home = (args.codex_home or Path(configured_codex or target_home / ".codex")).expanduser().resolve()
-    scopes = {"home": target_home, "codex": codex_home}
-    selected = ("codex", "antigravity") if args.tool == "all" else (args.tool,)
-    generated = generated_files(codex_home, selected)
+    configured_claude = None if args.target_home else os.environ.get("CLAUDE_CONFIG_DIR")
+    claude_home = (args.claude_home or Path(configured_claude or target_home / ".claude")).expanduser().resolve()
+    scopes = {"home": target_home, "codex": codex_home, "claude": claude_home}
+    selected = TOOLS if args.tool == "all" else (args.tool,)
+    generated = generated_files(codex_home, selected, claude_home)
+    merged = merged_files(claude_home, selected)
     links = []
     for tool in selected:
         for spec in json.loads(REPO.joinpath(f"adapters/{tool}/links.json").read_text()):
@@ -320,6 +361,11 @@ def main():
         print(f"{'OK' if current else 'GENERATE'} {path}")
         if args.check and not current:
             problems += 1
+    for path, content in merged.items():
+        current = path.is_file() and path.read_text() == content
+        print(f"{'OK' if current else 'MERGE'} {path}")
+        if args.check and not current:
+            problems += 1
     if redundant:
         print(f"REMOVE redundant repo discovery link: {local_skills}")
         if args.check:
@@ -333,6 +379,12 @@ def main():
     backup_records = []
     for path, content in relevant_generated.items():
         write_atomic(path, content)
+    for path, content in merged.items():
+        if path.is_file() and path.read_text() != content:
+            backup_root.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(path, backup_root / f"merged-{path.name}")
+            print(f"BACKUP {path} -> {backup_root / ('merged-' + path.name)}")
+        write_atomic(path, content, keep_mode=True)
     for index, (destination, source, _) in enumerate(links):
         if link_target(destination) == source:
             continue

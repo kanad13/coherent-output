@@ -62,6 +62,22 @@ class DocumentHookTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertEqual(self.sample.read_text(), "# Header\n\n- item\n")
 
+    def test_claude_edit_write_and_multiedit_use_file_path(self):
+        for tool in ("Edit", "Write", "MultiEdit"):
+            with self.subTest(tool=tool):
+                self.sample.write_text("#  Header\n\n-  item\n")
+                result = self.check("claude", {"tool_name": tool, "tool_input": {"file_path": str(self.sample)}})
+                self.assertEqual(result.returncode, 0, result.stderr)
+                self.assertEqual(self.sample.read_text(), "# Header\n\n- item\n")
+
+    def test_claude_failure_uses_exit_two_without_json_on_stdout(self):
+        sample = self.root / "invalid.json"
+        sample.write_text("{broken")
+        result = self.check("claude", {"tool_name": "Write", "tool_input": {"file_path": str(sample)}})
+        self.assertEqual(result.returncode, 2)
+        self.assertEqual(result.stdout, "")
+        self.assertIn("Document check failed", result.stderr)
+
     def test_shell_coverage_is_explicitly_outside_path_extraction(self):
         result = self.check("codex", {"tool_name": "Bash", "tool_input": {"command": "pwd"}})
         self.assertEqual(result.returncode, 0, result.stderr)
@@ -150,11 +166,10 @@ class DocumentHookTests(unittest.TestCase):
         self.assertIn("Document check failed", result.stderr)
 
     def test_malformed_payloads_are_not_successful_checks(self):
-        for host in ("codex", "antigravity"):
+        for host in ("codex", "claude", "antigravity"):
             with self.subTest(host=host):
                 result = self.check(host, {})
                 self.assertEqual(result.returncode, 2)
-                json.loads(result.stdout)
                 self.assertIn("Document check failed", result.stderr)
 
     def test_valid_and_invalid_mermaid_produce_different_results(self):

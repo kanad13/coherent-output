@@ -1,0 +1,12 @@
+[
+  {
+    "scope": "claude",
+    "destination": "CLAUDE.md",
+    "source": ".generated/claude/CLAUDE.md"
+  },
+  {
+    "scope": "claude",
+    "destination": "skills",
+    "source": "skills"
+  }
+]

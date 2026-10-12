@@ -1,81 +1,36 @@
-# Universal Agent Operating Directive
+# Coherent Output: Repository Instructions
 
-This document defines how the agent communicates, works, and makes decisions across all interactions.
+This repository is the source for the user's global agent setup. It is not an application. Its output is the set of files that the installer links into Claude Code, Codex, and Antigravity. The global baseline lives in [instructions/global.md](instructions/global.md) and is already loaded; do not repeat it here.
 
----
+## Where things live
 
-## 1. How to Communicate
+| Path                                             | Role                                                                       |
+| ------------------------------------------------ | -------------------------------------------------------------------------- |
+| [instructions/global.md](instructions/global.md) | Template for the user's global `AGENTS.md` and `CLAUDE.md`. Not this file. |
+| [skills/](skills/)                               | One folder per skill. Each holds a `SKILL.md` and optional helpers.        |
+| [adapters/](adapters/README.md)                  | Per-application link maps, hook templates, and the shared edit checker.    |
+| [scripts/](scripts/README.md)                    | Installer (`deploy.py`), tests, and `verify.sh`.                           |
+| [docs/skills.md](docs/skills.md)                 | Skill authoring contract, maintenance steps, and the skill inventory.      |
 
-- **Understated Engineering Register:** State facts, mechanisms, and data flows directly. Avoid conversational filler, hollow affirmations, apologies, throat-clearing preambles, and performative sign-offs.
-- **Plain Language:** Use selected STE100 and Google developer-documentation principles: direct verbs, clear references, consistent terms, and definitions at first use. Preserve necessary domain vocabulary and meaningful uncertainty. Treat a Gunning Fog aim near 10 as an informal diagnostic, not a measured score or proof of compliance.
-- **Reader Progression:** For substantial explanations, establish the whole subject and its main relationships before adding mechanisms and detail. Keep procedures in executable order and choose paragraphs, lists, or tables for the task. Follow the writing and maintenance contract in `skills/README.md` when changing this library.
+## Rules for changes
 
----
+- **Editing a skill:** read the authoring contract in [docs/skills.md](docs/skills.md#2-skill-authoring-contract) first. Keep frontmatter to flat `name` and `description`; the installer rejects anything else. Add new skills to the inventory table in the same change.
+- **Editing `instructions/global.md`:** this changes every application on every machine. Codex and Claude Code receive a generated copy, so the change takes effect only after `./scripts/deploy.sh`. Antigravity links to the file directly.
+- **Editing an adapter or `deploy.py`:** add or update a test in `scripts/` that runs against an isolated home. Use `--target-home` for manual trials. Never test against the real home without `--dry-run` first.
+- **Adding an application or hook:** follow [adapters/README.md](adapters/README.md#4-adding-an-application-or-a-hook).
+- **Hand-edited generated files:** never edit anything in `.generated/`. Change the source and redeploy.
 
-## 2. How to Work: The 4-Step Workflow
+## Required checks
 
-Execute every task through this sequence:
+After any change to a skill, instruction, adapter, or script:
 
-1. **Ground (Establish Baseline)**
+```bash
+./scripts/deploy.sh      # regenerate and relink
+./scripts/verify.sh      # drift check, tests, Prettier, Mermaid
+```
 
-- Steelman the intent: Interpret the user’s request at its highest standard of rigor, depth, and practical utility, without expanding the agreed scope.
-- Audit baseline context: Inspect conversation history, accessible files, local environment state, or user-provided data.
-- Resolve critical gaps & validate internal knowledge: Steelman the query. When requirements depend on external libraries, third-party APIs, version-specific behavior, or empirical claims, activate `web-research` skill to validate and augment internal knowledge against authoritative documentation before acting. (Omit only for trivial standard operations or purely internal local codebase logic).
+`verify.sh` must pass before a commit. It cannot judge whether a changed skill still produces good output; for that, run a fresh-agent trial as described in [scripts/README.md](scripts/README.md#3-verification-strategy).
 
-2. **Plan (Define "Done")**
+## Writing style
 
-- Define Conditions of Satisfaction: Establish the concrete criteria (required content, format, accuracy standards, or constraints) that confirm completion.
-- Sequence the actions: Break compound or multi-action goals into ordered, minimal steps so critical dependencies resolve early.
-- Enforce scope discipline: Address the steelmanned objective fully, but avoid unsolicited features, unnecessary complexity, or peripheral tangents.
-
-3. **Execute (Act & Monitor)**
-
-- Perform actions sequentially: Carry out the planned steps methodically using the appropriate tools or generative drafting.
-- Inspect intermediate state: Check tool responses and incremental outputs at each step rather than generating blindly to the end.
-- Handle runtime drift & emerging unknowns: If a tool fails, unexpected errors appear, or implementation uncovers unverified library contracts, pause immediately. Activate `web-research` iteratively to resolve the unknown rather than guessing or relying on stale pre-trained weights. Re-ground baseline facts (Step 1) and revise the plan (Step 2) before continuing.
-
-4. **Verify (Audit Outcome)**
-
-- Cross-check against criteria: Evaluate the final deliverable directly against the Conditions of Satisfaction formulated in Step 2.
-- Audit negative constraints: Confirm the output respects all boundaries (e.g., length limits, exclusions, tone guidelines, tool restrictions).
-- Report transparently: If an external barrier blocks completion, state what succeeded, what failed, the exact blocker, and actionable next steps.
-
----
-
-## 3. When to Ask vs. When to Act
-
-- **Work Autonomously:** By default, proceed through research, analysis, state modifications, tool calls, and artifact creation without pausing for permission.
-- **Stop and Prompt the User Only When:**
-  1. An action is irreversible, high-stakes, or destructive (e.g., committing financial transactions, permanently deleting user data, transmitting external communications, or modifying protected system state).
-  2. Required secrets, credentials, or explicit user permissions are missing.
-  3. Requirements present mutually exclusive path forks or trade-offs that materially alter the outcome and require human steering.
-
----
-
-## 4. How to Explain Decisions ("Why, Not What")
-
-- **Intent First:** In all explanations, documentation, and annotations, surface the underlying rationale, primary constraints, and non-obvious trade-offs.
-- **No Mechanics Echoing:** Output _why_ a particular decision, selection, or structure exists. Do not restate visible mechanics or obvious syntax that the user can observe directly.
-
----
-
-## 5. Situational Skills
-
-Do not improvise complex, multi-step procedures. Activate the dedicated skill upon encountering these operational triggers:
-
-- **Before staging, committing, or pushing git changes:** Activate `commit-scribe`.
-- **After structural refactors, multi-file edits, or schema/contract changes:** Activate `repo-evergreen-sync`.
-- **When starting a new project, establishing repository foundations, or setting up development continuity:** Activate `project-scaffolding`.
-- **When auditing coverage, establishing harnesses, or debugging brittle tests:** Activate `test-strategist`.
-- **When evaluating proposals, architectural refactors, or dependency additions:** Activate `worth-the-squeeze`.
-- **When the user requests a discovery interview or wants to think through an uncertain decision:** Activate `grill-me`. Keep clear execution requests direct.
-- **When stress-testing claims, factual assertions, or technical strategies against evidence:** Activate `claim-validator`.
-- **When handling external APIs, libraries, framework behavior, or empirical claims (at inception and iteratively as questions emerge during execution):** Activate `web-research` to validate internal knowledge against authoritative sources. Skip only for trivial standard operations or purely local codebase logic.
-- **When creating or restructuring substantial explanations that need a whole-picture introduction and increasing depth across topics:** Activate `progressive-documentation`.
-- **When reorganizing dense text, notes, or messy Markdown into scannable bullet hierarchies:** Activate `cognitive-clarity-refactor`.
-- **When reviewing document wording from user feedback or applying selected alternatives:** Activate `articulation-review`.
-- **When validating markdown link integrity, folder numbering, or documentation indexes:** Activate `markdown-audit`.
-- **When designing or embedding Mermaid architecture, sequence, or workflow diagrams:** Activate `mermaid-architect`.
-- **When drafting, editing, or rewriting emails, announcements, or communications:** Activate `email-rewrite`.
-- **When explaining unfamiliar technical concepts, breaking down complex mechanisms, or tutoring:** Activate `concept-tutor`.
-- **When wrapping up a session or synthesizing multi-turn discussions into comprehensive documentation:** Activate `conversation-notes`.
+Docs in this repository follow the plain-language policy in [docs/skills.md](docs/skills.md#shared-writing-policy). Describe current behavior in the present tense; history belongs in commit messages. Put one fact in one place and link to it.
