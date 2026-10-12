@@ -81,7 +81,7 @@ Run the selected checks, or execute manual procedures directly, and compare actu
 
 - **Record evidence:** the behavior checked, runtime or artifact, exact commands, expected and observed results, and exit codes, counts, and duration when relevant. Report passed, failed, deferred, and blocked checks separately, with the exact blocker and the unverified outcome.
 - **Keep it durable:** keep the workflow map, commands, prerequisites, fixtures, environment constraints, and triggers current. Ensure project instructions send future agents to the strategy and require review when workflows, contracts, surfaces, or tooling change.
-- **Git scope:** commit or push only within the authorized workflow, and activate `commit-scribe` before staging, committing, or pushing.
+- **Git scope:** never stage, commit, or push. Leave version-control actions to the caller.
 
 ## 7. Completion Criteria
 
