@@ -94,11 +94,11 @@ The library provides 16 situational skills organized by operational domain:
 
 ### Repository Operations & Git Hygiene
 
-| Skill                                                         | Description                                                                                     |
-| :------------------------------------------------------------ | :---------------------------------------------------------------------------------------------- |
-| [commit-scribe](../skills/commit-scribe/SKILL.md)             | Structured Git commits (problem, solution, decisions, implementation, notes) and upstream push. |
-| [repo-evergreen-sync](../skills/repo-evergreen-sync/SKILL.md) | Propagate recent changes across the repository to eliminate drift, split-brain, and stale docs. |
-| [markdown-audit](../skills/markdown-audit/SKILL.md)           | Audit documentation numbering, index coverage, and link integrity.                              |
+| Skill                                                         | Description                                                                                                |
+| :------------------------------------------------------------ | :--------------------------------------------------------------------------------------------------------- |
+| [commit-scribe](../skills/commit-scribe/SKILL.md)             | Structured Git commits (problem, solution, decisions, implementation, notes); pushes only when authorized. |
+| [repo-evergreen-sync](../skills/repo-evergreen-sync/SKILL.md) | Propagate recent changes across the repository to eliminate drift, split-brain, and stale docs.            |
+| [markdown-audit](../skills/markdown-audit/SKILL.md)           | Audit documentation numbering, index coverage, and link integrity.                                         |
 
 ### Engineering Strategy & Quality Assurance
 

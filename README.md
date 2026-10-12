@@ -103,12 +103,12 @@ The installer needs only Python, POSIX symlinks, and home-relative paths. It is 
 
 ## What changes when you edit
 
-| You edit                      | Then run              | Takes effect                      |
-| ----------------------------- | --------------------- | --------------------------------- |
-| A skill's contents            | Nothing               | Next chat, in every agent         |
-| A skill's name or a new skill | `./scripts/deploy.sh` | Next chat; validates the metadata |
-| `instructions/global.md`      | `./scripts/deploy.sh` | Next chat, after regeneration     |
-| A hook template or adapter    | `./scripts/deploy.sh` | Next chat, after trust review     |
+| You edit                                                     | Then run              | Takes effect                                                                                    |
+| ------------------------------------------------------------ | --------------------- | ----------------------------------------------------------------------------------------------- |
+| A skill's contents                                           | Nothing               | Next chat, in every agent                                                                       |
+| A skill's name, a new skill, or a reference to another skill | `./scripts/deploy.sh` | Next chat; validates the metadata and the [call graph](docs/skills.md#4-routing-and-call-graph) |
+| `instructions/global.md`                                     | `./scripts/deploy.sh` | Next chat, after regeneration                                                                   |
+| A hook template or adapter                                   | `./scripts/deploy.sh` | Next chat, after trust review                                                                   |
 
 Always finish with `./scripts/verify.sh`. It reports any difference between the repository and the installed state. A change to what a skill produces also needs a trial: run a fresh agent with only that skill and a sample input, then inspect the result.
 
