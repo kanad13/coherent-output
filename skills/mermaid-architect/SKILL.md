@@ -23,7 +23,7 @@ Follow this protocol to design, verify, and insert native Mermaid diagrams into 
   - Cap individual diagrams at a maximum of 10–12 nodes. Break larger systems into separate overview and subsystem diagrams ("peel the onion").
   - Default to `TD` for lifecycles, hierarchies, and decision trees; default to `LR` for pipelines and time sequences.
   - Enclose all display labels containing spaces, parentheses, or punctuation in explicit double quotes: `id["Service (v2)"]`.
-- **Absolute Factual Grounding:** Ground every entity, state, transition, and relationship directly in the source text. Never invent components. Explicitly label necessary bridging assumptions with `[Inferred]`.
+- **Absolute Factual Grounding:** Ground every entity, state, transition, and relationship directly in the source text. Explicitly label necessary bridging assumptions with `[Inferred]`.
 
 ---
 

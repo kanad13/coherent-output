@@ -11,8 +11,8 @@ Help the user elevate document clarity, logical sequencing, and structural ergon
 
 - Read the full document before proposing local changes. Identify its purpose, audience, governing instructions, and relevant repository context.
 - Identify the requested stage: initial review, another round of options, or finalization of selections. A request for options keeps the original text; a request to apply preferences produces final content.
-- Inspect uncommitted changes before editing. When commits are part of the agreed workflow, preserve the annotated draft first (see Commit Points). Rely on Git or designated scratchpad paths rather than untracked workspace copies.
-- For a finalization request, read the earlier concerns and the new selections, then continue at Step 6. Do not generate another set of options unless requested.
+- Inspect uncommitted changes before editing. When commits are part of the agreed workflow, preserve the annotated draft first (see Commit Points). Keep drafts in Git or designated scratchpad paths.
+- For a finalization request, read the earlier concerns and the new selections, then continue at Step 6. Generate another set of options only when requested.
 
 ## 2. Understand Feedback and Audit Related Text
 
@@ -25,7 +25,7 @@ Help the user elevate document clarity, logical sequencing, and structural ergon
 
 Useful inventory instructions include:
 
-- Explain a technical concept's practical meaning and why it matters to the reader before implementation detail. Add a short, familiar analogy or example when it makes the concept easier to understand. Keep the explanation simple and avoid introducing more unfamiliar terms.
+- Explain a technical concept's practical meaning and why it matters to the reader before implementation detail. Add a short, familiar analogy or example when it makes the concept easier to understand. Keep the explanation simple using only familiar terms.
 - At first use in the file, place a short, plain-language explanation beside an unfamiliar term or acronym. Explain only what the reader needs for the passage. Use familiar words and leave secondary details for later. Explain the term once per file unless the user requests repetition.
 - Explain why a decision matters and state the conditions under which a mechanism or action applies.
 - Match structure to the artifact. For a substantial explanation, establish the whole subject and main relationships before adding mechanisms and detail; each revisit must add understanding. The progressive-documentation skill can help if available. Use cognitive-clarity-refactor for dense Markdown that needs its bullet hierarchy, with single-thought child bullets and useful decision tables. Preserve paragraphs, procedures, and required templates where appropriate.
@@ -73,7 +73,7 @@ Useful inventory instructions include:
 ## 7. Verify, Synchronize, and Commit Final Content
 
 - Compare the result with the baseline and selections. Confirm that every comment is resolved, unchanged facts and constraints remain, and the final wording satisfies the inventory.
-- After accepted multi-file changes, check related files for drift and apply the same value test to related edits. Retain unaffected material. Tell the user that a repository-wide drift check is available; do not start one unasked.
+- After accepted multi-file changes, check related files for drift and apply the same value test to related edits. Retain unaffected material. Tell the user that a repository-wide drift check is available; start one only when asked.
 - Check formatting, links, protected elements, and remaining review residue. Use markdown-audit when navigation or link changes warrant it; run other available checks in proportion to the change.
 - Report the changed files, key decisions, verification results, and commit status.
 

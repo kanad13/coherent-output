@@ -44,7 +44,7 @@ Execute the following five phases sequentially:
 ### Phase 3: Structural Blueprint & Micro-Formatting
 
 - Construct a clean, shallow heading hierarchy ($H_2 / H_3$) incorporating both the audited discussion items and the deduced gap-fillers into their canonical positions.
-- Use the following coverage checklist to plan sections, rather than imposing a fixed chapter order. Open with the purpose, final outcome, main aspects, their relationships, and decision-critical limits. Then deepen mechanisms, decisions, and implementation. Keep rejected alternatives beside the decisions they explain instead of duplicating them in a separate chapter. The progressive-documentation skill can support this planning if available; the rules here suffice without it. **Callee mode:** when another skill invoked this one, make no further skill calls; the local rules suffice.
+- Use the following coverage checklist to plan sections. Open with the purpose, final outcome, main aspects, their relationships, and decision-critical limits. Then deepen mechanisms, decisions, and implementation. Keep rejected alternatives beside the decisions they explain instead of duplicating them in a separate chapter. The progressive-documentation skill can support this planning if available; the rules here suffice without it. **Callee mode:** when another skill invoked this one, make no further skill calls; the local rules suffice.
 - Cover:
   1. **Executive Purpose & Scope:** High-level problem statement and final outcome.
   2. **System Context & Prerequisites:** Background concepts and environment assumptions.
@@ -58,9 +58,9 @@ Execute the following five phases sequentially:
 
 Use selected STE100 and Google developer-documentation principles as plain-language guidance. Treat a Gunning Fog aim near 10 as an informal diagnostic; do not claim a measured score or full conformance without assessment.
 
-- **Active Voice & Affirmative Sentences:** State mechanisms and data flows directly. Avoid passive voice and roundabout constructions.
+- **Active Voice & Affirmative Sentences:** State mechanisms and data flows directly.
 - **Short Sentences:** Restrict sentences to one primary technical idea.
-- **Explicit Terminology:** Define technical terms and acronyms on first use. Use a single consistent word for a given technical concept; never rotate synonyms for stylistic variation.
+- **Explicit Terminology:** Define technical terms and acronyms on first use. Use a single consistent word for a given technical concept.
 - **Unambiguous Referents:** Replace ambiguous pronouns with entity names. Use clear pronouns when they improve flow. Remove conversational filler and corporate buzzwords.
 - **Exact Technical Fidelity:** Preserve exact command flags, configuration keys, file paths, code snippets, and error strings verbatim.
 
@@ -70,7 +70,7 @@ Before finalizing the deliverable, verify that:
 
 - 100% of decisions, tool discoveries, code changes, and rationales from the Phase 1 ledger are accurately represented without silent omission.
 - All deduced understanding gaps from Phase 2 reside in their appropriate blueprint sections.
-- The opening explains the whole subject, and later sections add relationships, mechanisms, decisions, or detail rather than repeating the summary.
+- The opening explains the whole subject, and later sections add relationships, mechanisms, decisions, or detail.
 - The prose uses clear terms and readable paragraphs or task-appropriate lists. Required chronology, procedures, uncertainty, and exact artifacts remain intact.
 
 ---

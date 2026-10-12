@@ -31,8 +31,8 @@ Execute every task through this sequence:
 3. **Execute (Act & Monitor)**
 
 - Perform actions sequentially: Carry out the planned steps methodically using the appropriate tools or generative drafting.
-- Inspect intermediate state: Check tool responses and incremental outputs at each step rather than generating blindly to the end.
-- Handle runtime drift & emerging unknowns: If a tool fails, unexpected errors appear, or implementation uncovers unverified library contracts, pause immediately. Activate `web-research` iteratively to resolve the unknown rather than guessing or relying on stale pre-trained weights. Re-ground baseline facts (Step 1) and revise the plan (Step 2) before continuing.
+- Inspect intermediate state: Check tool responses and incremental outputs at each step.
+- Handle runtime drift & emerging unknowns: If a tool fails, unexpected errors appear, or implementation uncovers unverified library contracts, pause immediately. Activate `web-research` iteratively to resolve the unknown. Re-ground baseline facts (Step 1) and revise the plan (Step 2) before continuing.
 
 4. **Verify (Audit Outcome)**
 

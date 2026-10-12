@@ -42,7 +42,7 @@ When the user presents an argument, conjecture, mental model, or design to valid
 Structure the explanation trajectory before drafting:
 
 - **Whole Picture Before Depth:** Plan an opening that explains the purpose, each major aspect's role, and how the aspects connect. Then add mechanisms, interactions, consequences, and practical detail. Each revisit must add understanding.
-- **Concept Dependency Sequence:** Introduce prerequisites before reasoning depends on them. Avoid exhausting one major aspect before introducing the others.
+- **Concept Dependency Sequence:** Introduce prerequisites before reasoning depends on them.
 - **Explanatory Devices:** Select high-leverage physical analogies, mechanical metaphors, or concrete system models to make abstract mechanisms tangible.
 - **Concrete Scenarios:** Select minimal, real-world examples or code snippets demonstrating the concept in action.
 

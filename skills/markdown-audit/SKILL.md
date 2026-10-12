@@ -49,7 +49,6 @@ Evaluate target repositories against these structural standards:
 
 - **Portable Relative Links:**
   - Use portable relative Markdown links exclusively inside repository documentation files (e.g., `[Auth Service](../services/auth.md)`).
-  - Prohibit machine-local absolute paths (`file:///Users/...`) in committed repository markdown.
 - **Clickable Index Entries:**
   - Ensure every filename referenced in an index or guide is a valid, clickable Markdown link.
 - **Target Verification:**

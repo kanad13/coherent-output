@@ -13,11 +13,11 @@ Follow this protocol to evaluate whether an engineering proposal, architectural 
 
 1. **Zero Compliance Bias:**
    - Never validate a proposal, refactor, or suggestion simply because the user proposed it, championed it, or assumed it was a good idea.
-   - You are paid for calibrated technical judgment and protective skepticism, not polite nod-along agreement.
+   - Give calibrated technical judgment and protective skepticism.
 2. **First-Principles Grounding:**
    - Anchor every evaluation in empirical facts, measurable utility, architectural invariants, and real-world trade-offs.
    - Refuse vanity refactoring, chore-for-the-sake-of-churn, resume-driven development, and theoretical optimizations that do not move user or operational needles.
-3. **Hypothesis, Not Mandate:**
+3. **Proposals Are Hypotheses:**
    - Treat every proposal as an unproven hypothesis with a burden of proof on the proposer.
    - Default position is status-quo preservation unless the net value demonstrably outstrips total lifetime friction.
 
@@ -68,13 +68,13 @@ Calculate the full lifetime cost, not just the initial commit diff:
 
 Assign exactly one of these five verdicts to the evaluated item:
 
-| Verdict                  | Meaning                                                                | Actionable Mandate                                                                                              |
-| :----------------------- | :--------------------------------------------------------------------- | :-------------------------------------------------------------------------------------------------------------- |
-| **`STRONG PURSUE`**      | High Juice, Low/Proportional Squeeze.                                  | Implement immediately. The return on investment is obvious, immediate, and carries minimal blast radius.        |
-| **`SCOPED PURSUE`**      | High Juice, but unconstrained Squeeze is lethal.                       | Pursue only under a strictly bounded, surgical scope that caps effort and isolates risk. Reject full redesigns. |
-| **`COUNTER-PROPOSAL`**   | The proposed path is overly heavy, but the underlying problem is real. | Present a lightweight alternative achieving 80–90% of the juice with 10% of the squeeze.                        |
-| **`DEFER / ACCUMULATE`** | Juice is real but marginal; Squeeze is disproportional right now.      | Log in technical debt or backlog. Revisit opportunistically when touching related subsystems.                   |
-| **`REJECT / SKIP`**      | Low Juice, High/Persistent Squeeze.                                    | Do not do it. Explain clearly why the effort is a complexity trap, vanity exercise, or unnecessary risk.        |
+| Verdict                  | Meaning                                                                | Actionable Mandate                                                                                       |
+| :----------------------- | :--------------------------------------------------------------------- | :------------------------------------------------------------------------------------------------------- |
+| **`STRONG PURSUE`**      | High Juice, Low/Proportional Squeeze.                                  | Implement immediately. The return on investment is obvious, immediate, and carries minimal blast radius. |
+| **`SCOPED PURSUE`**      | High Juice, but unconstrained Squeeze is lethal.                       | Pursue only under a strictly bounded, surgical scope that caps effort and isolates risk.                 |
+| **`COUNTER-PROPOSAL`**   | The proposed path is overly heavy, but the underlying problem is real. | Present a lightweight alternative achieving 80–90% of the juice with 10% of the squeeze.                 |
+| **`DEFER / ACCUMULATE`** | Juice is real but marginal; Squeeze is disproportional right now.      | Log in technical debt or backlog. Revisit opportunistically when touching related subsystems.            |
+| **`REJECT / SKIP`**      | Low Juice, High/Persistent Squeeze.                                    | Do not do it. Explain clearly why the effort is a complexity trap, vanity exercise, or unnecessary risk. |
 
 ---
 
@@ -92,7 +92,7 @@ Execute this structured audit sequence:
 
 - Inspect actual repository code, usage telemetry, issue logs, and upstream release notes.
 - Check upstream breaking changes: did the proposed library change module formats (e.g. CJS to ESM), drop APIs, or overhaul state?
-- Test assumptions empirically using quick scripts or local probes rather than guessing.
+- Test assumptions empirically using quick scripts or local probes.
 - When the verdict depends on a factual sub-claim (a version's behavior, a limit, a compatibility statement), activate `claim-validator` on that claim alone and use its verdict and evidence. Without it, verify the claim directly and mark it unverified in the ledger.
 - **Callee mode:** when another skill invoked this one, make no further skill calls. Verify directly and list what stays unverified in the ledger.
 
@@ -159,7 +159,7 @@ Deliver the assessment using this structured template:
 
 ### Rationale
 
-[2–4 direct, affirmative sentences explaining the verdict based on evidence, not opinion]
+[2–4 direct, affirmative sentences explaining the verdict based on evidence]
 
 ### Action Plan / Counter-Proposal
 

@@ -7,7 +7,7 @@ description: Creates structured, high-context git commits for repository changes
 
 Follow this protocol when creating Git commits and pushing changes for repository updates. Enforce pre-commit hygiene, inspect staged diffs, and construct structured five-section commit messages that document architectural intent, trade-offs, and verification results.
 
-This skill owns every Git decision for the library. Other skills hand over the change set and the user's Git instructions, and do not decide whether to stage, commit, or push. Read the authorization level below before any write.
+This skill owns every Git decision for the library. Other skills hand over the change set and the user's Git instructions; this skill decides whether to stage, commit, or push. Read the authorization level below before any write.
 
 ---
 
@@ -33,10 +33,10 @@ A narrower instruction overrides a broader one (for example, "do not push until 
    - Audit the candidate diff for temporary residue before staging:
      - **Commented-Out Code:** Eradicate commented-out code blocks entirely; rely on Git version history for retrieval.
      - **Debug Residue:** Purge temporary debugging statements (`console.log`, `print`, `debugger`, dumps).
-     - **Attribution Stamps:** Purge assistant attribution stamps, author tags, and ticket annotations from files in the diff. Never add `Co-Authored-By` or assistant attribution trailers to the commit message unless the user asks for them; the user is the sole committer.
+     - **Attribution Stamps:** Purge assistant attribution stamps, author tags, and ticket annotations from files in the diff.
      - **Temporary Files:** Ensure untracked scratchpad notes, log dumps, and temp files are excluded or deleted.
 3. **Intent Comment Verification ("Why, Not What"):**
-   - Confirm that non-obvious algorithms, edge cases, and design choices in the diff contain comments explaining the underlying rationale, constraints, or invariants rather than narrating syntax.
+   - Confirm that non-obvious algorithms, edge cases, and design choices in the diff contain comments explaining the underlying rationale, constraints, or invariants.
 4. **Execute Pre-Commit Verification:**
    - Run project test suites, linters, and type checkers. Report any check that fails, is skipped, or is unavailable. Never commit code that breaks tests.
 5. **Understand Intent:**
@@ -85,7 +85,7 @@ Notes
 
 ## 3. Execution & Safety Boundary
 
-1. **Stage Atomic Changes:** Stage only intended modifications relevant to this logical unit of work (`git add <files>`). Avoid blanket staging that catches unintended dirty files.
+1. **Stage Atomic Changes:** Stage only intended modifications relevant to this logical unit of work (`git add <files>`).
 2. **Verify Staged Diff:** Check `git diff --cached` to verify that only intentional modifications are staged and no residual debug statements slipped through.
 3. **Commit Locally:** Create exactly one local commit with the structured message.
 4. **Push to Remote (Commit + push only):** Push committed changes to the tracking upstream remote branch (`git push`). If no upstream branch is configured, push with `-u origin <branch>` to establish tracking. At any lower level, stop after the local commit and report that nothing was pushed.

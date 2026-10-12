@@ -7,7 +7,7 @@ description: Audits and establishes project foundations that satisfy requirement
 
 Turn project requirements and existing practices into verified foundations and a working continuity process. Follow stages 1–7 in order, carrying each stage's findings into the next, and revisit a stage when later evidence changes it. The project records its concrete files, tools, layout, and maintenance instructions; this skill supplies the audit, decision, implementation, and verification sequence.
 
-**Size the work to the project.** A script or single-session task needs a README section and one verification command, nothing more. Add `PLAN.md`, `DECISIONS.md`, and `TESTING.md` only when work will span sessions or involves non-obvious decisions. Never create a record that has nothing current to say.
+**Size the work to the project.** A script or single-session task needs a README section and one verification command, nothing more. Add `PLAN.md`, `DECISIONS.md`, and `TESTING.md` only when work will span sessions or involves non-obvious decisions.
 
 ## 1. Establish the Project Baseline
 
@@ -34,7 +34,7 @@ For continuity-only work, define acceptance criteria around existing workflows, 
 
 ## 3. Establish Discoverable Project Memory
 
-Give each needed kind of information one canonical home that future agents can find. Link shared facts to that home instead of repeating them.
+Give each needed kind of information one canonical home that future agents can find. Link shared facts to that home.
 
 | Information           | What Must Be Discoverable                                                                | Possible Home                                                  |
 | :-------------------- | :--------------------------------------------------------------------------------------- | :------------------------------------------------------------- |
@@ -45,8 +45,8 @@ Give each needed kind of information one canonical home that future agents can f
 | Verification          | Real workflows, expected outcomes, checks, commands, and execution triggers              | `TESTING.md` or existing testing documentation                 |
 | Agent workflow        | Where to read context and when to update the canonical records                           | `AGENTS.md` or an existing project instruction file            |
 
-- **Instruction file:** use `AGENTS.md` as the canonical file. Claude Code reads it directly when no `CLAUDE.md` exists; if a `CLAUDE.md` already exists, have it import `AGENTS.md` (`@AGENTS.md`) rather than copying it.
-- **Keep records current:** update plans and operating guidance in place, retain decision rationale, and mark superseded decisions explicitly. Route history to version control, not to living documents.
+- **Instruction file:** use `AGENTS.md` as the canonical file. Claude Code reads it directly when no `CLAUDE.md` exists; if a `CLAUDE.md` already exists, have it import `AGENTS.md` (`@AGENTS.md`).
+- **Keep records current:** update plans and operating guidance in place, retain decision rationale, and mark superseded decisions explicitly. Route history to version control.
 - **Version control:** initialize local version control when it is missing and within scope. Commits and remote publication follow the authorized Git workflow.
 - **Minimal shapes** (extend only when the project needs more):
 
@@ -82,7 +82,7 @@ Write project-specific instructions in the instruction file. They must tell futu
 | Change behavior, interfaces, tooling, or setup      | Update affected tests and canonical instructions alongside implementation; audit the testing strategy when its assumptions change.       |
 | End a session or hand off work                      | Record completed work, remaining work, unresolved decisions, verification evidence, and the next action.                                 |
 
-Name the project's real files and commands, not generic advice. Reference a skill only where its workflow is needed, and carry forward project constraints without repeating universal agent policy. A sample of the finished text:
+Name the project's real files and commands. Reference a skill only where its workflow is needed, and carry forward project constraints without repeating universal agent policy. A sample of the finished text:
 
 ```markdown
 ## Working agreements

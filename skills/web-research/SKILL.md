@@ -5,16 +5,16 @@ description: Conducts rigorous, multi-source web research to validate internal m
 
 # Web Research & Evidence Synthesis
 
-Follow this protocol when researching technical questions, validating model knowledge against primary documentation, or gathering external empirical evidence. Prioritize primary sources according to the authoritative evidence hierarchy, classify findings into facts, claims, and inferences, and enforce zero hallucination.
+Follow this protocol when researching technical questions, validating model knowledge against primary documentation, or gathering external empirical evidence. Prioritize primary sources according to the authoritative evidence hierarchy, classify findings into facts, claims, and inferences, and trace every claim to a source.
 
 ---
 
 ## 1. Invocation Triggers & Operational Scope
 
 - **Initial Grounding Trigger:** When user requests involve external frameworks, third-party APIs, SDK specifications, or empirical claims, steelman the query and search authoritative sources to validate internal model knowledge against current ground truth.
-- **Iterative In-Flight Trigger:** When executing tasks and encountering unfamiliar library methods, syntax deprecations, or unexpected tool/compiler errors, search immediately rather than guessing or hallucinating fixes.
+- **Iterative In-Flight Trigger:** When executing tasks and encountering unfamiliar library methods, syntax deprecations, or unexpected tool/compiler errors, search immediately.
 - **Exclusion Boundaries:** Do not invoke for trivial standard operations (e.g., standard language primitives, basic shell commands) or purely internal codebase refactors that do not cross system boundaries.
-- **Scope Discipline:** Avoid search rabbit holes. Limit in-flight queries to resolving the immediate blocking unknown before resuming the primary workflow.
+- **Scope Discipline:** Limit in-flight queries to resolving the immediate blocking unknown before resuming the primary workflow.
 
 ---
 

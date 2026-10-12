@@ -12,7 +12,7 @@ Follow this protocol to transform unstructured notes, messy thoughts, or poorly 
 ## 1. Core Mandates & Operating Principles
 
 - **Assume Disorganized Input:** Source drafts, notes, or messages are often fragmented, poorly sequenced, repetitive, or emotionally reactive.
-- **Prohibit Superficial Proofreading:** Never perform mere spell-checking, grammar polishing, or minor cosmetic edits. Radically restructure the information architecture to achieve the sender's true objective.
+- **Radical Restructuring:** Restructure the information architecture to achieve the sender's true objective.
 - **Steelman the Intent:** Fundamentally look at what the sender is trying to convey. Articulate the strongest, most coherent, and strategic version of the message before rewriting.
 - **The Zero-Loss Invariant:** Preserve 100% of substantive data from the source input:
   - Every factual assertion, date, number, metric, and stakeholder identity.
@@ -98,4 +98,4 @@ Return the deliverable in this exact structure:
 - **Draft B (Contextual & Collaborative):** Subject line, body, and strategic rationale.
 - **Draft C (Operational & Decision-Focused):** Subject line, body, and strategic rationale.
 
-4. **Preservation & Traceability Audit:** Verification confirming zero informational loss and modality preservation.
+4. **Preservation & Traceability Audit:** Verification confirming no informational loss and modality preservation.

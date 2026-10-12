@@ -4,13 +4,13 @@ This repository is the source for the user's global agent setup. It is not an ap
 
 ## Where things live
 
-| Path                                             | Role                                                                       |
-| ------------------------------------------------ | -------------------------------------------------------------------------- |
-| [instructions/global.md](instructions/global.md) | Template for the user's global `AGENTS.md` and `CLAUDE.md`. Not this file. |
-| [skills/](skills/)                               | One folder per skill. Each holds a `SKILL.md` and optional helpers.        |
-| [adapters/](adapters/README.md)                  | Per-application link maps, hook templates, and the shared edit checker.    |
-| [scripts/](scripts/README.md)                    | Installer (`deploy.py`), tests, and `verify.sh`.                           |
-| [docs/skills.md](docs/skills.md)                 | Skill authoring contract, maintenance steps, and the skill inventory.      |
+| Path                                             | Role                                                                    |
+| ------------------------------------------------ | ----------------------------------------------------------------------- |
+| [instructions/global.md](instructions/global.md) | Template for the user's global `AGENTS.md` and `CLAUDE.md`.             |
+| [skills/](skills/)                               | One folder per skill. Each holds a `SKILL.md` and optional helpers.     |
+| [adapters/](adapters/README.md)                  | Per-application link maps, hook templates, and the shared edit checker. |
+| [scripts/](scripts/README.md)                    | Installer (`deploy.py`), tests, and `verify.sh`.                        |
+| [docs/skills.md](docs/skills.md)                 | Skill authoring contract, maintenance steps, and the skill inventory.   |
 
 ## Rules for changes
 

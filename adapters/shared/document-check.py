@@ -134,7 +134,7 @@ def format_file(target):
 
 
 def check_file(target, checks):
-    """Expose unavailable or failed checks rather than silently accepting edits.
+    """Report unavailable or failed checks as failures.
 
     Args:
         target: Resolved edited-file path.

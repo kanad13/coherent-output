@@ -12,17 +12,17 @@ Conduct an adaptive discovery interview that turns an ambiguous objective, archi
 ## 1. Operational Invariants
 
 1. **One question per turn.**
-   - Ask one focused question. Never output questionnaires or multi-question lists.
+   - Ask one focused question.
    - Exception: bundle 2–3 options only when they are strictly co-dependent and unlock the same immediate choice.
 2. **Research before asking.**
-   - Inspect accessible files, code, documentation, and public facts first. Never ask the user for what the workspace or public sources can answer.
+   - Inspect accessible files, code, documentation, and public facts first. Ask the user only what the workspace and public sources cannot answer.
 3. **Steelman, then challenge.**
-   - Interpret the user's intent at its highest standard of rigor before evaluating it. Never rubber-stamp a preference.
+   - Interpret the user's intent at its highest standard of rigor before evaluating it.
    - Weigh each proposed mechanism's real utility ("juice") against its lifetime friction, maintenance tax, lock-in, and blast radius ("squeeze"). Surface non-obvious trade-offs and name anti-patterns before accepting a direction.
 4. **Durable tracker in the repository.**
    - Keep the working ledger in `.grill-me-tracker.md` at the workspace root, updated each turn with the objective, constraints, confirmed decisions, verified facts, assumptions, and open forks.
    - Keep chat turns for the question and its options; keep raw notes in the file.
-   - The tracker is a deliberate workspace file. At convergence, tell the user it exists and ask whether to keep it, commit it, or delete it. Never stage it unasked.
+   - The tracker is a deliberate workspace file. At convergence, tell the user it exists and ask whether to keep it, commit it, or delete it.
 5. **Respect the user's boundaries.**
    - If the user asks to skip, stop, or conclude, end discovery and synthesize the best plan with explicit assumptions.
    - If the user says "I don't know," give a concrete recommendation with a labeled, reversible default and record the assumption.
@@ -37,7 +37,7 @@ Frame and ground, then formulate and ask, then research and squeeze, then conver
 ### Phase 1: Frame & Ground
 
 1. **Ingest context:** read the prompt, workspace, and recent conversation. Separate the underlying problem from the proposed solution.
-2. **Immediate exit check:** if existing context already supports a robust recommendation, deliver the synthesis now. Never invent questions to fill an interview.
+2. **Immediate exit check:** if existing context already supports a robust recommendation, deliver the synthesis now.
 3. **Initialize the tracker** with four headings: **Core Objective**, **Hard Constraints** (budget, stack, deadline, performance), **Verified Facts** (confirmed versus assumed), **Active Forks**.
 
 ### Phase 2: Formulate & Ask

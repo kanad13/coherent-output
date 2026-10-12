@@ -35,7 +35,7 @@ Inspect the surfaces users operate: command-line arguments, pipelines and exit c
   - Use browser or native interaction for the surface users operate, including focus, navigation, state transitions, and error handling where they affect the workflow.
 - **Require defect-sensitive checks:**
   - **Sabotage check:** deliberately break the behavior (revert the fix, invert a condition, remove a call) and confirm the check fails. A check that cannot fail proves nothing; restore the code afterward.
-  - Assert on public results and observable side effects, not private structure.
+  - Assert on public results and observable side effects.
   - Cover relevant boundaries and failure paths: empty or malformed input, boundary values, Unicode, oversized payloads, timeouts, permission errors, cancellation, unavailable dependencies.
 
 ## 3. Select Methods That Support the Claim
@@ -82,7 +82,6 @@ Run the selected checks, or execute manual procedures directly, and compare actu
 
 - **Record evidence:** the behavior checked, runtime or artifact, exact commands, expected and observed results, and exit codes, counts, and duration when relevant. Report passed, failed, deferred, and blocked checks separately, with the exact blocker and the unverified outcome.
 - **Keep it durable:** keep the workflow map, commands, prerequisites, fixtures, environment constraints, and triggers current. Ensure project instructions send future agents to the strategy and require review when workflows, contracts, surfaces, or tooling change.
-- **Git scope:** never stage, commit, or push. Leave version-control actions to the caller.
 
 ## 7. Completion Criteria
 

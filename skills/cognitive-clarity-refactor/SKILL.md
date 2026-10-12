@@ -11,9 +11,9 @@ Execute this protocol to convert high-friction prose into structured, scannable 
 
 ## 1. Core Invariants
 
-- **Semantic Fidelity Guarantee:** Retain every fact, technical constraint, dependency, and warning from the source text. Reorganize and clarify articulation, but never omit valid technical assertions or dilute commitments.
+- **Semantic Fidelity Guarantee:** Retain every fact, technical constraint, dependency, and warning from the source text. Reorganize and clarify articulation.
 - **Verbatim Asset Protection:** Treat code blocks, terminal sessions, mathematical equations, tables, and Mermaid definitions as protected assets. Do not rewrite code or table contents during prose refactoring.
-- **Single-Thought Structure:** Restrict every child bullet to a single assertion or instruction. Do not join unrelated actions with compound conjunctions.
+- **Single-Thought Structure:** Restrict every child bullet to a single assertion or instruction.
 
 ---
 
@@ -26,7 +26,7 @@ Structure all text using a strict two-tier hierarchical layout:
   `- **Category Anchor:**`
 - **Declarative Child Bullets:** Place each discrete assertion or action on an un-bolded child bullet indented directly beneath its category anchor:
   `  - Child declarative assertion or instruction.`
-- **Single-Thought Invariant:** Limit each child bullet to exactly one complete assertion or action. Do not join unrelated operational steps with compound conjunctions.
+- **Single-Thought Invariant:** Limit each child bullet to exactly one complete assertion or action.
 - **Branching Matrices:** If a concept involves two or more conditional states (`if... then... else`), convert it into a Markdown table instead of nested bullets.
 
 ---
@@ -53,7 +53,7 @@ Draft every declarative child bullet by applying the following principles:
 ### C. Complexity Throttle (Gunning Fog Index \~10 Cadence)
 
 - **Layperson Accessibility:** Calibrate readability for a general technical reader. Use direct, intuitive explanations before introducing technical abstractions.
-- **Zero Marketing Cadence:** Eliminate hyperbolic adjectives, speculative buzzwords, and promotional tone. Present engineering facts without overselling.
+- **Neutral Tone:** Eliminate hyperbolic adjectives, speculative buzzwords, and promotional tone. Present engineering facts plainly.
 - **Linear Syntax (Right-Branching):** State the subject and primary action first; place constraints, caveats, and dependencies after the main clause.
 
 ---

@@ -13,10 +13,8 @@ Structure explanatory documents in breadth-first layers of depth. Establish the 
 
 1. **Breadth Before Depth:**
    - Introduce every major topic, component, or pillar at a high level before descending into the details of any single one.
-   - Prohibit topic siloing: never exhaust Topic A before introducing Topic B.
 2. **Verbatim Asset Preservation:**
    - Preserve all code blocks, data tables, numerical values, formulas, and quoted text byte-for-byte.
-   - Do not mutate or truncate reference assets during restructuring.
 3. **Scope Guard:**
    - Apply to multi-topic explanations, system overviews, proposals, strategy memos, and policies.
    - Do not apply to chronological runbooks, linear step-by-step procedures, or brief direct answers. Keep procedures in executable sequence.

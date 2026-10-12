@@ -122,7 +122,7 @@ Hooks run after the edit, so they cannot undo it. They do not see files changed 
 
 - **Unknown files stop the install.** If a destination holds a file the installer does not own, nothing is written. Rerun with `--backup-conflicts` to move the original into `~/.local/state/coherent-output/backups/` with a restore manifest.
 - **Merged settings keep your other settings.** In `settings.json` and `hooks.json`, the installer adds or updates only its own hook entry. Your other keys and hooks stay as they are. Before it rewrites a file, it saves a copy in the backup directory.
-- **Broken settings are never touched.** If an existing settings file is not valid JSON, the installer stops before any write and names the file. Fix the file yourself, then rerun. The installer does not guess what you meant.
+- **Broken settings are never touched.** If an existing settings file is not valid JSON, the installer stops before any write and names the file. Fix the file yourself, then rerun.
 
 `./scripts/deploy.sh --check` reports drift without writing.
 

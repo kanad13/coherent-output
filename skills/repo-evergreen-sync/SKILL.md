@@ -23,7 +23,7 @@ Apply these standards across all code and documentation modified or created duri
   - Imperative summary line describing the operational contract.
   - Detail block describing non-obvious design assumptions, edge cases, or side effects.
   - Structured sections: `Args:` / `@param`, `Returns:` / `@returns`, `Raises:` / `@throws`.
-  - **Zero Lying Docstrings:** Parameter names, types, defaults, and return signatures must match runtime code with 100% precision.
+  - **Accurate Docstrings:** Parameter names, types, defaults, and return signatures match the runtime code exactly.
 
 ### Strict "Why, Not What" Commenting Standard
 
@@ -33,10 +33,10 @@ Apply these standards across all code and documentation modified or created duri
 
 ### Living Documentation & Plain-Language Standards
 
-- **Active Present-Tense Invariant:** Living files (`*.md`, source code, configs, schemas) must describe current operational state. Never append changelog notes or version deltas into living reference docs (e.g., `*Note: Updated in v2 to use DuckDB*`). Route historical context exclusively to Git commit messages.
+- **Active Present-Tense Invariant:** Living files (`*.md`, source code, configs, schemas) must describe current operational state. Route changelog notes and version deltas to Git commit messages.
 - **Plain Language:** Use selected STE100 and Google developer-documentation principles: direct verbs, clear references, consistent terms, and definitions at first use. Preserve technical vocabulary and uncertainty. Treat a Gunning Fog aim near 10 as an informal diagnostic; do not claim a measured score or full compliance without assessment.
 - **Artifact-Specific Structure:** For substantial explanations, introduce the whole subject and main relationships before deepening mechanisms and detail. Use progressive-documentation if available; these local rules also suffice. Choose paragraphs, steps, lists, and tables for the task. Use cognitive-clarity-refactor only when the artifact needs its scannable bullet hierarchy. Keep procedures executable and required templates intact.
-- **Single Source of Truth:** Establish canonical documentation in one location and link to it using portable relative Markdown links. Avoid duplicate assertions across disparate files.
+- **Single Source of Truth:** Establish canonical documentation in one location and link to it using portable relative Markdown links.
 
 ---
 
@@ -101,7 +101,7 @@ Verify that the synchronization pass introduced zero regressions:
 
 ### Phase 6: Commit & Upstream Sync via commit-scribe skill
 
-Hand the verified change set to commit-scribe, together with the user's Git instructions in their own words. Do not decide here whether to stage, commit, or push; commit-scribe owns that decision and the commit message.
+Hand the verified change set to commit-scribe, together with the user's Git instructions in their own words. commit-scribe decides whether to stage, commit, or push, and writes the commit message.
 
 - Activate the commit-scribe skill with the list of reconciled files and a one-line statement of the drift that was resolved.
 - Report back to the user with commit-scribe's result (level used, hash, files, pushed or not), plus the test verification results.
@@ -118,14 +118,14 @@ Before completing execution, confirm that all items are satisfied:
 
 - [ ] Top-level Google-style module docstring present on every touched or created file.
 - [ ] Class and function docstrings follow Google style with accurate parameters and return types.
-- [ ] All comments explain "Why, Not What"; zero syntax echo comments exist.
-- [ ] Zero dead code blocks, zero temporary debug statements, and zero scratchpad files remain.
+- [ ] All comments explain why; none restates syntax.
+- [ ] No dead code, temporary debug statements, or scratchpad files remain.
 
 ### Documentation & Navigation
 
-- [ ] All updated docs written in active present tense (zero patch notes or backward-looking deltas).
+- [ ] All updated docs describe the current state in active present tense.
 - [ ] Document structure matches its purpose; explanatory layers add understanding, and procedures remain executable.
-- [ ] Zero heading echoing (first sentence beneath a heading does not restate the heading title).
+- [ ] The first sentence under each heading adds information beyond the heading.
 - [ ] Parent README manifests and root documentation index newly created or modified files.
 - [ ] All relative Markdown links resolve to valid sibling files.
 
