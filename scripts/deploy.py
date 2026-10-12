@@ -9,6 +9,10 @@ Three mechanisms fit three ownership cases: symlinks for files the application
 only reads, generated files for text composed from several sources, and merges
 for settings the application also writes. A real install also points this
 clone's ``core.hooksPath`` at ``.githooks`` so the commit gate needs no extra step.
+
+Skills reference one another in prose, and a renamed or deleted skill would break
+those references silently. The preflight therefore also checks them against the
+call-graph table in ``docs/skills.md``, which is the one record of who may call whom.
 """
 
 import argparse
@@ -26,6 +30,8 @@ import tempfile
 
 
 REPO = Path(__file__).resolve().parent.parent
+GRAPH_DOC = "docs/skills.md"
+CALLEE_MODE_MARKER = "Callee mode"
 
 
 def frontmatter(path):
@@ -322,6 +328,117 @@ def write_atomic(path, content, keep_mode=False):
             os.unlink(temporary)
 
 
+def parse_skill_graph(doc_text):
+    """Read the call-graph table from the skills document.
+
+    The table is the single record of roles and allowed calls, so it is parsed by
+    its header names rather than by position and column order can change safely.
+
+    Args:
+        doc_text: Markdown text that holds a table with Skill, Role, Required calls,
+            Optional calls, and Redirects columns.
+
+    Returns:
+        A dict mapping each skill name to ``{"role", "required", "optional", "redirects"}``.
+
+    Raises:
+        ValueError: The table or one of its columns is missing, or a skill repeats.
+    """
+    lines = doc_text.splitlines()
+    wanted = ("skill", "role", "required calls", "optional calls", "redirects")
+    for index, line in enumerate(lines):
+        cells = [cell.strip().lower() for cell in line.strip().strip("|").split("|")]
+        if line.lstrip().startswith("|") and all(name in cells for name in wanted):
+            columns = {name: cells.index(name) for name in wanted}
+            break
+    else:
+        raise ValueError(f"{GRAPH_DOC} has no call-graph table with columns: {', '.join(wanted)}")
+
+    def names(cell):
+        return [] if cell.lower() in ("", "none", "-", "\u2014") else [item.strip() for item in cell.split(",")]
+
+    graph = {}
+    for line in lines[index + 2:]:
+        if not line.lstrip().startswith("|"):
+            break
+        cells = [cell.strip() for cell in line.strip().strip("|").split("|")]
+        link = re.match(r"\[([^\]]+)\]", cells[columns["skill"]])
+        skill = link.group(1) if link else cells[columns["skill"]]
+        if skill in graph:
+            raise ValueError(f"{GRAPH_DOC} lists skill twice: {skill}")
+        graph[skill] = {
+            "role": cells[columns["role"]].lower(),
+            "required": names(cells[columns["required calls"]]),
+            "optional": names(cells[columns["optional calls"]]),
+            "redirects": names(cells[columns["redirects"]]),
+        }
+    return graph
+
+
+def skill_graph_problems(graph, skill_texts):
+    """List every way the call-graph table and the skill texts disagree.
+
+    Static checks stand in for runtime depth control: acyclic edges, workflows that
+    are never callees, and a callee-mode line in every lens that calls others
+    together guarantee that a chain stops one edge from the skill the user invoked.
+
+    Args:
+        graph: Result of ``parse_skill_graph``.
+        skill_texts: Dict mapping each skill name to its full ``SKILL.md`` text.
+
+    Returns:
+        A list of human-readable problems; empty when the graph is consistent.
+    """
+    problems = []
+    for name in sorted(set(skill_texts) - set(graph)):
+        problems.append(f"{name}: missing from the call-graph table")
+    for name in sorted(set(graph) - set(skill_texts)):
+        problems.append(f"{name}: listed in the call-graph table but has no skill folder")
+    known = {name: entry for name, entry in graph.items() if name in skill_texts}
+    for name, entry in known.items():
+        if entry["role"] not in ("lens", "workflow"):
+            problems.append(f"{name}: role must be lens or workflow, not '{entry['role']}'")
+        calls = entry["required"] + entry["optional"]
+        listed = set(calls) | set(entry["redirects"])
+        for callee in sorted(listed):
+            if callee == name:
+                problems.append(f"{name}: lists itself")
+            elif callee not in skill_texts:
+                problems.append(f"{name}: references unknown skill '{callee}'")
+        for callee in calls:
+            if callee in known and known[callee]["role"] == "workflow":
+                problems.append(f"{name}: calls workflow '{callee}'; workflows are entry skills only")
+        if entry["role"] == "lens" and calls and CALLEE_MODE_MARKER.lower() not in skill_texts[name].lower():
+            problems.append(f"{name}: calls other skills but has no '{CALLEE_MODE_MARKER}' line")
+        mentioned = {
+            other for other in skill_texts
+            if other != name and re.search(rf"(?<![\w-]){re.escape(other)}(?![\w-])", skill_texts[name])
+        }
+        for other in sorted(mentioned - listed):
+            problems.append(f"{name}: text names '{other}' but its table row does not list it")
+        for other in sorted((listed & set(skill_texts)) - mentioned - {name}):
+            problems.append(f"{name}: table lists '{other}' but the text never names it")
+
+    state = {}
+
+    def visit(node, path):
+        state[node] = "open"
+        for callee in known.get(node, {}).get("required", []) + known.get(node, {}).get("optional", []):
+            if callee not in known:
+                continue
+            if state.get(callee) == "open":
+                cycle = path[path.index(callee):] + [callee] if callee in path else [node, callee]
+                problems.append("call cycle: " + " -> ".join(cycle))
+            elif callee not in state:
+                visit(callee, path + [callee])
+        state[node] = "done"
+
+    for node in sorted(known):
+        if node not in state:
+            visit(node, [node])
+    return problems
+
+
 def main():
     """Preflight ownership before installing the selected host mappings.
 
@@ -377,6 +494,12 @@ def main():
         names.append(metadata["name"])
     if len(names) != len(set(names)):
         raise ValueError("Duplicate names in source skill library")
+    graph_problems = skill_graph_problems(
+        parse_skill_graph(REPO.joinpath(GRAPH_DOC).read_text()),
+        {skill.parent.name: skill.read_text() for skill in skill_files},
+    )
+    if graph_problems:
+        raise ValueError("Skill call graph is inconsistent:\n  " + "\n  ".join(graph_problems))
 
     conflicts = []
     for destination, source, previous in links:

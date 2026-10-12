@@ -28,7 +28,7 @@ class DeploymentTests(unittest.TestCase):
         self.root = Path(self.temporary.name).resolve()
         self.repo = self.root / "checkout with space's"
         self.repo.mkdir()
-        for name in ("skills", "rules", "adapters", "scripts", "instructions", ".githooks"):
+        for name in ("skills", "rules", "adapters", "scripts", "instructions", "docs", ".githooks"):
             shutil.copytree(SOURCE / name, self.repo / name, ignore=shutil.ignore_patterns("__pycache__"))
         shutil.copyfile(SOURCE / ".prettierrc", self.repo / ".prettierrc")
         shutil.copyfile(SOURCE / ".prettierignore", self.repo / ".prettierignore")
@@ -388,6 +388,63 @@ class DeploymentTests(unittest.TestCase):
                 self.run_deploy("--dry-run", status=1)
         skill.write_text("---\nname: worth-the-squeeze\ndescription: " + "x" * 1025 + "\n---\nBody\n")
         self.run_deploy("--dry-run", status=1)
+
+
+    def edit_graph_cell(self, skill, column, value):
+        """Rewrite one cell of the call-graph table in the isolated checkout.
+
+        Args:
+            skill: Skill whose row changes.
+            column: Header text of the cell to replace, such as ``Optional calls``.
+            value: New cell text.
+        """
+        document = self.repo / "docs/skills.md"
+        lines = document.read_text().splitlines()
+        header = next(line for line in lines if "Optional calls" in line)
+        names = [cell.strip() for cell in header.strip().strip("|").split("|")]
+        for number, line in enumerate(lines):
+            cells = [cell.strip() for cell in line.strip().strip("|").split("|")]
+            if line.startswith("| [" + skill + "]") and len(cells) == len(names):
+                cells[names.index(column)] = value
+                lines[number] = "| " + " | ".join(cells) + " |"
+        document.write_text("\n".join(lines) + "\n")
+
+    def assert_graph_refused(self, expected):
+        """Require a dry run to fail with the named graph problem."""
+        result = self.run_deploy("--dry-run", status=1)
+        self.assertIn("call graph is inconsistent", result.stderr)
+        self.assertIn(expected, result.stderr)
+
+    def test_graph_rejects_unknown_callee(self):
+        self.edit_graph_cell("grill-me", "Optional calls", "web-research, ghost-skill")
+        self.assert_graph_refused("unknown skill 'ghost-skill'")
+
+    def test_graph_rejects_cycle(self):
+        self.edit_graph_cell("web-research", "Optional calls", "claim-validator")
+        self.assert_graph_refused("call cycle: claim-validator -> web-research -> claim-validator")
+
+    def test_graph_rejects_called_workflow(self):
+        self.edit_graph_cell("claim-validator", "Optional calls", "web-research, grill-me")
+        self.assert_graph_refused("calls workflow 'grill-me'")
+
+    def test_graph_rejects_undeclared_body_reference(self):
+        skill = self.repo / "skills/web-research/SKILL.md"
+        skill.write_text(skill.read_text() + "\nAsk commit-scribe to save the findings.\n")
+        self.assert_graph_refused("text names 'commit-scribe' but its table row does not list it")
+
+    def test_graph_rejects_stale_table_entry(self):
+        self.edit_graph_cell("commit-scribe", "Optional calls", "web-research")
+        self.assert_graph_refused("table lists 'web-research' but the text never names it")
+
+    def test_graph_requires_callee_mode_line_in_calling_lens(self):
+        skill = self.repo / "skills/claim-validator/SKILL.md"
+        skill.write_text(skill.read_text().replace("Callee mode", "Nested use"))
+        self.assert_graph_refused("has no 'Callee mode' line")
+
+    def test_graph_rejects_skill_missing_from_table(self):
+        document = self.repo / "docs/skills.md"
+        document.write_text("\n".join(line for line in document.read_text().splitlines() if not line.startswith("| [grill-me]")) + "\n")
+        self.assert_graph_refused("grill-me: missing from the call-graph table")
 
 
 if __name__ == "__main__":

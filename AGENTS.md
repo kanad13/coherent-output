@@ -15,6 +15,7 @@ This repository is the source for the user's global agent setup. It is not an ap
 ## Rules for changes
 
 - **Editing a skill:** read the authoring contract in [docs/skills.md](docs/skills.md#2-skill-authoring-contract) first. Keep frontmatter to flat `name` and `description`; the installer rejects anything else. Add new skills to the inventory table in the same change.
+- **Adding or removing a reference between skills:** update the call-graph table in [docs/skills.md](docs/skills.md#4-routing-and-call-graph) in the same change. The installer refuses a table that disagrees with the skill texts.
 - **Editing `instructions/global.md`:** this changes every application on every machine. Codex and Claude Code receive a generated copy, so the change takes effect only after `./scripts/deploy.sh`. Antigravity links to the file directly.
 - **Editing an adapter or `deploy.py`:** add or update a test in `scripts/` that runs against an isolated home. Use `--target-home` for manual trials. Never test against the real home without `--dry-run` first.
 - **Adding an application or hook:** follow [adapters/README.md](adapters/README.md#4-adding-an-application-or-a-hook).
