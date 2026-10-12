@@ -61,6 +61,7 @@ Record when each kind of check runs: fast checks on every change, workflow check
 
 Compare the selected methods with existing tooling and classify it as adequate, missing, outgrown, or brittle. Retain tooling that supports the strategy.
 
+- **Callee mode:** when another skill invoked this one, make no further skill calls. Use the inline fallbacks below.
 - **Tools:** prefer existing runners and ecosystem built-ins. Activate `web-research` for unfamiliar tools or version constraints; without it, read official documentation and mark unverified claims. Activate `worth-the-squeeze` before adding a substantial framework; without it, weigh defect detection against setup and upkeep.
 - **Isolation:** use temporary directories, ephemeral ports, and reset shared state between runs. Control time and randomness. Investigate order dependence and intermittent failures.
 - **Prove the harness:** confirm a new runner executes checks and reports failures accurately, then run a representative project behavior through it. Runner health alone does not establish product correctness. When automation is unavailable or disproportionate, write a repeatable manual procedure with its scope, expected results, and limits.

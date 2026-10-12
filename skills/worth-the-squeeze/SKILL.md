@@ -93,6 +93,8 @@ Execute this structured audit sequence:
 - Inspect actual repository code, usage telemetry, issue logs, and upstream release notes.
 - Check upstream breaking changes: did the proposed library change module formats (e.g. CJS to ESM), drop APIs, or overhaul state?
 - Test assumptions empirically using quick scripts or local probes rather than guessing.
+- When the verdict depends on a factual sub-claim (a version's behavior, a limit, a compatibility statement), activate `claim-validator` on that claim alone and use its verdict and evidence. Without it, verify the claim directly and mark it unverified in the ledger.
+- **Callee mode:** when another skill invoked this one, make no further skill calls. Verify directly and list what stays unverified in the ledger.
 
 ### Step 3: Quantify the Juice and the Squeeze
 
