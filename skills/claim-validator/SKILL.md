@@ -40,8 +40,9 @@ Follow this methodology to stress-test claims, arguments, technical proposals, a
 
 ### Step 3: Investigate & Gather Evidence
 
-- Search primary documentation, benchmark datasets, and technical standards.
+- Activate `web-research` with the list of atomic hypotheses. It returns a sourced answer, a tiered evidence table, and a gaps list; map each row to a hypothesis. Without it, search directly, prefer primary documentation, and mark every unsourced point as unverified.
 - Test for edge cases, scaling limits, and historical failure modes.
+- **Callee mode:** when another skill invoked this one, make no further skill calls. Search directly and list what stays unverified in the report.
 
 ### Step 4: Render Calibrated Verdicts
 
