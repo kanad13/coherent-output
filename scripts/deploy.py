@@ -4,6 +4,11 @@
 Preflight the selected host artifacts and shared skill metadata before writes.
 Generated commands resolve this checkout and its local runtime; conflicts stay
 recoverable through explicit backups rather than destructive replacement.
+
+Three mechanisms fit three ownership cases: symlinks for files the application
+only reads, generated files for text composed from several sources, and merges
+for settings the application also writes. A real install also points this
+clone's ``core.hooksPath`` at ``.githooks`` so the commit gate needs no extra step.
 """
 
 import argparse
@@ -115,13 +120,35 @@ def merge_hooks(template_path, host, destination):
 
 
 def codex_hooks(codex_home):
-    """Merge the Codex handler into the destination's existing hooks."""
+    """Merge the Codex handler into the destination's existing hooks.
+
+    Args:
+        codex_home: Resolved Codex home whose ``hooks.json`` is merged, or None.
+
+    Returns:
+        Serialized hooks for the home's generated file.
+
+    Raises:
+        ValueError: Existing JSON or hook-container shapes are invalid.
+        OSError: The template or existing file cannot be read.
+    """
     destination = codex_home / "hooks.json" if codex_home else None
     return merge_hooks("adapters/codex/hooks.template.json", "codex", destination)
 
 
 def claude_settings(claude_home):
-    """Merge the Claude Code handler into the user's settings, which the app also writes."""
+    """Merge the Claude Code handlers into settings, which the application also writes.
+
+    Args:
+        claude_home: Resolved Claude Code home whose ``settings.json`` is merged, or None.
+
+    Returns:
+        Serialized settings with unrelated keys and hooks preserved.
+
+    Raises:
+        ValueError: Existing JSON or hook-container shapes are invalid.
+        OSError: The template or existing file cannot be read.
+    """
     destination = claude_home / "settings.json" if claude_home else None
     return merge_hooks("adapters/claude/settings.template.json", "claude", destination)
 
@@ -200,6 +227,8 @@ def generated_files(codex_home=None, selected=TOOLS, claude_home=None):
     Args:
         codex_home: Optional destination for merging existing Codex hooks.
         selected: Host names whose generated artifacts are required.
+        claude_home: Accepted for symmetry with ``merged_files``; Claude's generated
+            instructions do not depend on the destination.
 
     Returns:
         A mapping from generated file paths to their intended text contents.
@@ -217,6 +246,10 @@ def generated_files(codex_home=None, selected=TOOLS, claude_home=None):
 
 def merged_files(claude_home, selected):
     """Name host files the application also writes, so they are merged, not linked.
+
+    Args:
+        claude_home: Resolved Claude Code home that holds ``settings.json``.
+        selected: Host names being installed.
 
     Returns:
         A mapping from destination paths to their intended merged contents.
@@ -295,6 +328,7 @@ def main():
     Returns:
         Zero for installation, preview, or a correct installed state; one for
         installed-state drift. Entry-point error handling also reports one.
+        A real install also sets this clone's ``core.hooksPath``.
     """
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--tool", choices=("all", *TOOLS), default="all")

@@ -27,7 +27,7 @@ def edited_paths(payload, host):
 
     Returns:
         Resolved paths with supported extensions; failed Antigravity events and
-        Codex Bash events produce no paths.
+        Bash events from Codex or Claude Code produce no paths.
 
     Raises:
         ValueError: The supported event's required fields are malformed.

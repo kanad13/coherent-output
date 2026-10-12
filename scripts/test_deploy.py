@@ -28,9 +28,10 @@ class DeploymentTests(unittest.TestCase):
         self.root = Path(self.temporary.name).resolve()
         self.repo = self.root / "checkout with space's"
         self.repo.mkdir()
-        for name in ("skills", "rules", "adapters", "scripts", "instructions"):
+        for name in ("skills", "rules", "adapters", "scripts", "instructions", ".githooks"):
             shutil.copytree(SOURCE / name, self.repo / name, ignore=shutil.ignore_patterns("__pycache__"))
         shutil.copyfile(SOURCE / ".prettierrc", self.repo / ".prettierrc")
+        shutil.copyfile(SOURCE / ".prettierignore", self.repo / ".prettierignore")
         (self.repo / "node_modules").symlink_to(SOURCE / "node_modules", target_is_directory=True)
         self.target = self.root / "user home"
 
@@ -340,6 +341,35 @@ class DeploymentTests(unittest.TestCase):
             )
             self.assertEqual(result.returncode, 0, result.stderr)
             self.assertEqual(bool(result.stdout), asks)
+
+    def test_claude_merge_keeps_unrelated_handlers_in_every_event_once(self):
+        settings = self.target / ".claude/settings.json"
+        settings.parent.mkdir(parents=True)
+        personal = {"type": "command", "command": "echo personal"}
+        original = {"hooks": {"PreToolUse": [{"matcher": "Bash", "hooks": [personal]}], "Stop": [{"hooks": [personal]}]}}
+        settings.write_text(json.dumps(original))
+        for _ in range(2):
+            self.run_deploy("--tool", "claude")
+        installed = json.loads(settings.read_text())["hooks"]
+        self.assertEqual(installed["Stop"], original["hooks"]["Stop"])
+        pre = [handler["command"] for group in installed["PreToolUse"] for handler in group["hooks"]]
+        self.assertEqual(pre.count("echo personal"), 1)
+        self.assertEqual(len([command for command in pre if "safety-gate.py" in command]), 1)
+
+    def test_real_install_points_the_clone_at_the_commit_gate(self):
+        subprocess.run(["git", "init", "-q", str(self.repo)], check=True)
+        self.run_deploy("--tool", "claude")
+        configured = subprocess.run(["git", "-C", str(self.repo), "config", "core.hooksPath"], capture_output=True, text=True)
+        self.assertEqual(configured.stdout.strip(), ".githooks")
+
+    def test_commit_gate_refuses_misformatted_files_and_accepts_clean_ones(self):
+        gate = self.repo / ".githooks/pre-commit"
+        clean = subprocess.run(["bash", str(gate)], capture_output=True, text=True, cwd=self.repo, timeout=100)
+        self.assertEqual(clean.returncode, 0, clean.stdout + clean.stderr)
+        (self.repo / "notes.md").write_text("#  Header\n\n-  item\n")
+        dirty = subprocess.run(["bash", str(gate)], capture_output=True, text=True, cwd=self.repo, timeout=100)
+        self.assertEqual(dirty.returncode, 1)
+        self.assertIn("formatting differs", dirty.stderr)
 
     def test_invalid_claude_settings_abort_before_writing(self):
         settings = self.target / ".claude/settings.json"
