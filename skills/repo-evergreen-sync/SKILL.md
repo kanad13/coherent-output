@@ -62,7 +62,7 @@ Perform a deep, diligent audit pass across the entire repository to uncover casc
 - **Surface B: Documentation, Manifests & Navigation:**
   - Check root `README.md`, directory-level README indexes, operational runbooks, and architectural guides.
   - Verify that newly added, renamed, or deleted files, tools, rules, or skills are registered in parent manifests and documentation navigation tables.
-  - Audit Markdown link integrity across touched documents using portable relative links.
+  - Activate markdown-audit on the touched documents, scoped to link and index integrity. It returns a findings table; apply the fixes in Phase 4. Without it, check each relative link by hand.
 - **Surface C: Test Portfolio Audit via test-strategist skill:**
   - Activate the test-strategist skill to evaluate existing test suites against modified functionality.
   - Identify broken assertions, obsolete test cases that need pruning, and newly introduced code paths or edge cases that lack coverage.
@@ -108,7 +108,7 @@ Hand the verified change set to commit-scribe, together with the user's Git inst
 
 ---
 
-Required dependencies are test-strategist for the test audit and commit-scribe for Git finalization. If either is unavailable, state the affected step, complete supported local reconciliation and checks, and report that step as incomplete. Do not claim the dependency workflow ran. Structural writing skills are optional; Section 1 provides the local fallback.
+Required dependencies are test-strategist for the test audit and commit-scribe for Git finalization. If either is unavailable, complete the other steps and report the affected step as not performed. Structural writing skills and markdown-audit are optional; Section 1 and a manual link check are the fallbacks.
 
 ## 3. Pre-Commit Verification Checklist
 
