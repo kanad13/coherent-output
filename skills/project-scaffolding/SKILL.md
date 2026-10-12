@@ -120,7 +120,7 @@ Activate `test-strategist` for the strategy, harness, and `TESTING.md`. Without 
 
 - **Run it:** execute the documented setup, launch, test, and packaging commands in a clean or isolated environment where practical. Disclose environment-dependent prerequisites. For a produced package, launch the actual artifact. Build success and screenshots alone do not establish runtime behavior.
 - **Cold-start test:** start a fresh agent or subagent with only the repository. Ask it for the current goal, the last verified result, and the next action, and have it run the documented check. Each wrong or missing answer marks a gap in the records or instructions. Repair it and repeat.
-- **Report honestly:** name failed or blocked checks, the exact barrier, and the unverified outcome. Activate `commit-scribe` before staging, committing, or pushing, and only within the authorized workflow.
+- **Report honestly:** name failed or blocked checks, the exact barrier, and the unverified outcome. Hand any staging, committing, or pushing to `commit-scribe` with the user's Git instructions.
 
 ## 8. Completion Criteria
 

@@ -1,11 +1,11 @@
 ---
 name: repo-evergreen-sync
-description: Synchronizes the entire repository after coding changes, resolving systemic drift across code, contracts, documentation, and tests. Analyzes session diff and conversation intent, enforces Google-style module prefacing and "Why, Not What" comment standards, audits ripple impacts, adapts test suites via test-strategist, updates clear documentation, verifies regressions, and commits via commit-scribe when authorized. Use immediately after implementing, editing, or refactoring code. Do not use for initial exploratory coding or standalone documentation audits without recent codebase modifications.
+description: Synchronizes the entire repository after coding changes, resolving systemic drift across code, contracts, documentation, and tests. Analyzes session diff and conversation intent, enforces Google-style module prefacing and "Why, Not What" comment standards, audits ripple impacts, adapts test suites via test-strategist, updates clear documentation, verifies regressions, and hands Git finalization to commit-scribe. Use immediately after implementing, editing, or refactoring code. Do not use for initial exploratory coding or standalone documentation audits without recent codebase modifications.
 ---
 
 # Evergreen Repository Synchronization Engine
 
-Follow this protocol immediately after a coding session to inspect recent functional changes, audit systemic ripple effects across the entire codebase, adapt tests, update documentation, and finalize the reconciled state within the user's authorized Git scope. Eliminate split-brain drift between code and documentation before closing a development task.
+Follow this protocol immediately after a coding session to inspect recent functional changes, audit systemic ripple effects across the entire codebase, adapt tests, update documentation, and hand the reconciled state to commit-scribe for Git finalization. Eliminate split-brain drift between code and documentation before closing a development task.
 
 ---
 
@@ -101,20 +101,14 @@ Verify that the synchronization pass introduced zero regressions:
 
 ### Phase 6: Commit & Upstream Sync via commit-scribe skill
 
-When the user has authorized Git finalization, package the synchronized state into a clean, atomic Git commit. Otherwise report the verified working-tree changes and stop before staging. Push only when the authorized workflow includes it:
+Hand the verified change set to commit-scribe, together with the user's Git instructions in their own words. Do not decide here whether to stage, commit, or push; commit-scribe owns that decision and the commit message.
 
-- Activate the commit-scribe skill to stage all reconciled files (`git add <files>`).
-- Construct a high-context structured commit message documenting:
-  - **Problem:** Drift introduced by recent functional additions or refactors.
-  - **Solution:** Reconciled documentation, adapted test suites, and synchronized consumers.
-  - **Decisions:** Non-obvious trade-offs made during synchronization.
-  - **Implementation:** List of touched components and surfaces.
-- Push the commit to the upstream tracking remote (`git push`) only when authorized.
-- Report back to the user with the commit hash, modified files, test verification results, and upstream status.
+- Activate the commit-scribe skill with the list of reconciled files and a one-line statement of the drift that was resolved.
+- Report back to the user with commit-scribe's result (level used, hash, files, pushed or not), plus the test verification results.
 
 ---
 
-Required dependencies are test-strategist for the test audit and commit-scribe for authorized Git finalization. If either is unavailable, state the affected step, complete supported local reconciliation and checks, and report that step as incomplete. Do not claim the dependency workflow ran. Structural writing skills are optional; Section 1 provides the local fallback.
+Required dependencies are test-strategist for the test audit and commit-scribe for Git finalization. If either is unavailable, state the affected step, complete supported local reconciliation and checks, and report that step as incomplete. Do not claim the dependency workflow ran. Structural writing skills are optional; Section 1 provides the local fallback.
 
 ## 3. Pre-Commit Verification Checklist
 
@@ -140,4 +134,4 @@ Before completing execution, confirm that all items are satisfied:
 - [ ] CLI flags, schemas, configurations, and environment variables align across code, docs, and tests.
 - [ ] Test suites adapted and passing with 0 errors via project verification runners (e.g., `<repo_root>/scripts/verify.sh` or local test runner).
 - [ ] Prettier formatting verified with 0 warnings or syntax errors.
-- [ ] Git finalization follows the user's scope; use commit-scribe before any authorized staging, commit, or push.
+- [ ] Git finalization went through commit-scribe with the user's Git instructions.
