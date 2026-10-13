@@ -124,7 +124,7 @@ The library provides 16 situational skills organized by operational domain:
 | Skill                                                         | Description                                                                                                  |
 | :------------------------------------------------------------ | :----------------------------------------------------------------------------------------------------------- |
 | [project-scaffolding](../skills/project-scaffolding/SKILL.md) | Establish verified project foundations and practices for tracking progress, decisions, and verification.     |
-| [mermaid-architect](../skills/mermaid-architect/SKILL.md)     | Design and insert compilable native Mermaid architecture and workflow diagrams.                              |
+| [mermaid-architect](../skills/mermaid-architect/SKILL.md)     | Insert one verified native Mermaid diagram per insight under every heading, leaving existing text unchanged. |
 | [grill-me](../skills/grill-me/SKILL.md)                       | Discover requirements through focused dialogue, research, option comparison, and a practical next-step plan. |
 
 ### Learning & Pedagogy
