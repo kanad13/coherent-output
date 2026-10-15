@@ -3,6 +3,10 @@
 
 The helper travels with the skill. It never downloads a dependency during a
 check, and distinguishes invalid diagrams from unavailable tooling.
+
+Structure checks run before rendering because they need no browser and catch
+defects that compile cleanly (disconnected groups, reversed direction); a
+structure error therefore fails fast with exit code 1.
 """
 
 import argparse
@@ -74,7 +78,14 @@ def parse_blocks(content):
 
 
 def parse_flowchart(code):
-    """Extract nodes, edges, subgraph membership and edge styles from a flowchart."""
+    """Extract nodes, edges, subgraph membership and direction from a flowchart.
+
+Args:
+    code: Mermaid flowchart source.
+
+Returns:
+    Dict with node and subgraph id sets, edge pairs, a child-to-subgraph map, and the direction.
+"""
     nodes, edges, subs, parent = set(), [], set(), {}
     stack = []
     direction = None
@@ -117,6 +128,15 @@ def parse_flowchart(code):
 
 
 def components(items, links):
+    """Group items joined by links.
+
+    Args:
+        items: Iterable of hashable ids.
+        links: Pairs of ids that belong together; unknown ids are ignored.
+
+    Returns:
+        A list of sets, one per connected group.
+    """
     root = {i: i for i in items}
 
     def find(i):
@@ -134,7 +154,15 @@ def components(items, links):
 
 
 def check_structure(caption, code):
-    """Return (errors, warnings) for one diagram without launching a browser."""
+    """Return (errors, warnings) for one diagram without launching a browser.
+
+Args:
+    caption: The caption line above the fence, or None.
+    code: Mermaid source of the diagram.
+
+Returns:
+    Two lists of messages. Errors fail verification; warnings fail only under --strict.
+"""
     errors, warnings = [], []
     kind = code.strip().split()[0] if code.strip() else ""
     if caption and COMPOUND.search(caption):

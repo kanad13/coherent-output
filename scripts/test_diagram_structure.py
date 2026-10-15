@@ -6,6 +6,9 @@ caption, reversed direction) or the fix that must stay accepted.
 
 import importlib.util
 from pathlib import Path
+import subprocess
+import sys
+import tempfile
 import unittest
 
 SOURCE = Path(__file__).resolve().parent.parent
@@ -51,6 +54,15 @@ class StructureChecks(unittest.TestCase):
 
     def test_quoted_sequence_message_warns(self):
         self.assertTrue(any("quotes" in w for w in check(QUOTED_SEQUENCE)[1]))
+
+    def test_cli_exits_one_on_structure_error_without_a_renderer(self):
+        """The hook and verify.sh depend on the exit code, not on the helper functions."""
+        with tempfile.TemporaryDirectory() as folder:
+            document = Path(folder) / "doc.md"
+            document.write_text(f"# Title\n\n**Diagram: Two pairs.**\n\n```mermaid\n{ISLANDS}\n```\n", encoding="utf-8")
+            result = subprocess.run([sys.executable, str(spec.origin), str(document)], capture_output=True, text=True)
+        self.assertEqual(result.returncode, 1)
+        self.assertIn("disconnected", result.stderr)
 
     def test_unclosed_fence_is_reported(self):
         self.assertTrue(verifier.parse_blocks("```mermaid\nflowchart LR\nA --> B\n")[1])
