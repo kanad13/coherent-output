@@ -15,15 +15,16 @@ npm ci
 
 Puppeteer supplies the browser used by Mermaid CLI. The manifest approves its pinned install script. If browser provisioning is unavailable, report Mermaid verification as unavailable.
 
-| Script                                          | Responsibility                                                                                               |
-| ----------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
-| [deploy.sh](deploy.sh)                          | Shell entry point for the Python installer                                                                   |
-| [deploy.py](deploy.py)                          | Preflight, skill call-graph check, generated files, links, recoverable backups, Codex and Claude hook merges |
-| [test_deploy.py](test_deploy.py)                | Isolated installations, conflicts, migration, identity validation, call-graph rejections                     |
-| [test_hooks.py](test_hooks.py)                  | Actual formatting, diagram compilation, payload contracts, visible failures                                  |
-| [check_diagrams.py](check_diagrams.py)          | Repository-wide Mermaid gate using the bundled skill checker                                                 |
-| [.githooks/pre-commit](../.githooks/pre-commit) | Fast commit gate: Prettier check and installer dry run; enabled by `deploy.sh`                               |
-| [verify.sh](verify.sh)                          | Installed-state check, all tests, repository formatting, diagram validation                                  |
+| Script                                                 | Responsibility                                                                                               |
+| ------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------ |
+| [deploy.sh](deploy.sh)                                 | Shell entry point for the Python installer                                                                   |
+| [deploy.py](deploy.py)                                 | Preflight, skill call-graph check, generated files, links, recoverable backups, Codex and Claude hook merges |
+| [test_deploy.py](test_deploy.py)                       | Isolated installations, conflicts, migration, identity validation, call-graph rejections                     |
+| [test_hooks.py](test_hooks.py)                         | Actual formatting, diagram compilation, payload contracts, visible failures                                  |
+| [test_diagram_structure.py](test_diagram_structure.py) | Structure rules of the Mermaid checker against a few inline bad and fixed diagrams                           |
+| [check_diagrams.py](check_diagrams.py)                 | Repository-wide Mermaid gate using the bundled skill checker                                                 |
+| [.githooks/pre-commit](../.githooks/pre-commit)        | Fast commit gate: Prettier check and installer dry run; enabled by `deploy.sh`                               |
+| [verify.sh](verify.sh)                                 | Installed-state check, all tests, repository formatting, diagram validation                                  |
 
 Use `--tool claude`, `--tool codex`, or `--tool antigravity` for one host. Unselected host configuration does not participate in generation or validation. Use `--target-home <temporary-home>` to exercise installation without changing the real home. Codex also accepts `--codex-home` and `CODEX_HOME`; Claude Code accepts `--claude-home` and `CLAUDE_CONFIG_DIR`. The verification runner forwards these installer selection and target flags to its installed-state check; the source behavior suite, formatting, and diagram checks still run.
 
@@ -43,7 +44,7 @@ npm run format:check
 python3 skills/mermaid-architect/scripts/verify-markdown.py README.md
 ```
 
-The Mermaid helper returns `0` for verified diagrams or no fences, `1` for invalid syntax, and `2` when verification cannot run. The hook translates checker failures into host feedback. No checker downloads dependencies while running.
+The Mermaid helper returns `0` for verified diagrams or no fences, `1` for invalid syntax or a structure error, and `2` when verification cannot run. The hook translates checker failures into host feedback. No checker downloads dependencies while running.
 
 ## 3. Verification strategy
 

@@ -28,7 +28,8 @@ def main():
     result = 0
     count = 0
     for directory, folders, files in os.walk(root):
-        folders[:] = [name for name in folders if name not in (".git", ".generated", "node_modules", "__pycache__")]
+        # evaluations is gitignored local review material holding deliberately invalid diagrams.
+        folders[:] = [name for name in folders if name not in (".git", ".generated", "node_modules", "__pycache__", "evaluations")]
         for name in sorted(files):
             if Path(name).suffix.lower() in (".md", ".markdown"):
                 count += 1

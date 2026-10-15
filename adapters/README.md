@@ -42,7 +42,7 @@ The Codex matcher covers the existing supported tool names. Its command uses the
 
 [document-check.py](shared/document-check.py) separates payload handling from shared checks. It resolves quoted and relative paths, prefers the target project's installed Prettier, and uses the pinned library fallback when needed. The target project's configuration takes precedence; unconfigured files use this repository's `.prettierrc`.
 
-Mermaid checks use the helper bundled with the mermaid-architect skill. A Markdown document without Mermaid fences requires no renderer. Diagrams require a provisioned CLI at the expected version; checks do not fetch packages.
+Mermaid checks use the helper bundled with the mermaid-architect skill. The helper first checks diagram structure (connectivity, node and subgraph limits, direction), which needs no renderer, then compiles. A Markdown document without Mermaid fences requires no renderer. Diagrams require a provisioned CLI at the expected version; checks do not fetch packages.
 
 On success, document hooks return `{}` on stdout. Diagnostics go to stderr. On failure, the shared checker exits `2`. Codex also receives `decision: block` feedback. Claude Code receives only stderr, because it ignores JSON when the exit code is `2`. PostToolUse feedback cannot reverse the preceding edit. For exact Markdown assets, an allowed `<!-- prettier-ignore -->` comment before the protected block avoids reformatting. Inspect the saved file after hooks; a submitted edit alone does not prove preservation. Formatter errors, invalid diagrams, missing dependencies, and timeouts remain visible rather than becoming successful results.
 

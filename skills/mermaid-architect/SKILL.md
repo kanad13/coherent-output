@@ -24,9 +24,12 @@ Add compilable Mermaid diagrams to a document by insertion only. Every pre-exist
 ## 2. Diagram Principles
 
 - **One message:** A diagram carries one insight, and that insight is its caption. A passage with several insights gets several diagrams.
+- **Caption test:** The caption has one subject and one relation. A caption that needs "while", "whereas", or "but" holds two insights: split it into two diagrams, or state the one relation that joins both halves ("A customer's plan decides the support channel").
+- **Connected:** A flowchart is one connected structure. Groups that the text compares, pairs, or contrasts connect through a hub node, a labelled edge, or one named outer box.
+- **Faithful structure:** Edges and layout carry only relations the text states. Draw a tree only for a stated hierarchy; peers point at the same target or share one box; a pool that serves several groups is one node with an edge to each.
 - **Simplicity:** Every node advances the message. Cut any node that does not. Use at most 10 nodes.
 - **Independence:** A reader who sees only the diagram understands it. Name actors, states, and systems in full inside the labels, because the contract allows no explanatory prose.
-- **Consistency:** Use one term per concept, one class meaning per color, and one direction convention across every diagram in the document.
+- **Consistency:** Use one term per concept, one class meaning per color, and the direction convention of Section 3 across every diagram in the document.
 - **Coverage:** Every heading (H1-H6) has at least one diagram, and no content is skipped.
   - A thin section gets a small diagram (2-4 nodes) of what its text states.
   - A section with no text of its own diagrams the relationship between its title and its subsections.
@@ -34,18 +37,34 @@ Add compilable Mermaid diagrams to a document by insertion only. Every pre-exist
 
 ---
 
-## 3. Syntax Rules
+## 3. Default Shapes
 
-- **Labels:** Put every node label and every edge label in double quotes. Write plain text: no emojis or decorative symbols, and a hyphen in place of parentheses (`"Request - data"`).
+Pick the shape from the content type. Each is one connected structure.
+
+| Content                  | Shape                                                                                       |
+| :----------------------- | :------------------------------------------------------------------------------------------ |
+| Comparison, alternatives | Hub: a root naming the thing compared, one edge per option labelled with the condition.     |
+| Lookup of pairs          | Two named column boxes (one per kind), one labelled edge per pair.                          |
+| Flat team, peers         | Peers point at the shared target, or sit in one box with one edge. Use `LR`, never a tree.  |
+| Flow                     | One `LR` chain from source to consumer, with verbs on the edges.                            |
+| Before and after         | Hub with `old` and `new` edges, or two named boxes joined by a labelled "replaced by" edge. |
+
+Reuse the passage's own verbs and figures in labels.
+
+## 4. Syntax Rules
+
+- **Labels:** Put every flowchart node label and edge label in double quotes. Sequence message text stays unquoted, because quotes print literally there. Write plain text: no emojis or decorative symbols, and a hyphen in place of parentheses (`"Request - data"`).
 - **Line breaks:** Use `<br/>` for multi-line labels and keep each line brief (2-6 words). To separate a title from detail, use `━━━`, the only permitted symbol: `"Title<br/>━━━<br/>Detail"`.
 - **Edge labels:** Put the label after the arrow operator in pipe form: `A -->|"calls"| B`.
 - **Subgraphs:** Use at most 3 per diagram. Declare an identifier plus a quoted title, and begin the body with a direction: `subgraph SvcId ["Service Tier"]` then `direction TB`.
-- **Direction:** `TD` for lifecycles, hierarchies, and decision trees. `LR` for pipelines and time sequences.
+- **Direction:** Arrows point from provider, cause, or earlier step to consumer, effect, or later step, with sources on the left (`LR`) or on top (`TD`). `RL` and `BT` are not used.
+  - `LR`: pipelines, comparisons, before-to-after, flat peers.
+  - `TD`: stated multi-level hierarchies, decision trees, lifecycles.
 - **Titles:** The caption carries the title. Leave frontmatter titles out of the fence.
 
 ---
 
-## 4. Styling
+## 5. Styling
 
 - **Classes:** In flowcharts and `stateDiagram-v2`, assign every node one class from the theme block (Appendix B) by logical tier:
   - `c1`: Ingress, client, entrypoint, primary flow
@@ -61,7 +80,7 @@ Add compilable Mermaid diagrams to a document by insertion only. Every pre-exist
 
 ---
 
-## 5. Procedure
+## 6. Procedure
 
 1. **Map:** List every heading outside fenced code, with the text under it. Note which sections already contain Mermaid diagrams; those stay untouched, and a heading without one still gets one.
 2. **Plan:** Write the coverage table, one row per diagram. Every heading appears in at least one row. Pick each grammar from Appendix A.
@@ -69,8 +88,8 @@ Add compilable Mermaid diagrams to a document by insertion only. Every pre-exist
    | Heading | Insight (becomes the caption) | Grammar | Placement |
    | :------ | :---------------------------- | :------ | :-------- |
 
-3. **Build:** Write each diagram to Sections 2-4. Reread it against its insight and delete nodes that do not carry it.
-4. **Verify:** Copy the document to a temporary location, add all blocks to the copy, and compile once with the batch helper. The helper names the failing diagram by its position in the document; fix it and recompile until the exit code is `0`. If a grammar still fails to compile, redraw the same insight as a flowchart.
+3. **Build:** Write each diagram to Sections 2-5. Reread it against its insight and delete nodes that do not carry it.
+4. **Verify:** Copy the document to a temporary location, add all blocks to the copy, and compile once with the batch helper. The helper names the failing diagram by its position in the document; fix it and recompile until the exit code is `0`. Treat warnings as defects and clear them too (`--strict` fails on them). If a grammar still fails to compile, redraw the same insight as a flowchart.
 5. **Apply:** Keep the original bytes and the insertion boundaries. Write the verified candidate to the source through a path that preserves bytes, then read the saved file after hooks and formatters finish.
 6. **Check the saved result:** Remove only the inserted blocks from a comparison copy and compare the remaining bytes with the original. Confirm every heading has a diagram in the saved file. A successful tool call or compilation does not establish text preservation.
 7. **Formatting conflict:** When post-processing changed existing text, restore the original bytes through a byte-preserving write and verify the restoration. Deliver the candidate through that path or as a separate artifact. Hooks, formatter settings, and ignore comments stay as they are, because changing them exceeds this contract. When preservation cannot be verified, report the conflict and the actual saved state.
@@ -82,7 +101,8 @@ The scripts live in `scripts/` beside this `SKILL.md`. Resolve `<skill_dir>` to 
 - Document batch: `python3 <skill_dir>/scripts/verify-markdown.py <document.md>`
 - Single diagram: `<skill_dir>/scripts/verify-mmdc.sh <diagram.mmd>`
 - Provisioning: the helper needs `@mermaid-js/mermaid-cli@12.0.0` and never downloads during verification. In this checkout, run `npm ci` at the repository root. For a separate install, place that exact version in the skill folder or on `PATH`. `COHERENT_MMDC_BIN` selects an explicit executable, and `COHERENT_PUPPETEER_CONFIG` passes a Puppeteer configuration file (for example `--no-sandbox` on a CI runner).
-- Exit codes: `0` compiled (or the document has no Mermaid fences), `1` invalid syntax, `2` verification could not run (missing tooling or browser dependencies). Report exit `2` as an unverified result. Each renderer call has a timeout, and temporary files are removed.
+- Structure checks run before rendering: a flowchart is one connected structure, stays within 10 nodes and 3 subgraphs, and does not use `RL` or `BT`. Warnings cover compound captions and quoted sequence messages.
+- Exit codes: `0` compiled (or the document has no Mermaid fences), `1` invalid syntax or structure, `2` verification could not run (missing tooling or browser dependencies). Report exit `2` as an unverified result. Each renderer call has a timeout, and temporary files are removed.
 
 ---
 
@@ -105,7 +125,7 @@ Choose the grammar that matches the visual question. When the first choice fails
 | Quantitative trends, comparisons      | XY Chart         | `xychart-beta`                    | Time series metrics, bar charts, benchmarks              |
 | Branching, version control            | Git Graph        | `gitGraph`                        | Branch and merge strategies, trunk-based development     |
 | Chronology, milestones, releases      | Timeline         | `timeline`                        | Release history, incident timelines, migration phases    |
-| Taxonomy, concept breakdown           | Mindmap          | `mindmap`                         | Category trees, feature breakdowns, mental models        |
+| Taxonomy, concept breakdown           | Mindmap          | `mindmap`                         | Only on request; it ignores the theme and implies a tree |
 | User experience, journey              | User Journey     | `journey`                         | Onboarding and step-by-step flows with satisfaction      |
 | Tradeoffs, 2x2 matrix                 | Quadrant         | `quadrantChart`                   | Risk versus value, priority matrices                     |
 | Binary protocol, header layout        | Packet           | `packet-beta`                     | Network headers (IP/TCP), binary file structures         |

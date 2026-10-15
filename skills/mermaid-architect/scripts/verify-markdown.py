@@ -44,6 +44,122 @@ def renderer():
         raise RuntimeError(f"Mermaid CLI must be {MMDC_VERSION}; received {result.stdout.strip()!r}.")
     return binary
 
+MAX_NODES = 10
+MAX_SUBGRAPHS = 3
+FORBIDDEN_DIRECTIONS = ("RL", "BT")
+COMPOUND = re.compile(r"(,\s*(while|whereas|but|and)\b|\b(while|whereas|meanwhile|although)\b|;|\bas well as\b)", re.I)
+ARROW = re.compile(r"\s*(?:<?-\.+-+>?|<?-{2,}>?|<?={2,}>?)\s*")
+KEYWORDS = ("flowchart", "graph", "classdef", "class ", "style ", "linkstyle", "direction", "%%", "click ")
+
+
+def parse_blocks(content):
+    """Return ((caption, code) pairs, unclosed) for every Mermaid fence, in document order.
+
+    The caption is the nearest non-blank line above the fence, or None.
+    """
+    blocks, fence, lines, last = [], None, [], None
+    for line in content.splitlines():
+        if fence is None:
+            opening = re.match(r"^ {0,3}(`{3,}|~{3,})mermaid\s*$", line)
+            if opening:
+                fence, lines = opening.group(1), []
+            elif line.strip():
+                last = line.strip()
+        elif re.match(r"^ {0,3}" + re.escape(fence[0]) + "{" + str(len(fence)) + r",}\s*$", line):
+            blocks.append((last, "\n".join(lines)))
+            fence, last = None, None
+        else:
+            lines.append(line)
+    return blocks, fence is not None
+
+
+def parse_flowchart(code):
+    """Extract nodes, edges, subgraph membership and edge styles from a flowchart."""
+    nodes, edges, subs, parent = set(), [], set(), {}
+    stack = []
+    direction = None
+    for raw in code.splitlines():
+        line = raw.strip().rstrip(";")
+        head = re.match(r"^(?:flowchart|graph)\s+(TD|TB|LR|RL|BT)\b", line)
+        if head:
+            direction = head.group(1)
+            continue
+        sub = re.match(r'^subgraph\s+([\w-]+)?\s*(?:\[.*\])?\s*$', line) or re.match(r'^subgraph\s+"(.*)"$', line)
+        if sub:
+            sid = sub.group(1) or f"anon{len(subs)}"
+            subs.add(sid)
+            if stack:
+                parent[sid] = stack[-1]
+            stack.append(sid)
+            continue
+        if line == "end":
+            if stack:
+                stack.pop()
+            continue
+        if not line or line.lower().startswith(KEYWORDS):
+            continue
+        text = re.sub(r"(--|==)\s*\"[^\"]*\"\s*(-->|==>|---)", r"\2", line)
+        text = re.sub(r'"[^"]*"', "Q", text)
+        text = re.sub(r"\|[^|]*\|", "", text)
+        text = re.sub(r"\[\[[^\]]*\]\]|\[[^\]]*\]|\{[^}]*\}|\(\([^)]*\)\)|\([^)]*\)", "", text)
+        text = re.sub(r":::\w+", "", text)
+        parts = [p.strip() for p in ARROW.split(text)]
+        groups = [[i for i in re.findall(r"[A-Za-z_][\w-]*", p)] for p in parts]
+        for group in groups:
+            for ident in group:
+                nodes.add(ident)
+                if stack and ident not in subs:
+                    parent.setdefault(ident, stack[-1])
+        for left, right in zip(groups, groups[1:]):
+            edges += [(a, b) for a in left for b in right]
+    return {"nodes": nodes, "edges": edges, "subs": subs, "parent": parent,
+            "direction": direction}
+
+
+def components(items, links):
+    root = {i: i for i in items}
+
+    def find(i):
+        while root[i] != i:
+            root[i] = root[root[i]]
+            i = root[i]
+        return i
+    for a, b in links:
+        if a in root and b in root:
+            root[find(a)] = find(b)
+    groups = {}
+    for i in items:
+        groups.setdefault(find(i), set()).add(i)
+    return list(groups.values())
+
+
+def check_structure(caption, code):
+    """Return (errors, warnings) for one diagram without launching a browser."""
+    errors, warnings = [], []
+    kind = code.strip().split()[0] if code.strip() else ""
+    if caption and COMPOUND.search(caption):
+        warnings.append("compound caption: one diagram carries one idea; split it or state the single relation")
+    if kind == "sequenceDiagram" and re.search(r"^\s*\S.*?(->>|-->>|->|-->).*?:\s*\"", code, re.M):
+        warnings.append("quotes render literally in sequence messages; remove them")
+    if kind not in ("flowchart", "graph"):
+        return errors, warnings
+    info = parse_flowchart(code)
+    if info["direction"] in FORBIDDEN_DIRECTIONS:
+        errors.append(f"direction {info['direction']} puts consumers before sources; use LR or TD")
+    members = info["nodes"] - info["subs"]
+    if len(members) > MAX_NODES:
+        errors.append(f"{len(members)} nodes exceed the limit of {MAX_NODES}")
+    if len(info["subs"]) > MAX_SUBGRAPHS:
+        errors.append(f"{len(info['subs'])} subgraphs exceed the limit of {MAX_SUBGRAPHS}")
+    universe = info["nodes"] | info["subs"]
+    # Membership counts as a relation: boxes are the author's explicit grouping.
+    links = list(info["edges"]) + [(n, p) for n, p in info["parent"].items()]
+    parts = components(universe, links)
+    if len(parts) > 1:
+        sizes = sorted((len(p) for p in parts), reverse=True)
+        errors.append(f"disconnected diagram: {len(parts)} separate groups ({sizes}); join them with a hub, a labelled edge, or one named outer box")
+    return errors, warnings
+
 
 def compile_diagrams(diagrams):
     """Compile inputs without leaking temporary files or hiding runtime gaps.
@@ -85,39 +201,42 @@ def compile_diagrams(diagrams):
         return 2
 
 
-def verify_markdown_diagrams(file_path):
+def verify_markdown_diagrams(file_path, strict=False):
     """Check fenced diagrams without changing the surrounding document.
 
     Args:
         file_path: Path to a UTF-8 Markdown document.
+        strict: Treat warnings (compound caption, quoted sequence messages) as failures.
 
     Returns:
         Zero for no diagrams or successful compilation, one for an unclosed
-        fence or recognized syntax failure, or two for unavailable verification.
+        fence, structure error, or recognized syntax failure, or two for
+        unavailable verification.
     """
     try:
         content = file_path.read_text(encoding="utf-8")
     except OSError as error:
         print(f"Cannot read diagram source: {error}", file=sys.stderr)
         return 2
-    diagrams = []
-    fence = None
-    lines = []
-    for line in content.splitlines():
-        if fence is None:
-            opening = re.match(r"^ {0,3}(`{3,}|~{3,})mermaid\s*$", line)
-            if opening:
-                fence = opening.group(1)
-                lines = []
-        elif re.match(r"^ {0,3}" + re.escape(fence[0]) + "{" + str(len(fence)) + r",}\s*$", line):
-            diagrams.append("\n".join(lines))
-            fence = None
-        else:
-            lines.append(line)
-    if fence:
+    blocks, unclosed = parse_blocks(content)
+    if unclosed:
         print("Unclosed Mermaid fence.", file=sys.stderr)
         return 1
-    return compile_diagrams(diagrams)
+    warnings, failed = [], False
+    for index, (caption, code) in enumerate(blocks, start=1):
+        errors, warns = check_structure(caption, code)
+        for message in errors:
+            print(f"Diagram {index} structure error: {message}", file=sys.stderr)
+        warnings += [f"diagram {index}: {w}" for w in warns]
+        failed = failed or bool(errors)
+    if failed:
+        for message in warnings:
+            print(f"Warning: {message}", file=sys.stderr)
+        return 1
+    result = compile_diagrams([code for _, code in blocks])
+    for message in warnings:
+        print(f"Warning: {message}", file=sys.stderr)
+    return 1 if result == 0 and warnings and strict else result
 
 
 def main():
@@ -128,6 +247,7 @@ def main():
     """
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("source", type=Path)
+    parser.add_argument("--strict", action="store_true", help="Treat warnings as failures")
     parser.add_argument("--diagram", action="store_true", help="Compile a raw .mmd input instead of Markdown fences")
     args = parser.parse_args()
     if args.diagram:
@@ -136,7 +256,7 @@ def main():
         except OSError as error:
             print(f"Cannot read diagram source: {error}", file=sys.stderr)
             return 2
-    return verify_markdown_diagrams(args.source)
+    return verify_markdown_diagrams(args.source, args.strict)
 
 
 if __name__ == "__main__":
