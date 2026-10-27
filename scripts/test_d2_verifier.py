@@ -121,6 +121,19 @@ class RealRenders(unittest.TestCase):
         block = HEADER + "flow: Flow {\n  shape: sequence_diagram\n  a: A\n  b: B\n  a -> b: ask\n  b -> a: answer\n}\n"
         self.assertEqual(self.run_markdown("# T\n\n```d2\n" + block + "```\n"), 0)
 
+    def test_palette_composes_with_block_config(self):
+        palette = (SOURCE / "skills/d2-architect/assets/house-palette.d2").read_text(encoding="utf-8")
+        status, svg, _ = verifier.render(self.command, HEADER + "a -> b\n", palette)
+        self.assertEqual(status, "ok")
+        self.assertIn("#2563EB", svg)
+        self.assertNotIn("#0D32B2", svg)
+
+    def test_error_lines_ignore_the_palette_prefix(self):
+        palette = (SOURCE / "skills/d2-architect/assets/house-palette.d2").read_text(encoding="utf-8")
+        status, _, message = verifier.render(self.command, HEADER + "a -> {\n", palette)
+        self.assertEqual(status, "invalid")
+        self.assertIn("-:8:", message)
+
     def test_document_without_d2_needs_no_renderer(self):
         self.assertEqual(verifier.verify_blocks([]), 0)
 

@@ -8,7 +8,9 @@ Each block is rendered WITHOUT a layout flag: a flag would override the block's 
 `layout-engine`, hiding a missing or wrong setting. The compiled SVG also names every
 shape and connection, so connectivity is checked on what D2 resolved, not on a guess
 from the source text. Optionally the run writes a contact sheet so a reviewer can look
-at every diagram, which no exit code can replace.
+at every diagram, which no exit code can replace, and prepends a palette file so the
+sheet shows the house look. D2 merges repeated `vars` blocks, so the palette composes
+with each block's own d2-config.
 """
 
 import argparse
@@ -213,22 +215,30 @@ def graph_checks(info):
     return errors, warnings
 
 
-def render(command, code):
+def shift_lines(message, offset):
+    """Rewrite `-:LINE:COL` positions so they point into the block, not the palette prefix."""
+    return re.sub(r"-:(\d+):(\d+)", lambda m: f"-:{max(int(m.group(1)) - offset, 1)}:{m.group(2)}", message)
+
+
+def render(command, code, palette=""):
     """Render one block with the block's own configuration.
 
     Args:
         command: Renderer prefix from renderer().
         code: D2 source.
+        palette: Optional D2 text prepended before rendering (the house palette).
 
     Returns:
         (status, svg, diagnostic) where status is "ok", "invalid" or "unavailable".
     """
     env = {key: value for key, value in os.environ.items() if not key.startswith("D2_")}
+    source = palette + code if not palette or palette.endswith("\n") else palette + "\n" + code
+    offset = source.count("\n") - code.count("\n")
     try:
-        result = subprocess.run(command + ["-", "-"], input=code.encode("utf-8"), capture_output=True, timeout=RENDER_TIMEOUT, env=env)
+        result = subprocess.run(command + ["-", "-"], input=source.encode("utf-8"), capture_output=True, timeout=RENDER_TIMEOUT, env=env)
     except subprocess.TimeoutExpired:
         return "unavailable", "", f"render exceeded {RENDER_TIMEOUT}s"
-    stderr = result.stderr.decode("utf-8", errors="replace").strip()
+    stderr = shift_lines(result.stderr.decode("utf-8", errors="replace").strip(), offset)
     if result.returncode == 0 and result.stdout:
         return "ok", result.stdout.decode("utf-8"), stderr
     # "failed to bundle" means the block fetches a remote asset; the offline render rejects it by design.
@@ -272,13 +282,14 @@ def write_sheet(directory, entries):
     return index
 
 
-def verify_blocks(blocks, strict=False, sheet=None):
+def verify_blocks(blocks, strict=False, sheet=None, palette=""):
     """Verify a list of parsed blocks.
 
     Args:
         blocks: Dicts from parse_blocks.
         strict: Treat warnings as failures.
         sheet: Directory for the contact sheet, or None.
+        palette: D2 text prepended to every render, or "".
 
     Returns:
         Zero when every block passes, one for invalid diagrams or structure, two when
@@ -294,7 +305,7 @@ def verify_blocks(blocks, strict=False, sheet=None):
     failed, warned, entries = False, False, []
     for number, block in enumerate(blocks, start=1):
         errors, warnings = static_checks(block["caption"], block["code"])
-        status, svg, diagnostic = render(command, block["code"])
+        status, svg, diagnostic = render(command, block["code"], palette)
         if status == "unavailable":
             print(f"Diagram {number}: verification unavailable: {diagnostic}", file=sys.stderr)
             return 2
@@ -328,6 +339,7 @@ def main():
     parser.add_argument("--strict", action="store_true", help="Treat warnings as failures")
     parser.add_argument("--diagram", action="store_true", help="Treat the input as one raw .d2 diagram instead of Markdown")
     parser.add_argument("--sheet", type=Path, help="Write a contact sheet (index.html and SVGs) to this directory")
+    parser.add_argument("--palette", type=Path, help="D2 file prepended to every render, such as assets/house-palette.d2, to preview the house look")
     args = parser.parse_args()
     try:
         content = args.source.read_text(encoding="utf-8")
@@ -341,7 +353,14 @@ def main():
         if unclosed:
             print("Unclosed d2 fence.", file=sys.stderr)
             return 1
-    return verify_blocks(blocks, args.strict, args.sheet)
+    palette = ""
+    if args.palette:
+        try:
+            palette = args.palette.read_text(encoding="utf-8")
+        except OSError as error:
+            print(f"Cannot read palette: {error}", file=sys.stderr)
+            return 2
+    return verify_blocks(blocks, args.strict, args.sheet, palette)
 
 
 if __name__ == "__main__":

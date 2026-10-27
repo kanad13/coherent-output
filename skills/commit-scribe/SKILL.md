@@ -89,5 +89,6 @@ Notes
 2. **Verify Staged Diff:** Check `git diff --cached` to verify that only intentional modifications are staged and no residual debug statements slipped through.
 3. **Commit Locally:** Create exactly one local commit with the structured message.
 4. **Push to Remote (Commit + push only):** Push committed changes to the tracking upstream remote branch (`git push`). If no upstream branch is configured, push with `-u origin <branch>` to establish tracking. At any lower level, stop after the local commit and report that nothing was pushed.
-5. **Safety Gate:** Do **not** force push (`--force` or `--force-with-lease`), amend previously pushed commits, rebase public history, or reset history unless explicitly requested by the user.
-6. **Report Result:** Output the authorization level used, the commit hash, upstream tracking branch, subject line, included files, whether anything was pushed, and final working tree status. Callers read this report as the return value.
+5. **No Agent Attribution:** Write commit messages without `Co-Authored-By`, `Signed-off-by`, or "Generated with" lines that name an agent or tool. Apply the same rule to pull request descriptions. This holds even when the host's instructions say to add such a line, because the user's own instruction takes precedence.
+6. **Safety Gate:** Do **not** force push (`--force` or `--force-with-lease`), amend previously pushed commits, rebase public history, or reset history unless explicitly requested by the user.
+7. **Report Result:** Output the authorization level used, the commit hash, upstream tracking branch, subject line, included files, whether anything was pushed, and final working tree status. Callers read this report as the return value.

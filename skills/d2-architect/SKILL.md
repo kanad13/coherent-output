@@ -70,6 +70,7 @@ Start every block with this header, unchanged apart from a theme the user names:
 vars: {
   d2-config: {
     layout-engine: tala
+    pad: 24
     theme-id: 0
     dark-theme-id: 200
   }
@@ -78,6 +79,8 @@ vars: {
 
 - **Layout:** Every block uses TALA. The block carries its own setting, so a previewer that honors D2 configuration renders the same layout. Never write another engine.
 - **Theme:** `theme-id: 0` with `dark-theme-id: 200` keeps text readable in light and dark previews.
+- **Padding:** `pad: 24` trims D2's 100-pixel default margin, which is too large inside a document.
+- **Nothing else:** Leave out `sketch`, `center`, `theme-overrides`, and `dark-theme-overrides`. The house palette is applied by the renderer, not written into blocks.
 
 ### Shapes carry the tier, the theme carries the color
 
@@ -92,6 +95,10 @@ Leave `fill` and `stroke` at their theme defaults. A fixed color breaks text con
 | External system or third party | `shape: cloud` with `style.stroke-dash: 4` |
 | Decision                       | `shape: diamond`                           |
 | Document or artifact           | `shape: document`                          |
+
+### House palette
+
+The palette lives in `assets/house-palette.d2` beside this `SKILL.md`. A previewer or the helper prepends it to a block, and D2 merges the repeated `vars` blocks, so the block's own configuration still governs the layout. The palette recolors D2's named theme slots, so each shape keeps its tint in light and dark: databases violet, documents green, people blue, queues and decisions slate, and containers a blue ramp from outer to inner. Pass it to the helper with `--palette` to see the house look in the contact sheet.
 
 ### Names, labels, and edges
 
@@ -118,7 +125,7 @@ Leave `fill` and `stroke` at their theme defaults. A fixed color breaks text con
    `Strength` is `Strong` when the text states a clear structure and `Thin` when the diagram restates little.
 
 3. **Build:** Write each diagram to Sections 2-4. Reread it against its insight and delete nodes that do not carry it. Read each caption aloud as a sentence and fix its grammar before verifying.
-4. **Verify:** Copy the document to a temporary location, add all blocks to the copy, and run the helper with `--sheet <temp_dir>`. Fix every reported error and warning, then rerun until the exit code is `0`. Then open the contact sheet it wrote and look at it. View every diagram, not a sample. For each one, confirm that labels are readable and unclipped, edges do not run through labels, containers hold exactly their members, and the picture states its caption. Redraw or simplify any diagram that fails. If the browser tool cannot open a local file, serve the folder (`python3 -m http.server -d <temp_dir> <port>`) and open the address. When you cannot view images, report the visual check as not performed.
+4. **Verify:** Copy the document to a temporary location, add all blocks to the copy, and run the helper with `--sheet <temp_dir> --palette <skill_dir>/assets/house-palette.d2`. Fix every reported error and warning, then rerun until the exit code is `0`. Then open the contact sheet it wrote and look at it. View every diagram, not a sample. For each one, confirm that labels are readable and unclipped, edges do not run through labels, containers hold exactly their members, and the picture states its caption. Redraw or simplify any diagram that fails. If the browser tool cannot open a local file, serve the folder (`python3 -m http.server -d <temp_dir> <port>`) and open the address. When you cannot view images, report the visual check as not performed.
 5. **Apply:** Keep the original bytes and the insertion boundaries, including the file's line endings: a CRLF file stays CRLF, so write the inserted lines with CRLF too, and keep the trailing-newline state. Read and write in binary mode or with `newline=""`. Write the verified candidate to the source through a path that preserves bytes, then read the saved file after hooks and formatters finish.
 6. **Check the saved result:** Remove only the inserted blocks from a comparison copy and compare the remaining bytes with the original, with `cmp` on the real files, not on normalized text. Confirm every heading has a diagram in the saved file. A successful tool call or compilation does not establish text preservation.
 7. **Formatting conflict:** When post-processing changed existing text, restore the original bytes through a byte-preserving write and verify the restoration. Deliver the candidate through that path or as a separate artifact. Hooks, formatter settings, and ignore comments stay as they are, because changing them exceeds this contract. When preservation cannot be verified, report the conflict and the actual saved state.
@@ -127,10 +134,11 @@ Leave `fill` and `stroke` at their theme defaults. A fixed color breaks text con
 
 The script lives in `scripts/` beside this `SKILL.md`. Resolve `<skill_dir>` to this skill's folder (`skills/d2-architect` in this checkout, or `d2-architect` inside the installed skills directory).
 
-- Document: `python3 <skill_dir>/scripts/verify-d2.py <document.md> --sheet <temp_dir>`
-- Raw diagram: `python3 <skill_dir>/scripts/verify-d2.py --diagram <diagram.d2> --sheet <temp_dir>`
+- Document: `python3 <skill_dir>/scripts/verify-d2.py <document.md> --sheet <temp_dir> --palette <skill_dir>/assets/house-palette.d2`
+- Raw diagram: `python3 <skill_dir>/scripts/verify-d2.py --diagram <diagram.d2> --sheet <temp_dir> --palette <skill_dir>/assets/house-palette.d2`
 - Provisioning: the helper needs D2 v0.9.0 or later, the first release that bundles TALA. It uses `COHERENT_D2_BIN` when set, then a `d2` on `PATH`, then the Docker image `d2lang/d2:v0.9.0`, run without network access. It never downloads during verification; provision once with `docker pull d2lang/d2:v0.9.0` or `brew install d2`.
 - The helper renders each block without a layout flag, so the block's own `layout-engine` governs.
 - Checks before the report: the standard header names TALA, each block compiles, each diagram is one connected structure, and warnings cover compound captions, color overrides, and diagrams above 40 nodes (`--strict` fails on them).
+- Palette: `--palette` prepends the file to every render, and error line numbers still point into your block.
 - Contact sheet: an HTML page with each diagram beside its heading, caption, and source, plus the rendered SVG files.
 - Exit codes: `0` compiled (or the document has no D2 fences), `1` invalid syntax, header, or structure, `2` verification could not run (missing D2 or Docker). Report exit `2` as an unverified result. Each render has a timeout, and temporary files are removed.

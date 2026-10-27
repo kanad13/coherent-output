@@ -1,0 +1,50 @@
+# House palette (Cool Slate). Prepend this block to a diagram to apply it: D2 merges
+# repeated `vars` blocks, so it composes with a diagram's own d2-config.
+# It recolors D2's named theme slots, so shapes keep their theme-driven tints:
+#   N7 background and default fill   B1 borders and arrows    B3 people
+#   B4-B6 containers, outer to inner AA5 databases            AB4 documents
+#   N5 queues   N4 decisions   N1 text   N2 edge labels
+vars: {
+  d2-config: {
+    theme-overrides: {
+      N1: "#0F172A"
+      N2: "#475569"
+      N3: "#94A3B8"
+      N4: "#CBD5E1"
+      N5: "#E2E8F0"
+      N6: "#F1F5F9"
+      N7: "#FFFFFF"
+      B1: "#2563EB"
+      B2: "#3B82F6"
+      B3: "#DBEAFE"
+      B4: "#E8EFFD"
+      B5: "#F0F5FE"
+      B6: "#F8FAFF"
+      AA2: "#7C3AED"
+      AA4: "#A78BFA"
+      AA5: "#EDE9FE"
+      AB4: "#D1FAE5"
+      AB5: "#ECFDF5"
+    }
+    dark-theme-overrides: {
+      N1: "#E2E8F0"
+      N2: "#94A3B8"
+      N3: "#64748B"
+      N4: "#475569"
+      N5: "#334155"
+      N6: "#1E293B"
+      N7: "#0F172A"
+      B1: "#60A5FA"
+      B2: "#93C5FD"
+      B3: "#1E3A5F"
+      B4: "#18233E"
+      B5: "#131C33"
+      B6: "#0F1729"
+      AA2: "#A78BFA"
+      AA4: "#6D28D9"
+      AA5: "#2E1F55"
+      AB4: "#134E3A"
+      AB5: "#0F3A2B"
+    }
+  }
+}
