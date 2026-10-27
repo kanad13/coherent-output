@@ -90,7 +90,7 @@ Raw transcripts, duplicated skill snapshots, and historical evaluation reports s
 
 ## 3. Skills inventory
 
-The library provides 16 situational skills organized by operational domain:
+The library provides 17 situational skills organized by operational domain:
 
 ### Repository Operations & Git Hygiene
 
@@ -121,11 +121,12 @@ The library provides 16 situational skills organized by operational domain:
 
 ### Architecture, Design & Discovery
 
-| Skill                                                         | Description                                                                                                  |
-| :------------------------------------------------------------ | :----------------------------------------------------------------------------------------------------------- |
-| [project-scaffolding](../skills/project-scaffolding/SKILL.md) | Establish verified project foundations and practices for tracking progress, decisions, and verification.     |
-| [mermaid-architect](../skills/mermaid-architect/SKILL.md)     | Insert one verified native Mermaid diagram per insight under every heading, leaving existing text unchanged. |
-| [grill-me](../skills/grill-me/SKILL.md)                       | Discover requirements through focused dialogue, research, option comparison, and a practical next-step plan. |
+| Skill                                                         | Description                                                                                                                    |
+| :------------------------------------------------------------ | :----------------------------------------------------------------------------------------------------------------------------- |
+| [project-scaffolding](../skills/project-scaffolding/SKILL.md) | Establish verified project foundations and practices for tracking progress, decisions, and verification.                       |
+| [mermaid-architect](../skills/mermaid-architect/SKILL.md)     | Insert one verified native Mermaid diagram per insight under every heading, leaving existing text unchanged.                   |
+| [d2-architect](../skills/d2-architect/SKILL.md)               | Insert one verified D2 diagram, laid out with TALA, under every heading when D2 is requested, leaving existing text unchanged. |
+| [grill-me](../skills/grill-me/SKILL.md)                       | Discover requirements through focused dialogue, research, option comparison, and a practical next-step plan.                   |
 
 ### Learning & Pedagogy
 
@@ -162,6 +163,7 @@ Rules that every skill follows:
 | [progressive-documentation](../skills/progressive-documentation/SKILL.md)   | lens     | none                           | none                                                                                               | none                                            | The same facts restructured into four layers              |
 | [cognitive-clarity-refactor](../skills/cognitive-clarity-refactor/SKILL.md) | lens     | none                           | progressive-documentation                                                                          | none                                            | Two-tier bullet document, facts preserved                 |
 | [mermaid-architect](../skills/mermaid-architect/SKILL.md)                   | lens     | none                           | none                                                                                               | none                                            | The document plus verified diagrams, insertion-only       |
+| [d2-architect](../skills/d2-architect/SKILL.md)                             | lens     | none                           | none                                                                                               | none                                            | The document plus verified D2 diagrams, insertion-only    |
 | [markdown-audit](../skills/markdown-audit/SKILL.md)                         | lens     | none                           | none                                                                                               | articulation-review, cognitive-clarity-refactor | Findings table and correction plan                        |
 | [email-rewrite](../skills/email-rewrite/SKILL.md)                           | lens     | none                           | none                                                                                               | cognitive-clarity-refactor                      | Brief, ledger, three candidate emails                     |
 | [concept-tutor](../skills/concept-tutor/SKILL.md)                           | lens     | none                           | progressive-documentation, cognitive-clarity-refactor                                              | none                                            | One calibrated explanation                                |

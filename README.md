@@ -9,7 +9,7 @@ Each agent keeps its configuration in a different place and in a different forma
 The library has three kinds of content:
 
 - **Instructions** ([instructions/global.md](instructions/global.md)): a short baseline that sets how an agent communicates, plans, verifies, and decides when to ask.
-- **Skills** ([skills/](docs/skills.md)): 16 task playbooks, such as writing commit messages, researching with sources, drafting Mermaid diagrams, and rewriting emails. An agent reads a skill only when the task needs it.
+- **Skills** ([skills/](docs/skills.md)): 17 task playbooks, such as writing commit messages, researching with sources, drafting Mermaid or D2 diagrams, and rewriting emails. An agent reads a skill only when the task needs it.
 - **Hooks** ([adapters/](adapters/README.md)): checks that run after an agent edits a file. They format the file with Prettier and compile any Mermaid diagrams. They return errors to the agent.
 
 The installer, [scripts/deploy.py](scripts/README.md), reads these sources and writes into each agent's home directory.
