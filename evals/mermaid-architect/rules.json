@@ -54,5 +54,13 @@
   {
     "id": "MA-ASCII-CONVERT",
     "quote": "Convert an ASCII diagram in a document only when the user asks."
+  },
+  {
+    "id": "MA-SIZE",
+    "quote": "Each diagram renders inside 1200 by 1000 pixels"
+  },
+  {
+    "id": "MA-LOOK",
+    "quote": "View each `diagram-N.png` one at a time, never several at once"
   }
 ]

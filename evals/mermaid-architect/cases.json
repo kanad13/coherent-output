@@ -63,7 +63,8 @@
           "maximum": 0
         }
       ]
-    ]
+    ],
+    "visual": false
   },
   {
     "id": "ladder-big",
@@ -259,6 +260,38 @@
         }
       ],
       ["no_ascii_art", {}],
+      [
+        "diagrams_verify",
+        {
+          "lang": "mermaid"
+        }
+      ]
+    ]
+  },
+  {
+    "id": "long-chain",
+    "prompt": "Show the nine steps of our release pipeline in one diagram: commit, lint, unit tests, build, integration tests, security scan, staging deploy, smoke tests, production deploy.",
+    "rules": ["MA-SIZE", "MA-LIMIT10", "MA-LOOK"],
+    "graders": [
+      [
+        "skill_loaded",
+        {
+          "skill": "mermaid-architect"
+        }
+      ],
+      [
+        "diagram_count",
+        {
+          "lang": "mermaid",
+          "minimum": 1
+        }
+      ],
+      [
+        "captions_present",
+        {
+          "lang": "mermaid"
+        }
+      ],
       [
         "diagrams_verify",
         {

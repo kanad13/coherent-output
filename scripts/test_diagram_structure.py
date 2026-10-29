@@ -76,6 +76,31 @@ class StructureChecks(unittest.TestCase):
     def test_quoted_sequence_message_warns(self):
         self.assertTrue(any("quotes" in w for w in check(QUOTED_SEQUENCE)[1]))
 
+    def test_oversize_and_strip_diagrams_warn(self):
+        def svg(width, height):
+            return f'<svg viewBox="-8 -8 {width} {height}"></svg>'
+        self.assertEqual(verifier.svg_size_warnings(svg(780, 640)), [])
+        self.assertTrue(verifier.svg_size_warnings(svg(1548, 270)))
+        self.assertTrue(verifier.svg_size_warnings(svg(1190, 335)))
+        self.assertTrue(verifier.svg_size_warnings(svg(400, 1300)))
+        self.assertTrue(verifier.svg_size_warnings(svg(1300, 700)))
+        self.assertTrue(verifier.svg_size_warnings(svg(900, 1100)))
+        self.assertTrue(verifier.svg_size_warnings(svg(1100, 300)))
+        self.assertTrue(verifier.svg_size_warnings(svg(300, 950)))
+        self.assertEqual(verifier.svg_size_warnings("<svg></svg>"), [])
+
+    def test_png_option_writes_one_image_per_diagram(self):
+        try:
+            verifier.renderer()
+        except (OSError, RuntimeError) as error:
+            self.skipTest(f"Mermaid not provisioned: {error}")
+        with tempfile.TemporaryDirectory() as folder:
+            path = Path(folder) / "doc.md"
+            path.write_text("```mermaid\nflowchart LR\nA[\"One\"] --> B[\"Two\"]\n```\n\n```mermaid\nflowchart TD\nC[\"Three\"] --> D[\"Four\"]\n```\n", encoding="utf-8")
+            verifier.verify_markdown_diagrams(path, png_dir=Path(folder) / "png")
+            images = sorted(p.name for p in (Path(folder) / "png").glob("*.png"))
+        self.assertEqual(images, ["diagram-1.png", "diagram-2.png"])
+
     def test_cli_exits_one_on_a_non_box_shape_without_a_renderer(self):
         with tempfile.TemporaryDirectory() as folder:
             path = Path(folder) / "doc.md"

@@ -63,6 +63,7 @@ Use a ladder when the concept needs more than 10 nodes, or when the text describ
 - **Connected:** A flowchart is one connected structure. Groups that the text compares, pairs, or contrasts connect through a hub node, a labelled edge, or one named outer box.
 - **Faithful structure:** Edges and layout carry only relations the source states. Draw a tree only for a stated hierarchy; peers point at the same target or share one box; a pool that serves several groups is one node with an edge to each.
 - **Simplicity:** Every node advances the message. Cut any node that does not. Use at most 10 nodes. When the content needs more, build a ladder (Section 3) instead of cramming.
+- **Size:** Each diagram renders inside 1200 by 1000 pixels and is no more than 3 times wider than tall, or tall than wide. A long chain in `LR` becomes a wide strip that readers squint at. Use `TD`, or split the chain into a ladder. The helper warns above these limits.
 - **Independence:** A reader who sees only the diagram understands it. Name actors, states, and systems in full inside the labels, because inserted blocks carry no explanatory prose.
 - **Consistency:** Use one term per concept, one class meaning per color, and the direction convention of Section 6 across every diagram in the answer or document.
 - **Grounding:** Every node and edge traces to the source: the document, the code or files the user pointed at, or the user's own description. Mark a necessary bridging assumption with `[Inferred]` in its label.
@@ -94,8 +95,8 @@ Reuse the passage's own verbs and figures in labels.
 - **Edge labels:** Put the label after the arrow operator in pipe form: `A -->|"calls"| B`.
 - **Subgraphs:** Use at most 3 per diagram. Declare an identifier plus a quoted title, and begin the body with a direction: `subgraph SvcId ["Service Tier"]` then `direction TB`.
 - **Direction:** Arrows point from provider, cause, or earlier step to consumer, effect, or later step, with sources on the left (`LR`) or on top (`TD`). `RL` and `BT` are not used.
-  - `LR`: pipelines, comparisons, before-to-after, flat peers.
-  - `TD`: stated multi-level hierarchies, decision trees, lifecycles.
+  - `LR`: pipelines of up to 5 boxes, comparisons, before-to-after, flat peers.
+  - `TD`: stated multi-level hierarchies, decision trees, lifecycles. A chain of more than 6 boxes splits into a ladder.
 - **Titles:** The caption carries the title. Leave frontmatter titles out of the fence.
 
 ---
@@ -129,8 +130,9 @@ Color carries the tier. Every node is a plain box, because other shapes render a
 
 1. **Frame:** State the one thing the reader must understand. Count the parts the source names. If the count exceeds 10 or the parts have internal structure, plan a ladder: list each level as `Level | Opens which part | Insight`.
 2. **Build:** Write each diagram to Sections 4-7. Reread it against its caption and delete nodes that do not carry it.
-3. **Verify:** Write the diagrams to a temporary Markdown file and run the batch helper. Fix every failure and warning, then rerun until the exit code is `0`. If a grammar still fails to compile, redraw the same insight as a flowchart.
-4. **Place:** Put each caption and fence where the reader meets the passage it explains. Return the response of Section 2.
+3. **Verify:** Write the diagrams to a temporary Markdown file and run the batch helper with `--png <temp_dir>`. Fix every failure and warning, then rerun until the exit code is `0`. If a grammar still fails to compile, redraw the same insight as a flowchart.
+4. **Look:** View each `diagram-N.png` one at a time, never several at once and never a long page. Confirm that labels are readable, nothing is clipped or overlaps, and the picture states its caption. Redraw any diagram that fails. When you cannot view images, report the visual check as not performed.
+5. **Place:** Put each caption and fence where the reader meets the passage it explains. Return the response of Section 2.
 
 ### Sweep mode
 
@@ -141,7 +143,11 @@ Color carries the tier. Every node is a plain box, because other shapes render a
    | :------ | :---------------------------- | :------ | :---- | :-------- |
 
 3. **Build:** Write each diagram to Sections 4-7. Reread it against its insight and delete nodes that do not carry it.
-4. **Verify:** Copy the document to a temporary location, add all blocks to the copy, and compile once with the batch helper. The helper names the failing diagram by its position in the document; fix it and recompile until the exit code is `0`. Treat warnings as defects and clear them too (`--strict` fails on them). If a grammar still fails to compile, redraw the same insight as a flowchart.
+4. **Verify:** Copy the document to a temporary location, add all blocks to the copy, and compile once with the batch helper and `--png <temp_dir>`.
+   - The helper names the failing diagram by its position in the document; fix it and recompile until the exit code is `0`.
+   - Treat warnings as defects and clear them too (`--strict` fails on them).
+   - If a grammar still fails to compile, redraw the same insight as a flowchart.
+   - View each `diagram-N.png` one at a time, never several at once: labels readable, nothing clipped or overlapping, the picture states its caption. Redraw any that fail.
 5. **Apply:** Keep the original bytes and the insertion boundaries. Write the verified candidate to the source through a path that preserves bytes, then read the saved file after hooks and formatters finish.
 6. **Check the saved result:** Remove only the inserted blocks from a comparison copy and compare the remaining bytes with the original. Confirm every heading has a diagram in the saved file. A successful tool call or compilation does not establish text preservation.
 7. **Formatting conflict:** When post-processing changed existing text, restore the original bytes through a byte-preserving write and verify the restoration. Deliver the candidate through that path or as a separate artifact. Hooks, formatter settings, and ignore comments stay as they are, because changing them exceeds this contract. When preservation cannot be verified, report the conflict and the actual saved state.
@@ -150,10 +156,10 @@ Color carries the tier. Every node is a plain box, because other shapes render a
 
 The scripts live in `scripts/` beside this `SKILL.md`. Resolve `<skill_dir>` to this skill's folder (`skills/mermaid-architect` in this checkout, or `mermaid-architect` inside the installed skills directory).
 
-- Document batch: `python3 <skill_dir>/scripts/verify-markdown.py <document.md>`
+- Document batch: `python3 <skill_dir>/scripts/verify-markdown.py <document.md> --png <temp_dir>`; `--png` writes one image per diagram for the visual check.
 - Single diagram: `<skill_dir>/scripts/verify-mmdc.sh <diagram.mmd>`
 - Provisioning: the helper needs `@mermaid-js/mermaid-cli@12.0.0` and never downloads during verification. In this checkout, run `npm ci` at the repository root. For a separate install, place that exact version in the skill folder or on `PATH`. `COHERENT_MMDC_BIN` selects an explicit executable, and `COHERENT_PUPPETEER_CONFIG` passes a Puppeteer configuration file (for example `--no-sandbox` on a CI runner).
-- Structure checks run before rendering: a flowchart is one connected structure, stays within 10 nodes and 3 subgraphs, and does not use `RL` or `BT`. Warnings cover compound captions and quoted sequence messages.
+- Structure checks run before rendering: a flowchart is one connected structure, stays within 10 nodes and 3 subgraphs, and does not use `RL` or `BT`. Warnings cover compound captions, quoted sequence messages, and diagrams that render oversize or as a thin strip.
 - Exit codes: `0` compiled (or the document has no Mermaid fences), `1` invalid syntax or structure, `2` verification could not run (missing tooling or browser dependencies). Report exit `2` as an unverified result. Each renderer call has a timeout, and temporary files are removed.
 
 ---

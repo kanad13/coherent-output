@@ -147,6 +147,45 @@ class DeadRuns(unittest.TestCase):
             self.assertEqual(evals.grade_run("d2-architect", case, run_dir)[0][1], graders.BLOCKED)
 
 
+class VisualReview(unittest.TestCase):
+    """A diagram case is not done until every rendered image was viewed and recorded."""
+
+    CASE = {"id": "x", "prompt": "p", "graders": []}
+
+    def run_dir(self, images=(), review=None):
+        directory = tempfile.TemporaryDirectory()
+        self.addCleanup(directory.cleanup)
+        run_dir = Path(directory.name)
+        for name in images:
+            path = run_dir / "images" / name
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_bytes(b"png")
+        if review is not None:
+            (run_dir / "visual.json").write_text(json.dumps(review), encoding="utf-8")
+        return run_dir
+
+    def status(self, run_dir, case=None):
+        verdict = evals.visual_verdict(case or self.CASE, run_dir)
+        return verdict[1] if verdict else None
+
+    def test_no_images_or_no_record_is_blocked(self):
+        self.assertEqual(self.status(self.run_dir()), graders.BLOCKED)
+        self.assertEqual(self.status(self.run_dir(["mermaid/diagram-1.png"])), graders.BLOCKED)
+
+    def test_an_unlisted_image_is_blocked_even_when_others_passed(self):
+        run_dir = self.run_dir(["d2/diagram-1.png", "d2/diagram-2.png"], {"d2/diagram-1.png": "pass"})
+        self.assertEqual(self.status(run_dir), graders.BLOCKED)
+
+    def test_one_failed_image_fails_the_case(self):
+        run_dir = self.run_dir(["d2/diagram-1.png", "d2/diagram-2.png"], {"d2/diagram-1.png": "pass", "d2/diagram-2.png": "fail: labels overlap"})
+        self.assertEqual(self.status(run_dir), graders.FAIL)
+
+    def test_all_images_passed_is_a_pass_and_routing_cases_skip_it(self):
+        run_dir = self.run_dir(["d2/diagram-1.png"], {"d2/diagram-1.png": "pass"})
+        self.assertEqual(self.status(run_dir), graders.PASS)
+        self.assertIsNone(self.status(self.run_dir(), {**self.CASE, "visual": False}))
+
+
 class Transcripts(unittest.TestCase):
     def test_skill_loads_and_final_response_are_read_back(self):
         events = [

@@ -18,7 +18,8 @@
           "maximum": 0
         }
       ]
-    ]
+    ],
+    "visual": false
   },
   {
     "id": "concept-set",
@@ -188,6 +189,38 @@
         "response_matches",
         {
           "pattern": "contact sheet|not performed"
+        }
+      ],
+      [
+        "diagrams_verify",
+        {
+          "lang": "d2"
+        }
+      ]
+    ]
+  },
+  {
+    "id": "long-chain",
+    "prompt": "Use D2 to show the nine steps of our release pipeline: commit, lint, unit tests, build, integration tests, security scan, staging deploy, smoke tests, production deploy.",
+    "rules": ["D2-SIZE", "D2-LOOK"],
+    "graders": [
+      [
+        "skill_loaded",
+        {
+          "skill": "d2-architect"
+        }
+      ],
+      [
+        "diagram_count",
+        {
+          "lang": "d2",
+          "minimum": 1
+        }
+      ],
+      [
+        "captions_present",
+        {
+          "lang": "d2"
         }
       ],
       [

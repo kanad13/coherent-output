@@ -6,6 +6,8 @@ tests that, and it is meant for the moments a skill is added or edited, not for 
 
 Commands:
   check   Static: rules, cases, and wording lint. Cheap; runs inside verify.sh.
+  images  Render every diagram of every run to its own PNG; each must be viewed alone and
+          recorded in <run>/visual.json before the case can pass.
   prepare Create run folders and prompts, so the harness that is editing the skill can
           run each case with its own fresh agents (subagents or its CLI).
   run     Same, but drive Claude Code's print mode for you.
@@ -228,6 +230,34 @@ def run_problem(run, run_dir):
     return None
 
 
+def visual_verdict(case, run_dir):
+    """Judge the recorded visual review of a run's diagram images, or None when not required.
+
+    Compilation and structure checks cannot see overlap, clipping, or a crowded picture, so a
+    diagram case is not done until every rendered image has been viewed on its own and
+    recorded in visual.json as "pass" or "fail: reason". A missing image, a missing record, or
+    an unlisted image is blocked, never a pass.
+    """
+    if case.get("visual") is False:
+        return None
+    folder = run_dir / "images"
+    images = sorted(path.relative_to(folder).as_posix() for path in folder.rglob("diagram-*.png")) if folder.exists() else []
+    if not images:
+        return ("visual_review", graders.BLOCKED, "no images: run `skill_evals.py images`, then view each image alone and record it in visual.json")
+    try:
+        review = json.loads((run_dir / "visual.json").read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        review = {}
+    missing = [name for name in images if name not in review]
+    if missing:
+        return ("visual_review", graders.BLOCKED, f"{len(missing)} of {len(images)} image(s) not reviewed, for example {missing[0]}")
+    failed = {name: note for name, note in review.items() if name in images and not str(note).strip().lower().startswith("pass")}
+    if failed:
+        name, note = next(iter(failed.items()))
+        return ("visual_review", graders.FAIL, f"{len(failed)} image(s) failed review, for example {name}: {note}")
+    return ("visual_review", graders.PASS, f"{len(images)} image(s) viewed")
+
+
 def grade_run(skill, case, run_dir):
     """Return a list of (grader, status, detail) for one run."""
     run = load_run(skill, case, run_dir)
@@ -242,6 +272,9 @@ def grade_run(skill, case, run_dir):
         except Exception as error:  # a crashing grader is a blocked check, never a pass
             status, detail = graders.BLOCKED, f"grader crashed: {error}"
         verdicts.append((name, status, detail))
+    visual = visual_verdict(case, run_dir)
+    if visual:
+        verdicts.append(visual)
     return verdicts
 
 
@@ -308,6 +341,47 @@ def command_check(args):
         if not errors:
             print(f"{skill}: suite consistent ({len(warnings)} wording warning(s))")
     return status
+
+
+def command_images(args):
+    """Render every diagram of every graded run to its own PNG, and list them for review."""
+    out = Path(args.out)
+    _, cases = load_suite(args.skill)
+    by_id = {c["id"]: c for c in cases}
+    listed = 0
+    for run_dir in sorted((out / args.skill).glob("*/run-*")):
+        case = by_id.get(run_dir.parent.name)
+        if not case or case.get("visual") is False:
+            continue
+        run = load_run(args.skill, case, run_dir)
+        folder = run_dir / "images"
+        shutil.rmtree(folder, ignore_errors=True)
+        index = [f"# Images for {run_dir.parent.name} {run_dir.name}", ""]
+        for lang in ("mermaid", "d2"):
+            text = graders.primary_text(run, lang)
+            found = graders.fences(text, lang)
+            if not found:
+                continue
+            with tempfile.TemporaryDirectory() as scratch:
+                document = Path(scratch) / "doc.md"
+                document.write_text(text, encoding="utf-8")
+                verifier = str(graders.VERIFIERS[lang])
+                if lang == "mermaid":
+                    command = [sys.executable, "-I", verifier, str(document), "--png", str(folder / lang)]
+                else:
+                    palette = str(SKILLS / "d2-architect/assets/house-palette.d2")
+                    command = [sys.executable, "-I", verifier, str(document), "--sheet", str(folder / lang), "--palette", palette]
+                subprocess.run(command, capture_output=True, text=True, timeout=900, env=os.environ.copy())
+            for number, (caption, _) in enumerate(found, 1):
+                image = folder / lang / f"diagram-{number}.png"
+                if image.exists():
+                    index.append(f"- `{lang}/diagram-{number}.png`: {caption}")
+                    print(image)
+                    listed += 1
+        (run_dir / "images").mkdir(exist_ok=True)
+        (run_dir / "images" / "INDEX.md").write_text("\n".join(index) + "\n", encoding="utf-8")
+    print(f"\n{listed} image(s). View each one alone, then write <run>/visual.json as {{\"<lang>/diagram-N.png\": \"pass\" or \"fail: reason\"}} for every image.")
+    return 0 if listed else 2
 
 
 def command_prepare(args):
@@ -383,7 +457,7 @@ def command_status(args):
         else:
             stale += 1
             reason = "never trialled" if recorded is None else "changed since the last passing trial"
-            print(f"{skill}: STALE ({reason}); run `python3 scripts/skill_evals.py run {skill} --all --stamp`")
+            print(f"{skill}: STALE ({reason}); run `python3 scripts/skill_evals.py prepare {skill} --all`, start an agent per folder, view each image, then `grade --stamp` (see evals/README.md)")
     return 1 if (stale and args.require_fresh) else 0
 
 
@@ -398,6 +472,9 @@ def main():
     prepare.add_argument("--all", action="store_true")
     prepare.add_argument("--runs", type=int, help="runs per case (default 1)")
     prepare.add_argument("--out")
+    images = sub.add_parser("images", help="render each graded diagram to its own PNG for review")
+    images.add_argument("skill")
+    images.add_argument("--out", required=True)
     run = sub.add_parser("run", help="run fresh agents on the cases, then grade")
     run.add_argument("skill")
     run.add_argument("--case", action="append", help="run only this case (repeatable)")
@@ -413,7 +490,7 @@ def main():
     status = sub.add_parser("status", help="which skills changed since their last passing trial")
     status.add_argument("--require-fresh", action="store_true")
     args = parser.parse_args()
-    return {"check": command_check, "prepare": command_prepare, "run": command_run, "grade": command_grade, "status": command_status}[args.command](args)
+    return {"check": command_check, "prepare": command_prepare, "images": command_images, "run": command_run, "grade": command_grade, "status": command_status}[args.command](args)
 
 
 if __name__ == "__main__":

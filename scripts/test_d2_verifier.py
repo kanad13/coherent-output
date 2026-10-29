@@ -178,6 +178,39 @@ class CliWithoutRenderer(unittest.TestCase):
         self.assertEqual(self.run_cli("a -> b\n"), 2)
 
 
+def svg_of(width, height):
+    return f'<svg viewBox="0 0 {width} {height}"><svg viewBox="-25 -25 {width} {height}"></svg></svg>'
+
+
+class RenderedSize(unittest.TestCase):
+    """Strips and oversize pictures are what readers scroll and squint at."""
+
+    def test_good_sizes_from_real_output_pass(self):
+        for width, height in ((916, 842), (936, 998), (726, 674), (518, 908)):
+            self.assertEqual(verifier.size_warnings(svg_of(width, height)), [], (width, height))
+
+    def test_strips_and_oversize_warn(self):
+        for width, height in ((212, 1520), (3140, 278), (328, 1131), (1841, 232), (1300, 700), (900, 1100), (1100, 300), (300, 950)):
+            self.assertTrue(verifier.size_warnings(svg_of(width, height)), (width, height))
+
+    def test_full_picture_gets_more_room_but_not_unlimited(self):
+        self.assertEqual(verifier.size_warnings(svg_of(1314, 1119), full=True), [])
+        self.assertEqual(verifier.size_warnings(svg_of(1252, 1679), full=True), [])
+        self.assertTrue(verifier.size_warnings(svg_of(1900, 1000), full=True))
+
+    def test_missing_viewbox_is_not_an_error(self):
+        self.assertEqual(verifier.size_warnings("<svg></svg>"), [])
+
+    def test_png_is_written_when_a_rasterizer_exists(self):
+        if not verifier.rasterizer():
+            self.skipTest("no rasterizer installed")
+        with tempfile.TemporaryDirectory() as directory:
+            svg, png = Path(directory) / "a.svg", Path(directory) / "a.png"
+            svg.write_text('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 20"><rect width="40" height="20"/></svg>', encoding="utf-8")
+            self.assertTrue(verifier.rasterize(svg, png, (40, 20)))
+            self.assertTrue(png.read_bytes().startswith(b"\x89PNG"))
+
+
 class SizeLimits(unittest.TestCase):
     def test_full_picture_caption_is_recognized(self):
         self.assertTrue(verifier.FULL_PICTURE.search("**Diagram 9: Full picture of the platform**"))

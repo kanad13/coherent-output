@@ -31,6 +31,11 @@ MIN_VERSION = (0, 9, 0)
 RENDER_TIMEOUT = 90
 LADDER_NODE_LIMIT = 15
 FULL_NODE_LIMIT = 40
+# Rendered size in pixels. Measured on real output: strips such as 3140x278 or 212x1520 are what
+# readers scroll and squint at, while 916x842 and 936x998 read fine. A "Full picture" may be larger.
+MAX_WIDTH, MAX_HEIGHT, MAX_RATIO = 1200, 1000, 3.0
+FULL_MAX_WIDTH, FULL_MAX_HEIGHT = 1800, 1800
+RASTER_TIMEOUT = 60
 os.environ["PATH"] = os.pathsep.join([os.environ.get("PATH", ""), str(Path.home() / ".local/bin"), "/opt/homebrew/bin", "/usr/local/bin"])
 
 COMPOUND = re.compile(r"(,\s*(while|whereas|but|and)\b|\b(while|whereas|meanwhile|although)\b|;|\bas well as\b)", re.I)
@@ -216,6 +221,60 @@ def components(items, links):
     return list(groups.values())
 
 
+def svg_size(svg):
+    """Return (width, height) in pixels from the outermost viewBox, or None."""
+    found = re.search(r'viewBox="\s*[-\d.]+[ ,]+[-\d.]+[ ,]+([\d.]+)[ ,]+([\d.]+)"', svg)
+    return (float(found.group(1)), float(found.group(2))) if found else None
+
+
+def size_warnings(svg, full=False):
+    """Warn when a diagram renders too wide, too tall, or as a thin strip.
+
+    The caps exist because a diagram that must be scrolled or squinted at fails its reader;
+    the remedy is the zoom ladder, so each message points there.
+    """
+    size = svg_size(svg)
+    if not size:
+        return []
+    width, height = size
+    max_width, max_height = (FULL_MAX_WIDTH, FULL_MAX_HEIGHT) if full else (MAX_WIDTH, MAX_HEIGHT)
+    warnings = []
+    if width > max_width or height > max_height:
+        warnings.append(f"renders {width:.0f}x{height:.0f}px (limit {max_width}x{max_height}); zoom into one part per diagram instead of cramming")
+    elif not full and max(width / height, height / width) > MAX_RATIO:
+        warnings.append(f"renders {width:.0f}x{height:.0f}px, a strip more than {MAX_RATIO:g}:1; use direction: right for a long chain or split it")
+    return warnings
+
+
+def rasterizer():
+    """Find a way to turn SVG into PNG, or None. Tried in order of fidelity to speed."""
+    for name, template in (("rsvg-convert", ["rsvg-convert", "-b", "white", "{svg}", "-o", "{png}"]),
+                           ("magick", ["magick", "-background", "white", "{svg}", "{png}"])):
+        if shutil.which(name):
+            return template
+    chrome = os.environ.get("COHERENT_CHROME_BIN")
+    if not chrome:
+        found = sorted(Path.home().glob(".cache/puppeteer/chrome-headless-shell/*/*/chrome-headless-shell"))
+        chrome = str(found[-1]) if found else shutil.which("chrome-headless-shell")
+    if chrome:
+        return [chrome, "--headless", "--no-sandbox", "--hide-scrollbars", "--default-background-color=FFFFFFFF", "--window-size={w},{h}", "--screenshot={png}", "file://{svg}"]
+    return None
+
+
+def rasterize(svg_path, png_path, size):
+    """Write png_path from svg_path; return True on success."""
+    template = rasterizer()
+    if not template:
+        return False
+    width, height = (int(size[0]) + 1, int(size[1]) + 1) if size else (1200, 900)
+    command = [part.format(svg=svg_path, png=png_path, w=width, h=height) for part in template]
+    try:
+        subprocess.run(command, capture_output=True, timeout=RASTER_TIMEOUT)
+    except (OSError, subprocess.TimeoutExpired):
+        return False
+    return Path(png_path).is_file()
+
+
 def graph_checks(info, full=False):
     """Check the drawn graph for the structural rules the skill sets.
 
@@ -309,6 +368,8 @@ def write_sheet(directory, entries):
     for entry in entries:
         name = f"diagram-{entry['number']}.svg"
         (out / name).write_text(entry["svg"], encoding="utf-8")
+        # One PNG per diagram, so a reviewer opens each picture alone instead of scrolling a long page.
+        rasterize(out / name, out / f"diagram-{entry['number']}.png", svg_size(entry["svg"]))
         cards.append(
             f'<section><h2>#{entry["number"]} {html.escape(entry["heading"] or "(no heading)")}</h2>'
             f'<p class="cap">{html.escape(entry["caption"] or "(no caption)")}</p>'
@@ -365,8 +426,9 @@ def verify_blocks(blocks, strict=False, sheet=None, palette=""):
         if status == "invalid":
             errors.append(f"does not compile: {diagnostic}")
         else:
-            more_errors, more_warnings = graph_checks(graph_from_svg(svg), full=bool(block["caption"] and FULL_PICTURE.search(block["caption"])))
-            errors, warnings = errors + more_errors, warnings + more_warnings
+            full = bool(block["caption"] and FULL_PICTURE.search(block["caption"]))
+            more_errors, more_warnings = graph_checks(graph_from_svg(svg), full=full)
+            errors, warnings = errors + more_errors, warnings + more_warnings + size_warnings(svg, full)
             entries.append({"number": number, "heading": block["heading"], "caption": block["caption"], "code": block["code"], "svg": svg})
         for message in errors:
             print(f"Diagram {number} error: {message}", file=sys.stderr)
@@ -375,6 +437,7 @@ def verify_blocks(blocks, strict=False, sheet=None, palette=""):
         failed, warned = failed or bool(errors), warned or bool(warnings)
     if sheet and entries:
         print(f"Contact sheet: {write_sheet(sheet, entries)}")
+        print("Per-diagram images: " + (f"{sheet}/diagram-N.png (view each one alone)" if rasterizer() else "none written (no rasterizer: install librsvg or set COHERENT_CHROME_BIN); open the SVG files"))
     if failed or (strict and warned):
         return 1
     print(f"Verified {len(blocks)} D2 diagram(s).")

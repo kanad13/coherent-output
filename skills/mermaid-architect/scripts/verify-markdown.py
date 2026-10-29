@@ -49,6 +49,8 @@ def renderer():
     return binary
 
 MAX_NODES = 10
+# Rendered size in pixels; the same caps as the D2 helper, measured on real output.
+MAX_WIDTH, MAX_HEIGHT, MAX_RATIO = 1200, 1000, 3.0
 MAX_SUBGRAPHS = 3
 FORBIDDEN_DIRECTIONS = ("RL", "BT")
 COMPOUND = re.compile(r"(,\s*(while|whereas|but|and)\b|\b(while|whereas|meanwhile|although)\b|;|\bas well as\b)", re.I)
@@ -198,11 +200,26 @@ Returns:
     return errors, warnings
 
 
-def compile_diagrams(diagrams):
+def svg_size_warnings(svg):
+    """Warn when a rendered diagram is too wide, too tall, or a thin strip."""
+    found = re.search(r'viewBox="\s*[-\d.]+[ ,]+[-\d.]+[ ,]+([\d.]+)[ ,]+([\d.]+)"', svg)
+    if not found:
+        return []
+    width, height = float(found.group(1)), float(found.group(2))
+    if width > MAX_WIDTH or height > MAX_HEIGHT:
+        return [f"renders {width:.0f}x{height:.0f}px (limit {MAX_WIDTH}x{MAX_HEIGHT}); zoom into one part per diagram instead of cramming"]
+    if max(width / height, height / width) > MAX_RATIO:
+        return [f"renders {width:.0f}x{height:.0f}px, a strip more than {MAX_RATIO:g}:1; use LR for a long chain or split it"]
+    return []
+
+
+def compile_diagrams(diagrams, png_dir=None, size_notes=None):
     """Compile inputs without leaking temporary files or hiding runtime gaps.
 
     Args:
         diagrams: Sequence of Mermaid source strings to compile.
+        png_dir: Optional directory that receives diagram-N.png, one image per diagram.
+        size_notes: Optional list that receives "diagram N: ..." size warnings.
 
     Returns:
         Zero for no inputs or successful compilation, one for recognized
@@ -212,6 +229,8 @@ def compile_diagrams(diagrams):
         return 0
     try:
         binary = renderer()
+        if png_dir:
+            Path(png_dir).mkdir(parents=True, exist_ok=True)
         with tempfile.TemporaryDirectory(prefix="coherent-mermaid-") as directory:
             for index, code in enumerate(diagrams, start=1):
                 source = Path(directory) / f"diagram-{index}.mmd"
@@ -231,6 +250,14 @@ def compile_diagrams(diagrams):
                     classification = "invalid diagram" if syntax_error else "verification unavailable"
                     print(f"Diagram {index} failed compilation ({classification}): {diagnostic}", file=sys.stderr)
                     return 1 if syntax_error else 2
+                if size_notes is not None:
+                    size_notes += [f"diagram {index}: {w}" for w in svg_size_warnings(output.read_text(encoding="utf-8"))]
+                if png_dir:
+                    image = Path(png_dir) / f"diagram-{index}.png"
+                    shot = [binary, "-i", str(source), "-o", str(image), "-e", "png", "-b", "white", "--quiet"] + command[command.index("--quiet") + 1:]
+                    subprocess.run(shot, capture_output=True, text=True, timeout=60)
+        if png_dir:
+            print(f"Per-diagram images: {png_dir}/diagram-N.png (view each one alone)")
         print(f"Verified {len(diagrams)} Mermaid diagram(s).")
         return 0
     except (OSError, RuntimeError, subprocess.TimeoutExpired) as error:
@@ -238,12 +265,13 @@ def compile_diagrams(diagrams):
         return 2
 
 
-def verify_markdown_diagrams(file_path, strict=False):
+def verify_markdown_diagrams(file_path, strict=False, png_dir=None):
     """Check fenced diagrams without changing the surrounding document.
 
     Args:
         file_path: Path to a UTF-8 Markdown document.
-        strict: Treat warnings (compound caption, quoted sequence messages) as failures.
+        strict: Treat warnings (compound caption, quoted sequence messages, oversize) as failures.
+        png_dir: Optional directory for one PNG per diagram.
 
     Returns:
         Zero for no diagrams or successful compilation, one for an unclosed
@@ -270,7 +298,7 @@ def verify_markdown_diagrams(file_path, strict=False):
         for message in warnings:
             print(f"Warning: {message}", file=sys.stderr)
         return 1
-    result = compile_diagrams([code for _, code in blocks])
+    result = compile_diagrams([code for _, code in blocks], png_dir, warnings)
     for message in warnings:
         print(f"Warning: {message}", file=sys.stderr)
     return 1 if result == 0 and warnings and strict else result
@@ -286,6 +314,7 @@ def main():
     parser.add_argument("source", type=Path)
     parser.add_argument("--strict", action="store_true", help="Treat warnings as failures")
     parser.add_argument("--diagram", action="store_true", help="Compile a raw .mmd input instead of Markdown fences")
+    parser.add_argument("--png", type=Path, help="Write one PNG per diagram to this directory, so each can be viewed alone")
     args = parser.parse_args()
     if args.diagram:
         try:
@@ -293,7 +322,7 @@ def main():
         except OSError as error:
             print(f"Cannot read diagram source: {error}", file=sys.stderr)
             return 2
-    return verify_markdown_diagrams(args.source, args.strict)
+    return verify_markdown_diagrams(args.source, args.strict, args.png)
 
 
 if __name__ == "__main__":

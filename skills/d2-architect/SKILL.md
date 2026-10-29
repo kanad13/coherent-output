@@ -47,6 +47,7 @@ Mermaid is the default diagram tool. D2 is the tool the user reaches for when th
 - **Continuity:** A container or node being opened keeps its exact label in the parent diagram. In the child it becomes the outer container, and the caption begins with that label, for example `**Diagram 2: Storefront splits search from identity**`. A zoom caption that never names the opened part leaves the reader lost.
 - **One part per diagram:** A level-1 diagram opens one part. Opening three parts at once makes three diagrams.
 - **Node count:** Count leaf nodes. Containers group them and do not count. A reader takes in a ladder diagram at a glance.
+- **Size:** Each diagram renders inside 1200 by 1000 pixels and is no more than 3 times wider than tall, or tall than wide. A long chain becomes a thin strip that readers scroll or squint at. Use `direction: right` for a long flat chain, or split it into a ladder. A `Full picture` diagram may reach 1800 by 1800. The helper warns above these limits.
 - **Stop rule:** Stop opening a part when the subject has no more structure there, or when the next level would restate one node. A diagram of one edge belongs inside its neighbor.
 
 ### Extra views
@@ -144,7 +145,7 @@ The palette lives in `assets/house-palette.d2` beside this `SKILL.md`. A preview
 - **Containers:** Write `group: Title { ... }`. Declare edges that cross containers at the root with full dotted paths.
 - **Edge labels:** Keep each label to 1-4 words. Long labels collide with lines and container borders. Number steps only when the subject numbers them.
 - **Boards:** Do not use `layers`, `scenarios`, or `steps`. A fenced block shows only the root board, so each ladder level is its own block.
-- **Direction:** Leave direction to TALA unless the subject states left-to-right order, then add `direction: right` and confirm the result in the contact sheet.
+- **Direction:** Leave direction to TALA unless the subject states left-to-right order, then add `direction: right` and confirm the result in the diagram's image.
 
 ---
 
@@ -158,11 +159,10 @@ The palette lives in `assets/house-palette.d2` beside this `SKILL.md`. A preview
 
 3. **Build:** Write each diagram to Sections 4-5. Reread it against its insight and delete nodes that do not carry it. Read each caption aloud as a sentence and fix its grammar before verifying.
 4. **Verify:** Write the set to the target file (or a temporary copy for an existing document) and run the helper with `--sheet <temp_dir> --palette <skill_dir>/assets/house-palette.d2`. Fix every reported error and warning, then rerun until the exit code is `0`.
-5. **Look:** Open the contact sheet the helper wrote and view every diagram, not a sample.
+5. **Look:** The helper writes `diagram-N.png` beside the contact sheet. View each PNG one at a time, and view every diagram, not a sample. A long page of diagrams hides the ones below the fold; the contact sheet (`index.html`) is for the user.
    - For each diagram, confirm that labels are readable and unclipped, edges do not run through labels, containers hold exactly their members, nothing overlaps, and the picture states its caption.
-   - Check dark mode as well as light by emulating `prefers-color-scheme: dark` in the browser; the SVG carries both themes.
+   - The PNG shows light mode. The SVG carries both themes, so check dark mode in a browser with `prefers-color-scheme: dark` emulated when one is available, and otherwise report it as unchecked.
    - Redraw or simplify any diagram that fails.
-   - If the browser tool cannot open a local file, serve the folder (`python3 -m http.server -d <temp_dir> <port>`) and open the address.
    - When you cannot view images, report the visual check as not performed.
 6. **Apply (existing document only):** Keep the original bytes and the insertion boundaries, including the file's line endings: a CRLF file stays CRLF, so write the inserted lines with CRLF too, and keep the trailing-newline state. Read and write in binary mode or with `newline=""`. Write the verified candidate to the source through a path that preserves bytes, then read the saved file after hooks and formatters finish.
 7. **Check the saved result (existing document only):** Remove only the inserted blocks from a comparison copy and compare the remaining bytes with the original, with `cmp` on the real files, not on normalized text.
@@ -176,7 +176,7 @@ The script lives in `scripts/` beside this `SKILL.md`. Resolve `<skill_dir>` to 
 - Raw diagram: `python3 <skill_dir>/scripts/verify-d2.py --diagram <diagram.d2> --sheet <temp_dir> --palette <skill_dir>/assets/house-palette.d2`
 - Renderer order: `COHERENT_D2_RENDERER_URL` (a running d2-renderer service, for example `http://localhost:8080`), then `COHERENT_D2_BIN`, then a `d2` on `PATH`, then the Docker image `d2lang/d2:v0.9.0` run without network access. D2 v0.9.0 or later bundles TALA. The helper never downloads during verification; provision once with `docker pull d2lang/d2:v0.9.0` or `brew install d2`.
 - The helper renders each block without a layout flag, so the block's own `layout-engine` governs.
-- Checks before the report: the header names TALA; no `icon`, link, tooltip, import, or `shape:` other than a box, `sql_table`, `class`, or `sequence_diagram`; each block compiles; each diagram is one connected structure. Warnings cover compound captions, color overrides, and size (above 15 leaf nodes, or above 40 for a `Full picture` diagram). `--strict` fails on warnings.
+- Checks before the report: the header names TALA; no `icon`, link, tooltip, import, or `shape:` other than a box, `sql_table`, `class`, or `sequence_diagram`; each block compiles; each diagram is one connected structure. Warnings cover compound captions, color overrides, node count (above 15 leaf nodes, or above 40 for a `Full picture` diagram), and rendered size (above 1200 by 1000 pixels, or a strip beyond 3:1). `--strict` fails on warnings.
 - Palette: `--palette` prepends the file to every render, and error line numbers still point into your block.
-- Contact sheet: an HTML page with each diagram beside its caption and source, plus the rendered SVG files.
+- Images: `--sheet` writes each diagram as `diagram-N.svg` and `diagram-N.png` (through `rsvg-convert`, `magick`, or a headless Chrome named by `COHERENT_CHROME_BIN`), plus an HTML contact sheet for the user. With no rasterizer, the helper says so and only the SVG files exist.
 - Exit codes: `0` compiled (or the document has no D2 fences), `1` invalid syntax, header, content rule, or structure, `2` verification could not run (no renderer). Report exit `2` as an unverified result. Each render has a timeout, and temporary files are removed.

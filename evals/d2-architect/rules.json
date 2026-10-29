@@ -36,15 +36,19 @@
     "quote": "Do not use `layers`, `scenarios`, or `steps`."
   },
   {
-    "id": "D2-LOOK",
-    "quote": "view every diagram, not a sample"
-  },
-  {
     "id": "D2-NOPRUNE",
     "quote": "number every diagram"
   },
   {
     "id": "D2-PLAINBOX",
     "quote": "Draw every node as the default rectangle."
+  },
+  {
+    "id": "D2-LOOK",
+    "quote": "View each PNG one at a time"
+  },
+  {
+    "id": "D2-SIZE",
+    "quote": "Each diagram renders inside 1200 by 1000 pixels"
   }
 ]
