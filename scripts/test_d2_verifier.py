@@ -57,6 +57,22 @@ class ParsingAndHeader(unittest.TestCase):
         self.assertTrue(verifier.static_checks("**Diagram: A feeds B, while C feeds D**", HEADER)[1])
 
 
+class ContentRules(unittest.TestCase):
+    """The user draws with shapes and labels only, on one board per block."""
+
+    def errors(self, body):
+        return verifier.static_checks(None, HEADER + body)[0]
+
+    def test_icon_image_link_tooltip_and_import_fail(self):
+        for body in ("x: X { icon: ./x.svg }\n", "x: X { shape: image }\n", "x: X { link: https://example.com }\n",
+                     "x: X { tooltip: hi }\n", "...@other.d2\n", "layers: { a: { b } }\n"):
+            with self.subTest(body=body):
+                self.assertTrue(self.errors(body), body)
+
+    def test_plain_shapes_and_classes_pass(self):
+        self.assertEqual(self.errors("classes: { store: { shape: cylinder } }\ndb: DB { class: store }\n"), [])
+
+
 class GraphRecovery(unittest.TestCase):
     """Recover nodes, containers, and edges from the group names D2 writes."""
 
@@ -82,6 +98,12 @@ class GraphRecovery(unittest.TestCase):
     def test_large_graph_warns(self):
         svg = "".join(group(f"n{i}") + group(f"(n{i} -&gt; n{i + 1})[0]") for i in range(45)) + group("n45")
         self.assertTrue(any("nodes" in w for w in verifier.graph_checks(verifier.graph_from_svg(svg))[1]))
+
+    def test_ladder_limit_is_fifteen_and_full_picture_is_forty(self):
+        svg = "".join(group(f"n{i}") + group(f"(n{i} -&gt; n{i + 1})[0]") for i in range(19)) + group("n19")
+        info = verifier.graph_from_svg(svg)
+        self.assertTrue(any("limit 15" in w for w in verifier.graph_checks(info)[1]))
+        self.assertEqual(verifier.graph_checks(info, full=True)[1], [])
 
     def test_version_parsing(self):
         self.assertEqual(verifier.parse_version("v0.9.0\n"), (0, 9, 0))

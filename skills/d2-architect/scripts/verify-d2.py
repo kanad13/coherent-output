@@ -23,11 +23,14 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import urllib.error
+import urllib.request
 
 D2_IMAGE = "d2lang/d2:v0.9.0"
 MIN_VERSION = (0, 9, 0)
 RENDER_TIMEOUT = 90
-SOFT_NODE_LIMIT = 40
+LADDER_NODE_LIMIT = 15
+FULL_NODE_LIMIT = 40
 os.environ["PATH"] = os.pathsep.join([os.environ.get("PATH", ""), str(Path.home() / ".local/bin"), "/opt/homebrew/bin", "/usr/local/bin"])
 
 COMPOUND = re.compile(r"(,\s*(while|whereas|but|and)\b|\b(while|whereas|meanwhile|although)\b|;|\bas well as\b)", re.I)
@@ -35,6 +38,16 @@ HEADING = re.compile(r"^ {0,3}(#{1,6})\s+(.*?)\s*#*\s*$")
 OPENING = re.compile(r"^ {0,3}(`{3,}|~{3,})\s*([\w-]*)")
 CONNECTION = re.compile(r"^(?:(?P<prefix>.*)\.)?\((?P<left>.+?) (?P<arrow><->|->|<-|--) (?P<right>.*?)\)\[\d+\]$")
 COLOR_OVERRIDE = re.compile(r"^\s*(fill|stroke|font-color)\s*:\s*[\"']?(#|[a-zA-Z])", re.M)
+# The user draws with shapes and labels only. Remote assets also fail the offline render, but a
+# local icon path or a link compiles, so the source text is checked directly.
+FORBIDDEN = (
+    (re.compile(r"(?:^|[{;.])\s*icon\s*:", re.M), "`icon` is not allowed: diagrams carry meaning in shapes and labels"),
+    (re.compile(r"shape\s*:\s*[\"']?image\b", re.M), "`shape: image` is not allowed"),
+    (re.compile(r"(?:^|[{;.])\s*(link|tooltip)\s*:", re.M), "`link` and `tooltip` are not allowed: static previews drop them"),
+    (re.compile(r"^\s*(\.\.\.)?\s*@", re.M), "imports are not allowed: a block must be self-contained"),
+    (re.compile(r"(?:^|[{;.])\s*(layers|scenarios|steps)\s*:", re.M), "`layers`, `scenarios` and `steps` are not allowed: a fence shows only the root board; use one block per level"),
+)
+FULL_PICTURE = re.compile(r"full picture", re.I)
 
 
 def parse_version(text):
@@ -46,18 +59,28 @@ def parse_version(text):
 def renderer():
     """Locate a D2 renderer without downloading anything.
 
-    Order: explicit COHERENT_D2_BIN, a `d2` on PATH, then the pinned Docker image run
+    Order: a running d2-renderer service named by COHERENT_D2_RENDERER_URL, explicit COHERENT_D2_BIN, a `d2` on PATH, then the pinned Docker image run
     with networking disabled so remote icons cannot make a block pass here and fail
     elsewhere.
 
     Returns:
-        The argument list that, followed by `- -`, renders stdin to stdout.
+        The argument list that, followed by `- -`, renders stdin to stdout, or
+        ["@http", url] for a d2-renderer service.
 
     Raises:
         RuntimeError: No renderer is available or the version is too old.
         OSError: A candidate cannot be launched.
         subprocess.TimeoutExpired: Version discovery exceeds ten seconds.
     """
+    service = os.environ.get("COHERENT_D2_RENDERER_URL")
+    if service:
+        base = service.rstrip("/")
+        try:
+            with urllib.request.urlopen(base + "/health", timeout=10) as reply:
+                reply.read()
+        except (OSError, urllib.error.URLError) as error:
+            raise RuntimeError(f"COHERENT_D2_RENDERER_URL {service!r} is not answering: {error}")
+        return ["@http", base + "/d2/svg"]
     explicit = os.environ.get("COHERENT_D2_BIN")
     binary = explicit or shutil.which("d2")
     if binary:
@@ -126,6 +149,7 @@ def static_checks(caption, code):
         errors.append("missing `layout-engine: tala` in the standard d2-config header")
     elif engine.group(1) != "tala":
         errors.append(f"layout-engine is {engine.group(1)}; every block must use tala")
+    errors.extend(message for pattern, message in FORBIDDEN if pattern.search(code))
     if caption and COMPOUND.search(caption):
         warnings.append("compound caption: one diagram carries one idea; split it or state the single relation")
     if COLOR_OVERRIDE.search(code):
@@ -192,11 +216,12 @@ def components(items, links):
     return list(groups.values())
 
 
-def graph_checks(info):
+def graph_checks(info, full=False):
     """Check the drawn graph for the structural rules the skill sets.
 
     Args:
         info: Result of graph_from_svg.
+        full: True for a "Full picture" diagram, which may hold more nodes.
 
     Returns:
         (errors, warnings).
@@ -204,8 +229,9 @@ def graph_checks(info):
     errors, warnings = [], []
     nodes = info["nodes"]
     leaves = [n for n in nodes if n not in info["containers"]]
-    if len(leaves) > SOFT_NODE_LIMIT:
-        warnings.append(f"{len(leaves)} nodes: TALA slows on very large graphs and readers lose the thread; consider splitting")
+    limit = FULL_NODE_LIMIT if full else LADDER_NODE_LIMIT
+    if len(leaves) > limit:
+        warnings.append(f"{len(leaves)} nodes (limit {limit}): readers lose the thread; zoom into one part per diagram or, for a Full picture diagram, split it")
     # Membership counts as a relation: a container is the author's explicit grouping.
     membership = [(n, n.rsplit(".", 1)[0]) for n in nodes if "." in n]
     parts = components(nodes, list(info["edges"]) + membership)
@@ -218,6 +244,23 @@ def graph_checks(info):
 def shift_lines(message, offset):
     """Rewrite `-:LINE:COL` positions so they point into the block, not the palette prefix."""
     return re.sub(r"-:(\d+):(\d+)", lambda m: f"-:{max(int(m.group(1)) - offset, 1)}:{m.group(2)}", message)
+
+
+def render_over_http(url, source, offset):
+    """Render through a d2-renderer service, which compiles offline and sends no layout flag.
+
+    The service answers 400 with the compiler message for invalid D2, so that maps to
+    "invalid"; any other failure means the service cannot be used.
+    """
+    request = urllib.request.Request(url, data=source.encode("utf-8"), method="POST")
+    try:
+        with urllib.request.urlopen(request, timeout=RENDER_TIMEOUT) as reply:
+            return "ok", reply.read().decode("utf-8"), ""
+    except urllib.error.HTTPError as error:
+        message = shift_lines(error.read().decode("utf-8", errors="replace").strip(), offset)
+        return ("invalid" if error.code == 400 else "unavailable"), "", message
+    except (OSError, urllib.error.URLError) as error:
+        return "unavailable", "", f"render service failed: {error}"
 
 
 def render(command, code, palette=""):
@@ -234,6 +277,8 @@ def render(command, code, palette=""):
     env = {key: value for key, value in os.environ.items() if not key.startswith("D2_")}
     source = palette + code if not palette or palette.endswith("\n") else palette + "\n" + code
     offset = source.count("\n") - code.count("\n")
+    if command[0] == "@http":
+        return render_over_http(command[1], source, offset)
     try:
         result = subprocess.run(command + ["-", "-"], input=source.encode("utf-8"), capture_output=True, timeout=RENDER_TIMEOUT, env=env)
     except subprocess.TimeoutExpired:
@@ -312,7 +357,7 @@ def verify_blocks(blocks, strict=False, sheet=None, palette=""):
         if status == "invalid":
             errors.append(f"does not compile: {diagnostic}")
         else:
-            more_errors, more_warnings = graph_checks(graph_from_svg(svg))
+            more_errors, more_warnings = graph_checks(graph_from_svg(svg), full=bool(block["caption"] and FULL_PICTURE.search(block["caption"])))
             errors, warnings = errors + more_errors, warnings + more_warnings
             entries.append({"number": number, "heading": block["heading"], "caption": block["caption"], "code": block["code"], "svg": svg})
         for message in errors:

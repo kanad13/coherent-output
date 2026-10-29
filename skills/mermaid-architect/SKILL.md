@@ -1,43 +1,76 @@
 ---
 name: mermaid-architect
-description: Gives every heading of a technical document a verified native Mermaid diagram that delivers one insight, and inserts the diagrams without altering existing text. Use when creating architecture diagrams, visualizing workflows, or enhancing docs with Mermaid. Do not use for rendering external UI widgets or modifying surrounding prose.
+description: Draws verified native Mermaid diagrams, one insight each, and splits large concepts into a zoom ladder from a 30,000-foot overview down to detail. This is the default diagramming skill. Use it automatically whenever a diagram is needed in any answer, document, README, plan, or review and the user has not named another tool. When the user invokes it explicitly on a document, sweep the whole document so every heading gets a diagram, without altering existing text. Do not use when the user asks for D2 (use d2-architect), for image files, or for rewriting surrounding prose.
 ---
 
 # Mermaid Diagram Architect
 
-Add compilable Mermaid diagrams to a document by insertion only. Every pre-existing byte of the source stays unchanged. Every heading (H1-H6) receives at least one diagram, and every diagram delivers one insight.
+Draw compilable Mermaid diagrams that a reader takes in at a glance. One diagram carries one insight. A concept too large for one diagram becomes a ladder of diagrams, from the widest view down to the detail. Every diagram is compiled before it reaches the user.
 
 ---
 
-## 1. Output Contract
+## 1. Modes
 
-- **Insertion only:** Leave existing headings, paragraphs, tables, and code fences unmodified, unreordered, and unreformatted.
-- **Insertion block:** Each insertion is exactly two parts:
+| Mode       | Starts when                                                                                                                                | Result                                                                                                    |
+| :--------- | :----------------------------------------------------------------------------------------------------------------------------------------- | :-------------------------------------------------------------------------------------------------------- |
+| **Ad hoc** | Any diagram is needed and the user named no other tool: an explanation, a design discussion, a README, a plan, a pull request description. | The diagram or ladder the request needs, placed where the reader will see it.                             |
+| **Sweep**  | The user invokes this skill explicitly on a document, or asks for diagrams across a document.                                              | Every heading (H1-H6) of the document gets at least one diagram, inserted without altering existing text. |
+
+- **Default tool:** Mermaid is the diagram language unless the user names another. When the user names D2, stop and use d2-architect instead.
+- **Ad hoc scope:** Draw what the request needs. Do not turn an ad hoc request into a document sweep.
+- **Sweep scope:** Work through the document section by section, in order, and leave no heading without a diagram.
+
+---
+
+## 2. Output Contract
+
+- **Insertion block:** Each diagram is exactly two parts:
   1. A caption line, `**Diagram: <Insight>**`, written as a statement of the diagram's single message.
   2. One fenced `mermaid` block.
-- **Caption format:** Write the caption in bold text. Headings stay out of captions so the document's table of contents stays intact. Prose summaries and transitions stay out of the document.
+- **Caption format:** Write the caption in bold text. Headings stay out of captions so the document's table of contents stays intact. Prose summaries and transitions stay out of inserted blocks.
 - **Placement:** Insert at a block boundary right after the passage that introduces the concept. When a heading has no text before its first subheading, insert directly under the heading.
-- **Response:** Return three sections: **A** the coverage plan table, **B** the updated document (or the verified candidate when a formatting conflict blocks saving), **C** compilation and preservation results, including any conflict.
+- **Insertion only (editing an existing file):** Leave existing headings, paragraphs, tables, and code fences unmodified, unreordered, and unreformatted. Every pre-existing byte stays unchanged. A diagram in a new answer or in text being authored has no bytes to preserve.
+- **Response, ad hoc:** The diagrams with their captions, then one line stating that they compiled.
+- **Response, sweep:** Three sections: **A** the coverage plan table, **B** the updated document (or the verified candidate when a formatting conflict blocks saving), **C** compilation and preservation results, including any conflict.
 
 ---
 
-## 2. Diagram Principles
+## 3. Zoom Ladder
+
+Use a ladder when the concept needs more than 10 nodes, or when the text describes a system whose parts each have their own internal structure.
+
+| Level | Shows                                                     | Size           |
+| :---- | :-------------------------------------------------------- | :------------- |
+| 0     | The whole concept from 30,000 feet: its major parts only. | 3-7 nodes      |
+| 1     | One part of level 0, opened up.                           | Up to 10 nodes |
+| 2+    | One part of the previous level, opened up the same way.   | Up to 10 nodes |
+
+- **Order of drawing:** Draw level 0 first. Then follow one part down through its levels until its text runs out. Then return to level 0 and open the next part. A reader follows one aspect to its depth before meeting the next.
+- **Continuity:** The part being opened keeps its exact label in the parent diagram. The child diagram's caption names that part, so the reader knows where they are: `**Diagram: Order Service splits intake from fulfilment**`.
+- **Zoom one part per diagram:** A level-1 diagram opens one node. Opening three nodes at once is three diagrams.
+- **Stop rule:** Stop opening when the source text gives no more structure, or when the next level would only restate one node. Do not invent depth.
+- **Fit the size:** A concept that fits in one diagram of at most 10 nodes stays one diagram. A ladder of one rung is a diagram.
+- **Sweep mode:** Headings already form levels. An H1 or H2 diagram is the wide view of its section, and deeper headings zoom into their parts.
+
+---
+
+## 4. Diagram Principles
 
 - **One message:** A diagram carries one insight, and that insight is its caption. A passage with several insights gets several diagrams.
 - **Caption test:** The caption has one subject and one relation. A caption that needs "while", "whereas", or "but" holds two insights: split it into two diagrams, or state the one relation that joins both halves ("A customer's plan decides the support channel").
 - **Connected:** A flowchart is one connected structure. Groups that the text compares, pairs, or contrasts connect through a hub node, a labelled edge, or one named outer box.
-- **Faithful structure:** Edges and layout carry only relations the text states. Draw a tree only for a stated hierarchy; peers point at the same target or share one box; a pool that serves several groups is one node with an edge to each.
-- **Simplicity:** Every node advances the message. Cut any node that does not. Use at most 10 nodes.
-- **Independence:** A reader who sees only the diagram understands it. Name actors, states, and systems in full inside the labels, because the contract allows no explanatory prose.
-- **Consistency:** Use one term per concept, one class meaning per color, and the direction convention of Section 3 across every diagram in the document.
-- **Coverage:** Every heading (H1-H6) has at least one diagram, and no content is skipped.
+- **Faithful structure:** Edges and layout carry only relations the source states. Draw a tree only for a stated hierarchy; peers point at the same target or share one box; a pool that serves several groups is one node with an edge to each.
+- **Simplicity:** Every node advances the message. Cut any node that does not. Use at most 10 nodes. When the content needs more, build a ladder (Section 3) instead of cramming.
+- **Independence:** A reader who sees only the diagram understands it. Name actors, states, and systems in full inside the labels, because inserted blocks carry no explanatory prose.
+- **Consistency:** Use one term per concept, one class meaning per color, and the direction convention of Section 6 across every diagram in the answer or document.
+- **Grounding:** Every node and edge traces to the source: the document, the code or files the user pointed at, or the user's own description. Mark a necessary bridging assumption with `[Inferred]` in its label.
+- **Coverage (sweep only):** Every heading (H1-H6) has at least one diagram, and no content is skipped.
   - A thin section gets a small diagram (2-4 nodes) of what its text states.
   - A section with no text of its own diagrams the relationship between its title and its subsections.
-- **Grounding:** Every node and edge traces to the source text. Mark a necessary bridging assumption with `[Inferred]` in its label.
 
 ---
 
-## 3. Default Shapes
+## 5. Default Shapes
 
 Pick the shape from the content type. Each is one connected structure.
 
@@ -48,10 +81,11 @@ Pick the shape from the content type. Each is one connected structure.
 | Flat team, peers         | Peers point at the shared target, or sit in one box with one edge. Use `LR`, never a tree.  |
 | Flow                     | One `LR` chain from source to consumer, with verbs on the edges.                            |
 | Before and after         | Hub with `old` and `new` edges, or two named boxes joined by a labelled "replaced by" edge. |
+| System with many parts   | A zoom ladder (Section 3): overview first, then one part per diagram.                       |
 
 Reuse the passage's own verbs and figures in labels.
 
-## 4. Syntax Rules
+## 6. Syntax Rules
 
 - **Labels:** Put every flowchart node label and edge label in double quotes. Sequence message text stays unquoted, because quotes print literally there. Write plain text: no emojis or decorative symbols, and a hyphen in place of parentheses (`"Request - data"`).
 - **Line breaks:** Use `<br/>` for multi-line labels and keep each line brief (2-6 words). To separate a title from detail, use `━━━`, the only permitted symbol: `"Title<br/>━━━<br/>Detail"`.
@@ -64,15 +98,21 @@ Reuse the passage's own verbs and figures in labels.
 
 ---
 
-## 5. Styling
+## 7. Styling
 
-- **Classes:** In flowcharts and `stateDiagram-v2`, assign every node one class from the theme block (Appendix B) by logical tier:
-  - `c1`: Ingress, client, entrypoint, primary flow
-  - `c2`: Compute, internal services, transforms, core engine
-  - `c3`: Persistence, data stores, state, caches
-  - `c4`: Messaging, queues, streaming, decision gates
-  - `c5`: External systems, third parties, egress, boundaries
-  - `default`: Uncategorized or utility nodes
+Color and shape together carry the tier, so the meaning survives color-blind viewing and monochrome print.
+
+- **Classes:** In flowcharts and `stateDiagram-v2`, assign every node one class from the theme block (Appendix B) by logical tier, and draw it in the tier's shape in flowcharts:
+
+  | Class     | Tier                                                | Flowchart shape            |
+  | :-------- | :-------------------------------------------------- | :------------------------- |
+  | `c1`      | Ingress, client, entrypoint, primary flow           | Stadium: `A(["Label"])`    |
+  | `c2`      | Compute, internal services, transforms, core engine | Rectangle: `A["Label"]`    |
+  | `c3`      | Persistence, data stores, state, caches             | Cylinder: `A[("Label")]`   |
+  | `c4`      | Messaging, queues, streaming, decision gates        | Hexagon: `A{{"Label"}}`    |
+  | `c5`      | External systems, third parties, egress, boundaries | Subroutine: `A[["Label"]]` |
+  | `default` | Uncategorized or utility nodes                      | Rectangle                  |
+
 - **Theme:** Paste the Theme A block (the default) at the top of each flowchart, or the theme the user names. In `stateDiagram-v2`, declare only the `c1`-`c5` classes in use and omit `classDef default`, which fails to compile.
 - **Other grammars:** Sequence diagrams and the remaining grammars use native styling without classes.
 - **Host colors:** Leave text and connector colors to the host theme. `classDef` and `style` carry fill and stroke only, with no `color:` and no `linkStyle`, so contrast holds in light and dark editors.
@@ -80,15 +120,24 @@ Reuse the passage's own verbs and figures in labels.
 
 ---
 
-## 6. Procedure
+## 8. Procedure
+
+### Ad hoc mode
+
+1. **Frame:** State the one thing the reader must understand. Count the parts the source names. If the count exceeds 10 or the parts have internal structure, plan a ladder: list each level as `Level | Opens which part | Insight`.
+2. **Build:** Write each diagram to Sections 4-7. Reread it against its caption and delete nodes that do not carry it.
+3. **Verify:** Write the diagrams to a temporary Markdown file and run the batch helper. Fix every failure and warning, then rerun until the exit code is `0`. If a grammar still fails to compile, redraw the same insight as a flowchart.
+4. **Place:** Put each caption and fence where the reader meets the passage it explains. Return the response of Section 2.
+
+### Sweep mode
 
 1. **Map:** List every heading outside fenced code, with the text under it. Note which sections already contain Mermaid diagrams; those stay untouched, and a heading without one still gets one.
-2. **Plan:** Write the coverage table, one row per diagram. Every heading appears in at least one row. Pick each grammar from Appendix A.
+2. **Plan:** Write the coverage table, one row per diagram. Every heading appears in at least one row. Pick each grammar from Appendix A. Where a section needs a ladder, give its rows a level number.
 
-   | Heading | Insight (becomes the caption) | Grammar | Placement |
-   | :------ | :---------------------------- | :------ | :-------- |
+   | Heading | Insight (becomes the caption) | Grammar | Level | Placement |
+   | :------ | :---------------------------- | :------ | :---- | :-------- |
 
-3. **Build:** Write each diagram to Sections 2-5. Reread it against its insight and delete nodes that do not carry it.
+3. **Build:** Write each diagram to Sections 4-7. Reread it against its insight and delete nodes that do not carry it.
 4. **Verify:** Copy the document to a temporary location, add all blocks to the copy, and compile once with the batch helper. The helper names the failing diagram by its position in the document; fix it and recompile until the exit code is `0`. Treat warnings as defects and clear them too (`--strict` fails on them). If a grammar still fails to compile, redraw the same insight as a flowchart.
 5. **Apply:** Keep the original bytes and the insertion boundaries. Write the verified candidate to the source through a path that preserves bytes, then read the saved file after hooks and formatters finish.
 6. **Check the saved result:** Remove only the inserted blocks from a comparison copy and compare the remaining bytes with the original. Confirm every heading has a diagram in the saved file. A successful tool call or compilation does not establish text preservation.
@@ -129,6 +178,8 @@ Choose the grammar that matches the visual question. When the first choice fails
 | User experience, journey              | User Journey     | `journey`                         | Onboarding and step-by-step flows with satisfaction      |
 | Tradeoffs, 2x2 matrix                 | Quadrant         | `quadrantChart`                   | Risk versus value, priority matrices                     |
 | Binary protocol, header layout        | Packet           | `packet-beta`                     | Network headers (IP/TCP), binary file structures         |
+
+When the user wants nested boundaries, a dense multi-component architecture, or a precise layout that these grammars cannot give, say that d2-architect fits that job and let the user decide.
 
 ---
 

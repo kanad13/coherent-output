@@ -76,7 +76,8 @@ Do not improvise complex, multi-step procedures. Activate the dedicated skill up
 - **When reorganizing dense text, notes, or messy Markdown into scannable bullet hierarchies:** Activate `cognitive-clarity-refactor`.
 - **When reviewing document wording from user feedback or applying selected alternatives:** Activate `articulation-review`.
 - **When validating markdown link integrity, folder numbering, or documentation indexes:** Activate `markdown-audit`.
-- **When designing or embedding Mermaid architecture, sequence, or workflow diagrams:** Activate `mermaid-architect`.
+- **Whenever a diagram would help an answer, document, plan, or review, and the user has not named another tool:** Activate `mermaid-architect`. It is the default diagram skill and runs without being asked. When the user invokes it on a document, it gives every heading a diagram.
+- **When the user explicitly asks for D2 diagrams of a named concept, plan, or architecture:** Activate `d2-architect`. Never choose it on your own.
 - **When drafting, editing, or rewriting emails, announcements, or communications:** Activate `email-rewrite`.
 - **When explaining unfamiliar technical concepts, breaking down complex mechanisms, or tutoring:** Activate `concept-tutor`.
 - **When wrapping up a session or synthesizing multi-turn discussions into comprehensive documentation:** Activate `conversation-notes`.
