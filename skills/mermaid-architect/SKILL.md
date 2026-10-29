@@ -48,7 +48,7 @@ Use a ladder when the concept needs more than 10 nodes, or when the text describ
 | 2+    | One part of the previous level, opened up the same way.   | Up to 10 nodes |
 
 - **Order of drawing:** Draw level 0 first. Then follow one part down through its levels until its text runs out. Then return to level 0 and open the next part. A reader follows one aspect to its depth before meeting the next.
-- **Continuity:** The part being opened keeps its exact label in the parent diagram. The child diagram's caption names that part, so the reader knows where they are: `**Diagram: Order Service splits intake from fulfilment**`.
+- **Continuity:** The part being opened keeps its exact label in the parent diagram, and the child diagram's caption begins with that exact label. A caption that does not start with the label leaves the reader lost. Example: `**Diagram: Order Service splits intake from fulfilment**`.
 - **Zoom one part per diagram:** A level-1 diagram opens one node. Opening three nodes at once is three diagrams.
 - **Stop rule:** Stop opening when the source text gives no more structure, or when the next level would only restate one node. Do not invent depth.
 - **Fit the size:** A concept that fits in one diagram of at most 10 nodes stays one diagram. A ladder of one rung is a diagram.
@@ -131,7 +131,11 @@ Color carries the tier. Every node is a plain box, because other shapes render a
 1. **Frame:** State the one thing the reader must understand. Count the parts the source names. If the count exceeds 10 or the parts have internal structure, plan a ladder: list each level as `Level | Opens which part | Insight`.
 2. **Build:** Write each diagram to Sections 4-7. Reread it against its caption and delete nodes that do not carry it.
 3. **Verify:** Write the diagrams to a temporary Markdown file and run the batch helper with `--png <temp_dir>`. Fix every failure and warning, then rerun until the exit code is `0`. If a grammar still fails to compile, redraw the same insight as a flowchart.
-4. **Look:** View each `diagram-N.png` one at a time, never several at once and never a long page. Confirm that labels are readable, nothing is clipped or overlaps, and the picture states its caption. Redraw any diagram that fails. When you cannot view images, report the visual check as not performed.
+4. **Look:** View each `diagram-N.png` one at a time, never several at once and never a long page.
+   - Confirm the picture states its caption.
+   - Fail a diagram when text is clipped, text overlaps a box or another label, a line or border runs through a label, the layout sprawls, or the flow reads backwards (right to left or bottom to top).
+   - A label or container title that only touches a border is cramped: shorten it.
+   - Redraw any diagram that fails. When you cannot view images, report the visual check as not performed.
 5. **Place:** Put each caption and fence where the reader meets the passage it explains. Return the response of Section 2.
 
 ### Sweep mode

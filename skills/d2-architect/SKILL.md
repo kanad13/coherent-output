@@ -28,7 +28,7 @@ Mermaid is the default diagram tool. D2 is the tool the user reaches for when th
   2. One fenced `d2` block that starts with the standard header from Section 5.
 - **Where it goes:** A new Markdown file named for the subject (for example `payments-architecture-diagrams.md`) in the folder the user names, or the current folder. The file holds the diagrams in reading order. Headings, if any, group levels; they are not required.
 - **Existing document:** Only when the user asks for diagrams inside an existing file, insert at block boundaries and leave every pre-existing byte unchanged (Section 6, steps 6-8).
-- **Self-contained:** Diagrams contain no icons, images, links, tooltips, or imports. No image files are created; the user's previewer renders the fences.
+- **Self-contained:** Diagrams contain no icons, images, links, tooltips, or imports. No image files are delivered; the user's previewer renders the fences. The review images from the helper go in a temporary folder outside the deliverable folder, never beside the Markdown file.
 - **Response:** Return three sections: **A** the numbered plan table, **B** the file location (or the updated document), **C** verification results: the helper's exit code, any warnings, the contact-sheet path, and what you saw in it.
 
 ---
@@ -64,7 +64,7 @@ Offer a lens only when the subject supports it. A lens that needs invented conte
 
 ### Full picture
 
-One all-in-one diagram of the whole subject is allowed after the ladder. Put `Full picture` in its caption so it reads as a convenience, not as the main explanation. The verification helper warns above 40 nodes for it and above 15 for every other diagram.
+One all-in-one diagram of the whole subject is allowed after the ladder. It is optional: when it renders above 1800 by 1800 pixels, or sprawls with long edges crossing containers, leave it out rather than ship it. Put `Full picture` in its caption so it reads as a convenience, not as the main explanation. The verification helper warns above 40 nodes for it and above 15 for every other diagram.
 
 ---
 
@@ -143,9 +143,9 @@ The palette lives in `assets/house-palette.d2` beside this `SKILL.md`. A preview
 - **Quoting:** Double-quote any label that contains `:`, `;`, `#`, `{`, `}`, `|`, `&`, `[`, or a leading `-`. Single-quote a label that contains `$`, because D2 reads `$` in a double-quoted label as a substitution and fails to compile.
 - **Edges:** Write `a -> b: verb phrase`. Arrows point from provider, cause, or earlier step to consumer, effect, or later step. Reserve dashed edges (`style.stroke-dash: 4`) for asynchronous, optional, or `[Inferred]` relations.
 - **Containers:** Write `group: Title { ... }`. Declare edges that cross containers at the root with full dotted paths.
-- **Edge labels:** Keep each label to 1-4 words. Long labels collide with lines and container borders. Number steps only when the subject numbers them.
+- **Edge labels and titles:** Keep each edge label to 1-4 words and each container title short enough to clear its border. Long labels collide with lines and container borders. Never put `[Inferred]` in a container title; list inferred groupings in the plan table. Number steps only when the subject numbers them.
 - **Boards:** Do not use `layers`, `scenarios`, or `steps`. A fenced block shows only the root board, so each ladder level is its own block.
-- **Direction:** Leave direction to TALA unless the subject states left-to-right order, then add `direction: right` and confirm the result in the diagram's image.
+- **Direction:** Arrows read left to right or top to bottom. Leave direction to TALA, but when it draws a chain bottom to top or right to left, add `direction: down` or `direction: right` and confirm the result in the diagram's image.
 
 ---
 
@@ -160,7 +160,7 @@ The palette lives in `assets/house-palette.d2` beside this `SKILL.md`. A preview
 3. **Build:** Write each diagram to Sections 4-5. Reread it against its insight and delete nodes that do not carry it. Read each caption aloud as a sentence and fix its grammar before verifying.
 4. **Verify:** Write the set to the target file (or a temporary copy for an existing document) and run the helper with `--sheet <temp_dir> --palette <skill_dir>/assets/house-palette.d2`. Fix every reported error and warning, then rerun until the exit code is `0`.
 5. **Look:** The helper writes `diagram-N.png` beside the contact sheet. View each PNG one at a time, and view every diagram, not a sample. A long page of diagrams hides the ones below the fold; the contact sheet (`index.html`) is for the user.
-   - For each diagram, confirm that labels are readable and unclipped, edges do not run through labels, containers hold exactly their members, nothing overlaps, and the picture states its caption.
+   - For each diagram, confirm that containers hold exactly their members and the picture states its caption. Fail a diagram when text is clipped, text overlaps a box or another label, a line or border runs through a label, the layout sprawls, or the flow reads backwards (right to left or bottom to top). A label or container title that only touches a border is cramped: shorten it.
    - The PNG shows light mode. The SVG carries both themes, so check dark mode in a browser with `prefers-color-scheme: dark` emulated when one is available, and otherwise report it as unchecked.
    - Redraw or simplify any diagram that fails.
    - When you cannot view images, report the visual check as not performed.
