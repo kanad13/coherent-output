@@ -1,5 +1,5 @@
 {
-  "digest": "fff5d442d606af0c",
+  "digest": "94fbaf9518fcde0b",
   "cases": {
     "auto-default": {
       "outcome": "pass",
@@ -13,8 +13,8 @@
     },
     "ladder-big": {
       "outcome": "pass",
-      "passed": 1,
-      "runs": 1
+      "passed": 2,
+      "runs": 3
     },
     "sweep-explicit": {
       "outcome": "pass",
@@ -37,6 +37,11 @@
       "runs": 1
     },
     "convert-ascii": {
+      "outcome": "pass",
+      "passed": 1,
+      "runs": 1
+    },
+    "long-chain": {
       "outcome": "pass",
       "passed": 1,
       "runs": 1

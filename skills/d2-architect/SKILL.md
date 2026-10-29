@@ -48,7 +48,8 @@ Mermaid is the default diagram tool. D2 is the tool the user reaches for when th
 - **One part per diagram:** A level-1 diagram opens one part. Opening three parts at once makes three diagrams.
 - **Node count:** Count leaf nodes. Containers group them and do not count. A reader takes in a ladder diagram at a glance.
 - **Size:** Each diagram renders inside 1200 by 1000 pixels and is no more than 3 times wider than tall, or tall than wide. A long chain becomes a thin strip that readers scroll or squint at. Use `direction: right` for a long flat chain, or split it into a ladder. A `Full picture` diagram may reach 1800 by 1800. The helper warns above these limits.
-- **Stop rule:** Stop opening a part when the subject has no more structure there, or when the next level would restate one node. A diagram of one edge belongs inside its neighbor.
+- **Open generously:** Open every part that has two or more stated internals or relations, even when the diagram is small. The user prunes, so more diagrams is better than fewer. Do not skip a zoom because it "would restate" the parent; skip it only when the subject states nothing inside the part.
+- **Stop rule:** Stop opening a part when the subject states no more structure there. A diagram of one edge belongs inside its neighbor.
 
 ### Extra views
 

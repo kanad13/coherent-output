@@ -45,7 +45,14 @@ python3 scripts/skill_evals.py grade d2-architect --out <results-dir>
 4. Add a grader to `skill_graders.py` only for a check no existing grader covers, and add a passing and a failing example to `scripts/test_skill_evals.py`. A grader that cannot fail proves nothing.
 5. Run `check`, then `run --all`, and read the output files of at least one run. A passing grader shows that its rule held in that run; it does not show that every output is good.
 
-## 4. Limits
+## 4. Known weaknesses found by trials
+
+- **d2-architect, boundary views:** a container holding many boxes, with labelled edges leaving it, repeatedly produced labels that collide with the container border or a ragged stack of boxes (`source-not-target`, two of three runs). Candidate fix: draw the container with only the parts that touch the outside, and give edges that leave it one word or no label.
+- **d2-architect, zoom captions:** the caption sometimes still omits the opened part's label (`concept-set`, one of three runs), even with an example in the skill.
+- **mermaid-architect, overviews:** one run drew a tangled overview with a line through a label (`ladder-big`, one of three runs).
+- **Visual review is a judgment:** verdicts follow one standard (fail: clipped or overlapped text, a line or border through a label, sprawl, a backwards flow; pass with a note: cramped but legible). Another reviewer may draw the line differently, so keep the `visual.json` notes.
+
+## 5. Limits
 
 - Graders judge structure and rules. They do not judge whether a diagram explains its subject well; read a sample of the outputs.
 - Three runs per case show instability, not a rate. Raise `--runs` for a rule that fails intermittently.
