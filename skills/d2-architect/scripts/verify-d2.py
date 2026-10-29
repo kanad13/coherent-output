@@ -31,9 +31,8 @@ MIN_VERSION = (0, 9, 0)
 RENDER_TIMEOUT = 90
 LADDER_NODE_LIMIT = 15
 FULL_NODE_LIMIT = 40
-# Rendered size in pixels. Measured on real output: strips such as 3140x278 or 212x1520 are what
-# readers scroll and squint at, while 916x842 and 936x998 read fine. A "Full picture" may be larger.
-MAX_WIDTH, MAX_HEIGHT, MAX_RATIO = 1200, 1000, 3.0
+# Rendered size in pixels. A "Full picture" may be larger.
+MAX_WIDTH, MAX_HEIGHT = 1200, 1000
 FULL_MAX_WIDTH, FULL_MAX_HEIGHT = 1800, 1800
 RASTER_TIMEOUT = 60
 os.environ["PATH"] = os.pathsep.join([os.environ.get("PATH", ""), str(Path.home() / ".local/bin"), "/opt/homebrew/bin", "/usr/local/bin"])
@@ -228,7 +227,7 @@ def svg_size(svg):
 
 
 def size_warnings(svg, full=False):
-    """Warn when a diagram renders too wide, too tall, or as a thin strip.
+    """Warn when a diagram renders too wide or too tall.
 
     The caps exist because a diagram that must be scrolled or squinted at fails its reader;
     the remedy is the zoom ladder, so each message points there.
@@ -241,8 +240,6 @@ def size_warnings(svg, full=False):
     warnings = []
     if width > max_width or height > max_height:
         warnings.append(f"renders {width:.0f}x{height:.0f}px (limit {max_width}x{max_height}); zoom into one part per diagram instead of cramming")
-    elif not full and max(width / height, height / width) > MAX_RATIO:
-        warnings.append(f"renders {width:.0f}x{height:.0f}px, a strip more than {MAX_RATIO:g}:1; use direction: right for a long chain or split it")
     return warnings
 
 

@@ -21,8 +21,6 @@ MUTATIONS = [
     ("d2: service 400 no longer invalid", "skills/d2-architect/scripts/verify-d2.py", 'return ("invalid" if error.code == 400 else "unavailable")', 'return ("invalid" if error.code == 999 else "unavailable")', "test_d2_verifier.py"),
     ("d2: source violations need a renderer to be reported", "skills/d2-architect/scripts/verify-d2.py", "    if early:\n        return 1\n", "", "test_d2_verifier.py"),
     ("d2: width cap ignored", "skills/d2-architect/scripts/verify-d2.py", "    if width > max_width or height > max_height:", "    if False:", "test_d2_verifier.py"),
-    ("d2: strip ratio ignored", "skills/d2-architect/scripts/verify-d2.py", "    elif not full and max(width / height, height / width) > MAX_RATIO:", "    elif False:", "test_d2_verifier.py"),
-    ("mermaid: strip ratio ignored", "skills/mermaid-architect/scripts/verify-markdown.py", "    if max(width / height, height / width) > MAX_RATIO:", "    if False:", "test_diagram_structure.py"),
     ("mermaid: size warning removed", "skills/mermaid-architect/scripts/verify-markdown.py", "    if width > MAX_WIDTH or height > MAX_HEIGHT:", "    if False:", "test_diagram_structure.py"),
     ("evals: unreviewed images pass", "scripts/skill_evals.py", '    missing = [name for name in images if name not in review]\n    if missing:', '    missing = [name for name in images if name not in review]\n    if False:', "test_skill_evals.py"),
     ("evals: failed image review ignored", "scripts/skill_evals.py", "    if failed:\n        name, note = next", "    if False:\n        name, note = next", "test_skill_evals.py"),

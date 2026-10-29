@@ -50,7 +50,7 @@ def renderer():
 
 MAX_NODES = 10
 # Rendered size in pixels; the same caps as the D2 helper, measured on real output.
-MAX_WIDTH, MAX_HEIGHT, MAX_RATIO = 1200, 1000, 3.0
+MAX_WIDTH, MAX_HEIGHT = 1200, 1000
 MAX_SUBGRAPHS = 3
 FORBIDDEN_DIRECTIONS = ("RL", "BT")
 COMPOUND = re.compile(r"(,\s*(while|whereas|but|and)\b|\b(while|whereas|meanwhile|although)\b|;|\bas well as\b)", re.I)
@@ -201,15 +201,13 @@ Returns:
 
 
 def svg_size_warnings(svg):
-    """Warn when a rendered diagram is too wide, too tall, or a thin strip."""
+    """Warn when a rendered diagram is too wide or too tall."""
     found = re.search(r'viewBox="\s*[-\d.]+[ ,]+[-\d.]+[ ,]+([\d.]+)[ ,]+([\d.]+)"', svg)
     if not found:
         return []
     width, height = float(found.group(1)), float(found.group(2))
     if width > MAX_WIDTH or height > MAX_HEIGHT:
         return [f"renders {width:.0f}x{height:.0f}px (limit {MAX_WIDTH}x{MAX_HEIGHT}); zoom into one part per diagram instead of cramming"]
-    if max(width / height, height / width) > MAX_RATIO:
-        return [f"renders {width:.0f}x{height:.0f}px, a strip more than {MAX_RATIO:g}:1; use LR for a long chain or split it"]
     return []
 
 

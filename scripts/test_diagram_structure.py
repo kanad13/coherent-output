@@ -76,17 +76,17 @@ class StructureChecks(unittest.TestCase):
     def test_quoted_sequence_message_warns(self):
         self.assertTrue(any("quotes" in w for w in check(QUOTED_SEQUENCE)[1]))
 
-    def test_oversize_and_strip_diagrams_warn(self):
+    def test_oversize_diagrams_warn(self):
         def svg(width, height):
             return f'<svg viewBox="-8 -8 {width} {height}"></svg>'
         self.assertEqual(verifier.svg_size_warnings(svg(780, 640)), [])
+        self.assertEqual(verifier.svg_size_warnings(svg(1190, 335)), [])
+        self.assertEqual(verifier.svg_size_warnings(svg(1100, 300)), [])
+        self.assertEqual(verifier.svg_size_warnings(svg(300, 950)), [])
         self.assertTrue(verifier.svg_size_warnings(svg(1548, 270)))
-        self.assertTrue(verifier.svg_size_warnings(svg(1190, 335)))
         self.assertTrue(verifier.svg_size_warnings(svg(400, 1300)))
         self.assertTrue(verifier.svg_size_warnings(svg(1300, 700)))
         self.assertTrue(verifier.svg_size_warnings(svg(900, 1100)))
-        self.assertTrue(verifier.svg_size_warnings(svg(1100, 300)))
-        self.assertTrue(verifier.svg_size_warnings(svg(300, 950)))
         self.assertEqual(verifier.svg_size_warnings("<svg></svg>"), [])
 
     def test_png_option_writes_one_image_per_diagram(self):

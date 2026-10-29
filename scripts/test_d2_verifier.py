@@ -189,9 +189,11 @@ class RenderedSize(unittest.TestCase):
         for width, height in ((916, 842), (936, 998), (726, 674), (518, 908)):
             self.assertEqual(verifier.size_warnings(svg_of(width, height)), [], (width, height))
 
-    def test_strips_and_oversize_warn(self):
-        for width, height in ((212, 1520), (3140, 278), (328, 1131), (1841, 232), (1300, 700), (900, 1100), (1100, 300), (300, 950)):
+    def test_oversize_warns(self):
+        for width, height in ((212, 1520), (3140, 278), (328, 1131), (1841, 232), (1300, 700), (900, 1100)):
             self.assertTrue(verifier.size_warnings(svg_of(width, height)), (width, height))
+        for width, height in ((1100, 300), (300, 950)):
+            self.assertEqual(verifier.size_warnings(svg_of(width, height)), [], (width, height))
 
     def test_full_picture_gets_more_room_but_not_unlimited(self):
         self.assertEqual(verifier.size_warnings(svg_of(1314, 1119), full=True), [])

@@ -63,7 +63,7 @@ Use a ladder when the concept needs more than 10 nodes, or when the text describ
 - **Connected:** A flowchart is one connected structure. Groups that the text compares, pairs, or contrasts connect through a hub node, a labelled edge, or one named outer box.
 - **Faithful structure:** Edges and layout carry only relations the source states. Draw a tree only for a stated hierarchy; peers point at the same target or share one box; a pool that serves several groups is one node with an edge to each.
 - **Simplicity:** Every node advances the message. Cut any node that does not. Use at most 10 nodes. When the content needs more, build a ladder (Section 3) instead of cramming.
-- **Size:** Each diagram renders inside 1200 by 1000 pixels and is no more than 3 times wider than tall, or tall than wide. A long chain in `LR` becomes a wide strip that readers squint at. Use `TD`, or split the chain into a ladder. The helper warns above these limits.
+- **Size:** Each diagram renders inside 1200 by 1000 pixels. The helper warns above these limits.
 - **Independence:** A reader who sees only the diagram understands it. Name actors, states, and systems in full inside the labels, because inserted blocks carry no explanatory prose.
 - **Consistency:** Use one term per concept, one class meaning per color, and the direction convention of Section 6 across every diagram in the answer or document.
 - **Grounding:** Every node and edge traces to the source: the document, the code or files the user pointed at, or the user's own description. Mark a necessary bridging assumption with `[Inferred]` in its label.
@@ -163,7 +163,7 @@ The scripts live in `scripts/` beside this `SKILL.md`. Resolve `<skill_dir>` to 
 - Document batch: `python3 <skill_dir>/scripts/verify-markdown.py <document.md> --png <temp_dir>`; `--png` writes one image per diagram for the visual check.
 - Single diagram: `<skill_dir>/scripts/verify-mmdc.sh <diagram.mmd>`
 - Provisioning: the helper needs `@mermaid-js/mermaid-cli@12.0.0` and never downloads during verification. In this checkout, run `npm ci` at the repository root. For a separate install, place that exact version in the skill folder or on `PATH`. `COHERENT_MMDC_BIN` selects an explicit executable, and `COHERENT_PUPPETEER_CONFIG` passes a Puppeteer configuration file (for example `--no-sandbox` on a CI runner).
-- Structure checks run before rendering: a flowchart is one connected structure, stays within 10 nodes and 3 subgraphs, and does not use `RL` or `BT`. Warnings cover compound captions, quoted sequence messages, and diagrams that render oversize or as a thin strip.
+- Structure checks run before rendering: a flowchart is one connected structure, stays within 10 nodes and 3 subgraphs, and does not use `RL` or `BT`. Warnings cover compound captions, quoted sequence messages, and diagrams that render oversize.
 - Exit codes: `0` compiled (or the document has no Mermaid fences), `1` invalid syntax or structure, `2` verification could not run (missing tooling or browser dependencies). Report exit `2` as an unverified result. Each renderer call has a timeout, and temporary files are removed.
 
 ---
