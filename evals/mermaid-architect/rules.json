@@ -1,0 +1,50 @@
+[
+  {
+    "id": "MA-DEFAULT",
+    "quote": "Mermaid is the diagram language unless the user names another."
+  },
+  {
+    "id": "MA-D2-HANDOFF",
+    "quote": "When the user names D2, stop and use d2-architect instead."
+  },
+  {
+    "id": "MA-ADHOC-SCOPE",
+    "quote": "Do not turn an ad hoc request into a document sweep."
+  },
+  {
+    "id": "MA-SWEEP",
+    "quote": "Every heading (H1-H6) of the document gets at least one diagram"
+  },
+  {
+    "id": "MA-PRESERVE",
+    "quote": "Every pre-existing byte stays unchanged."
+  },
+  {
+    "id": "MA-CAPTION",
+    "quote": "Write the caption in bold text."
+  },
+  {
+    "id": "MA-LIMIT10",
+    "quote": "Use at most 10 nodes."
+  },
+  {
+    "id": "MA-LADDER",
+    "quote": "Draw level 0 first."
+  },
+  {
+    "id": "MA-CONTINUITY",
+    "quote": "keeps its exact label in the parent diagram"
+  },
+  {
+    "id": "MA-SHAPES",
+    "quote": "draw it in the tier's shape in flowcharts"
+  },
+  {
+    "id": "MA-QUOTES",
+    "quote": "Put every flowchart node label and edge label in double quotes."
+  },
+  {
+    "id": "MA-HOSTCOLOR",
+    "quote": "with no `color:` and no `linkStyle`"
+  }
+]

@@ -18,4 +18,8 @@ echo "=== 3. Checking Prettier Formatting ==="
 echo "=== 4. Checking Repository Diagrams ==="
 python3 "$REPO_DIR/scripts/check_diagrams.py" "$REPO_DIR"
 
+echo "=== 5. Checking Skill Trial Suites ==="
+python3 "$REPO_DIR/scripts/skill_evals.py" check
+python3 "$REPO_DIR/scripts/skill_evals.py" status
+
 echo "=== All Verification Checks Passed ==="

@@ -1,0 +1,46 @@
+[
+  {
+    "id": "D2-EXPLICIT",
+    "quote": "A generic \"draw a diagram\" request goes to mermaid-architect."
+  },
+  {
+    "id": "D2-NOSWEEP",
+    "quote": "Do not walk a whole document heading by heading"
+  },
+  {
+    "id": "D2-SET",
+    "quote": "Deliver the overview, the zoom ladder (Section 3), and extra views."
+  },
+  {
+    "id": "D2-LADDER",
+    "quote": "Draw level 0 first."
+  },
+  {
+    "id": "D2-CONTINUITY",
+    "quote": "keeps its exact label in the parent diagram"
+  },
+  {
+    "id": "D2-NEWFILE",
+    "quote": "A new Markdown file named for the subject"
+  },
+  {
+    "id": "D2-NOICONS",
+    "quote": "Never write `icon`, `shape: image`, `link`, `tooltip`, or an import."
+  },
+  {
+    "id": "D2-TALA",
+    "quote": "Every block uses TALA."
+  },
+  {
+    "id": "D2-BOARDS",
+    "quote": "Do not use `layers`, `scenarios`, or `steps`."
+  },
+  {
+    "id": "D2-LOOK",
+    "quote": "view every diagram, not a sample"
+  },
+  {
+    "id": "D2-NOPRUNE",
+    "quote": "number every diagram"
+  }
+]

@@ -1,0 +1,228 @@
+[
+  {
+    "id": "auto-default",
+    "tier": "smoke",
+    "prompt": "Explain how a customer's support request moves from the web form to a resolved ticket. Include a diagram.",
+    "rules": ["MA-DEFAULT", "MA-CAPTION"],
+    "graders": [
+      [
+        "skill_loaded",
+        {
+          "skill": "mermaid-architect"
+        }
+      ],
+      [
+        "skill_not_loaded",
+        {
+          "skill": "d2-architect"
+        }
+      ],
+      [
+        "diagram_count",
+        {
+          "lang": "mermaid",
+          "minimum": 1
+        }
+      ],
+      [
+        "diagram_count",
+        {
+          "lang": "d2",
+          "maximum": 0
+        }
+      ],
+      [
+        "captions_present",
+        {
+          "lang": "mermaid"
+        }
+      ],
+      [
+        "diagrams_verify",
+        {
+          "lang": "mermaid"
+        }
+      ]
+    ]
+  },
+  {
+    "id": "d2-named",
+    "prompt": "Draw the support request flow, from web form to resolved ticket, as a D2 diagram.",
+    "rules": ["MA-D2-HANDOFF"],
+    "graders": [
+      [
+        "skill_not_loaded",
+        {
+          "skill": "mermaid-architect"
+        }
+      ],
+      [
+        "diagram_count",
+        {
+          "lang": "mermaid",
+          "maximum": 0
+        }
+      ]
+    ]
+  },
+  {
+    "id": "ladder-big",
+    "tier": "smoke",
+    "prompt": "Explain how an online shop works end to end. The parts are: storefront, search, catalog, cart, checkout, payments, fraud check, inventory, warehouse, shipping, carrier tracking, notifications, email provider, analytics, recommendations, identity, admin console, and the orders database. Show it in diagrams.",
+    "rules": ["MA-LIMIT10", "MA-LADDER", "MA-CONTINUITY", "MA-CAPTION"],
+    "graders": [
+      [
+        "skill_loaded",
+        {
+          "skill": "mermaid-architect"
+        }
+      ],
+      [
+        "diagram_count",
+        {
+          "lang": "mermaid",
+          "minimum": 3
+        }
+      ],
+      [
+        "ladder",
+        {
+          "lang": "mermaid"
+        }
+      ],
+      [
+        "captions_present",
+        {
+          "lang": "mermaid"
+        }
+      ],
+      [
+        "diagrams_verify",
+        {
+          "lang": "mermaid"
+        }
+      ]
+    ]
+  },
+  {
+    "id": "sweep-explicit",
+    "fixture": "handbook.md",
+    "prompt": "Use the mermaid-architect skill on handbook.md.",
+    "rules": ["MA-SWEEP", "MA-PRESERVE", "MA-CAPTION"],
+    "graders": [
+      [
+        "skill_loaded",
+        {
+          "skill": "mermaid-architect"
+        }
+      ],
+      [
+        "insertion_only",
+        {
+          "lang": "mermaid"
+        }
+      ],
+      [
+        "every_heading_has_diagram",
+        {
+          "lang": "mermaid"
+        }
+      ],
+      [
+        "captions_present",
+        {
+          "lang": "mermaid"
+        }
+      ],
+      [
+        "diagrams_verify",
+        {
+          "lang": "mermaid"
+        }
+      ]
+    ]
+  },
+  {
+    "id": "adhoc-not-sweep",
+    "tier": "smoke",
+    "fixture": "handbook.md",
+    "prompt": "In handbook.md, add a diagram that shows how escalation works.",
+    "rules": ["MA-ADHOC-SCOPE", "MA-PRESERVE"],
+    "graders": [
+      [
+        "skill_loaded",
+        {
+          "skill": "mermaid-architect"
+        }
+      ],
+      [
+        "insertion_only",
+        {
+          "lang": "mermaid"
+        }
+      ],
+      [
+        "diagram_count",
+        {
+          "lang": "mermaid",
+          "minimum": 1,
+          "maximum": 3
+        }
+      ],
+      [
+        "diagrams_verify",
+        {
+          "lang": "mermaid"
+        }
+      ]
+    ]
+  },
+  {
+    "id": "tier-shapes",
+    "prompt": "Draw the architecture of a mobile app that calls an orders API. The API writes to a database, publishes events to a queue, and calls an external payment provider.",
+    "rules": ["MA-SHAPES", "MA-QUOTES", "MA-HOSTCOLOR"],
+    "graders": [
+      [
+        "skill_loaded",
+        {
+          "skill": "mermaid-architect"
+        }
+      ],
+      [
+        "required_regex",
+        {
+          "lang": "mermaid",
+          "pattern": "\\[\\(\""
+        }
+      ],
+      [
+        "required_regex",
+        {
+          "lang": "mermaid",
+          "pattern": "\\{\\{\""
+        }
+      ],
+      [
+        "required_regex",
+        {
+          "lang": "mermaid",
+          "pattern": "\\[\\[\""
+        }
+      ],
+      ["flowchart_labels_quoted", {}],
+      [
+        "forbidden_regex",
+        {
+          "lang": "mermaid",
+          "pattern": "color:|linkStyle"
+        }
+      ],
+      [
+        "diagrams_verify",
+        {
+          "lang": "mermaid"
+        }
+      ]
+    ]
+  }
+]
