@@ -6,8 +6,10 @@ tests that, and it is meant for the moments a skill is added or edited, not for 
 
 Commands:
   check   Static: rules, cases, and wording lint. Cheap; runs inside verify.sh.
-  run     Dynamic: run fresh agents on the cases, then grade what they left behind.
-  grade   Grade results produced elsewhere (another host, or by hand).
+  prepare Create run folders and prompts, so the harness that is editing the skill can
+          run each case with its own fresh agents (subagents or its CLI).
+  run     Same, but drive Claude Code's print mode for you.
+  grade   Grade what the agents left behind.
   status  Report which skills changed since their last passing trial.
 
 Each skill with a suite has `evals/<skill>/rules.json` (the instructions under test, each
@@ -308,6 +310,26 @@ def command_check(args):
     return status
 
 
+def command_prepare(args):
+    """Create run folders for the selected cases and print each prompt with its folder."""
+    out = Path(args.out or tempfile.mkdtemp(prefix="skill-trials-"))
+    _, cases = load_suite(args.skill)
+    chosen = [c for c in cases if (not args.case or c["id"] in args.case) and (args.all or args.case or c.get("tier") == "smoke")]
+    manifest = []
+    for case in chosen:
+        for number in range(1, (args.runs or 1) + 1):
+            run_dir = out / args.skill / case["id"] / f"run-{number}"
+            (run_dir / "workdir").mkdir(parents=True, exist_ok=True)
+            if case.get("fixture"):
+                shutil.copy(EVALS / args.skill / "fixtures" / case["fixture"], run_dir / "workdir" / case["fixture"])
+            (run_dir / "prompt.txt").write_text(case["prompt"], encoding="utf-8")
+            manifest.append({"case": case["id"], "run": str(run_dir), "prompt": case["prompt"]})
+    (out / args.skill / "manifest.json").write_text(json.dumps(manifest, indent=2), encoding="utf-8")
+    print(json.dumps(manifest, indent=2))
+    print(f"\nFor each run: start a fresh agent with the prompt, working only in <run>/workdir. It writes its final reply to <run>/response.md and the skills it loaded to <run>/skills.txt. Then: python3 scripts/skill_evals.py grade {args.skill} --out {out}")
+    return 0
+
+
 def command_run(args):
     out = Path(args.out or tempfile.mkdtemp(prefix="skill-trials-"))
     rules, cases = load_suite(args.skill)
@@ -370,6 +392,12 @@ def main():
     sub = parser.add_subparsers(dest="command", required=True)
     check = sub.add_parser("check", help="static suite and wording checks")
     check.add_argument("skills", nargs="*")
+    prepare = sub.add_parser("prepare", help="create run folders for the harness to run with its own agents")
+    prepare.add_argument("skill")
+    prepare.add_argument("--case", action="append")
+    prepare.add_argument("--all", action="store_true")
+    prepare.add_argument("--runs", type=int, help="runs per case (default 1)")
+    prepare.add_argument("--out")
     run = sub.add_parser("run", help="run fresh agents on the cases, then grade")
     run.add_argument("skill")
     run.add_argument("--case", action="append", help="run only this case (repeatable)")
@@ -385,7 +413,7 @@ def main():
     status = sub.add_parser("status", help="which skills changed since their last passing trial")
     status.add_argument("--require-fresh", action="store_true")
     args = parser.parse_args()
-    return {"check": command_check, "run": command_run, "grade": command_grade, "status": command_status}[args.command](args)
+    return {"check": command_check, "prepare": command_prepare, "run": command_run, "grade": command_grade, "status": command_status}[args.command](args)
 
 
 if __name__ == "__main__":

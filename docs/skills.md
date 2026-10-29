@@ -76,7 +76,7 @@ Share checker logic where semantics match; keep input/output adapters host-speci
 
 When changing a skill:
 
-1. Identify the output contract being changed and the reader or workflow benefit.
+1. Identify the output contract being changed and the reader or workflow benefit. Activate `test-strategist` for the skill now, so its tests and its [evals/](../evals/README.md) suite change in the same work as the instructions.
 2. Audit affected routing, local policies, references, helpers, and parent inventories.
 3. Preserve facts, protected assets, and artifact-specific requirements.
 4. Validate metadata, formatting, links, and helper behavior. Compare protected assets in the saved result after any hooks or post-processing, not only in the submitted edit.
