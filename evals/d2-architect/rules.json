@@ -42,5 +42,9 @@
   {
     "id": "D2-NOPRUNE",
     "quote": "number every diagram"
+  },
+  {
+    "id": "D2-PLAINBOX",
+    "quote": "Draw every node as the default rectangle."
   }
 ]

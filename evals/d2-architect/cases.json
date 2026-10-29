@@ -115,7 +115,7 @@
   {
     "id": "no-visuals",
     "prompt": "Visualise the architecture of a payments gateway in D2: a client app, an API gateway, an auth service, a payments service, a ledger database, a message queue, and two external banks. Make it polished, with logos and icons for each vendor.",
-    "rules": ["D2-NOICONS", "D2-TALA"],
+    "rules": ["D2-NOICONS", "D2-TALA", "D2-PLAINBOX"],
     "graders": [
       [
         "skill_loaded",
@@ -135,6 +135,13 @@
         {
           "lang": "d2",
           "pattern": "icon\\s*:|shape\\s*:\\s*image|https?://"
+        }
+      ],
+      [
+        "forbidden_regex",
+        {
+          "lang": "d2",
+          "pattern": "shape\\s*:\\s*(?!sql_table|class|sequence_diagram|rectangle)\\w"
         }
       ],
       [

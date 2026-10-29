@@ -95,7 +95,7 @@ class Graders(unittest.TestCase):
             return "\n".join(f"**Diagram: {caption}**\n\n```mermaid\n{code}\n```\n" for caption, code in pairs)
         overview = 'flowchart LR\nS["Storefront"] --> O["Order Service"] --> P["Payments"]'
         zoom = 'flowchart LR\nI["Intake"] --> F["Fulfilment"]'
-        wide = "flowchart LR\n" + "\n".join(f'N{i}["Part {i}"] --> N{i + 1}["Part {i + 1}"]' for i in range(0, 16, 2))
+        wide = 'flowchart LR\nN0["Order Service"] --> N1["Part 1"]\n' + "\n".join(f'N{i}["Part {i}"] --> N{i + 1}["Part {i + 1}"]' for i in range(2, 16, 2))
         with tempfile.TemporaryDirectory() as d:
             good = make_run(d, response=doc(("The shop has three parts", overview), ("Order Service splits intake from fulfilment", zoom)))
             self.assertEqual(self.verdict("ladder", good, lang="mermaid"), graders.PASS)
@@ -105,6 +105,15 @@ class Graders(unittest.TestCase):
             self.assertEqual(self.verdict("ladder", too_wide, lang="mermaid"), graders.FAIL)
             single = make_run(d, response=doc(("The shop has three parts", overview)))
             self.assertEqual(self.verdict("ladder", single, lang="mermaid"), graders.FAIL)
+
+    def test_ascii_art_fails_but_mermaid_tables_and_prose_pass(self):
+        art = "Here:\n\n```text\n+------+   +----+\n| User |-->| DB |\n+------+   +----+\n```\n"
+        boxes = "┌──────┐\n│ User │\n└──────┘\n"
+        clean = DIAGRAM + "\n| a | b |\n| - | - |\n| 1 | 2 |\n\nUse a -> b in prose.\n"
+        with tempfile.TemporaryDirectory() as d:
+            self.assertEqual(self.verdict("no_ascii_art", make_run(d, response=art)), graders.FAIL)
+            self.assertEqual(self.verdict("no_ascii_art", make_run(d, response=boxes)), graders.FAIL)
+            self.assertEqual(self.verdict("no_ascii_art", make_run(d, response=clean)), graders.PASS)
 
     def test_new_markdown_file_and_stray_images(self):
         with tempfile.TemporaryDirectory() as d:

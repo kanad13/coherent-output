@@ -183,6 +183,35 @@ def flowchart_labels_quoted(run):
     return PASS, ""
 
 
+# --- ascii art ---------------------------------------------------------------------
+
+ASCII_ART = re.compile(r"[┌┐└┘│─├┤┬┴┼╔╗╚╝║═▲▼◄►]|\+[-=]{2,}\+|^\s*\+[-=]{3,}|^\s*\|\s+\S.*\s\|\s*$", re.M)
+
+
+def no_ascii_art(run):
+    """Neither the response nor any Markdown file draws with ASCII or box-drawing characters.
+
+    Mermaid fences and Markdown tables are skipped; any other fence, including `text`, is checked.
+    """
+    for name, text in markdown_texts(run).items():
+        kept, fence, language = [], None, None
+        for line in text.splitlines():
+            if fence is None:
+                opening = OPENING.match(line)
+                if opening:
+                    fence, language = opening.group(1), opening.group(2).lower()
+                elif not re.match(r"^\s*\|.*\|\s*$", line):
+                    kept.append(line)
+            elif re.match(r"^ {0,3}" + re.escape(fence[0]) + "{" + str(len(fence)) + r",}\s*$", line):
+                fence = None
+            elif language != "mermaid":
+                kept.append(line)
+        match = ASCII_ART.search("\n".join(kept))
+        if match:
+            return FAIL, f"{name} draws with ASCII art near {match.group(0)!r}"
+    return PASS, ""
+
+
 # --- files ---------------------------------------------------------------------------
 
 def no_files_matching(run, pattern):
@@ -331,6 +360,7 @@ GRADERS = {
     "required_regex": required_regex,
     "response_matches": response_matches,
     "flowchart_labels_quoted": flowchart_labels_quoted,
+    "no_ascii_art": no_ascii_art,
     "no_files_matching": no_files_matching,
     "new_markdown_with_diagrams": new_markdown_with_diagrams,
     "fixture_unchanged": fixture_unchanged,

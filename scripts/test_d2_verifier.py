@@ -5,9 +5,14 @@ none is provisioned, because a missing checker is an unavailable result and not 
 """
 
 import base64
+import http.server
 import importlib.util
+import os
 from pathlib import Path
+import subprocess
+import sys
 import tempfile
+import threading
 import unittest
 
 SOURCE = Path(__file__).resolve().parent.parent
@@ -69,8 +74,114 @@ class ContentRules(unittest.TestCase):
             with self.subTest(body=body):
                 self.assertTrue(self.errors(body), body)
 
+    def test_decorative_shapes_fail_but_data_shapes_pass(self):
+        for shape in ("cylinder", "queue", "cloud", "diamond", "person", "document", "circle", "hexagon", "image"):
+            with self.subTest(shape=shape):
+                self.assertTrue(self.errors(f"x: X {{ shape: {shape} }}\n"), shape)
+        for shape in ("sql_table", "class", "sequence_diagram", "rectangle"):
+            with self.subTest(shape=shape):
+                self.assertEqual(self.errors(f"x: X {{ shape: {shape} }}\n"), [], shape)
+
     def test_plain_shapes_and_classes_pass(self):
-        self.assertEqual(self.errors("classes: { store: { shape: cylinder } }\ndb: DB { class: store }\n"), [])
+        self.assertEqual(self.errors("classes: { store: { style.stroke-dash: 4 } }\ndb: DB { class: store }\n"), [])
+
+
+class StubService:
+    """A d2-renderer look-alike on an ephemeral port that answers every POST with one status."""
+
+    def __init__(self, status, body=b"<svg/>"):
+        outer = self
+
+        class Handler(http.server.BaseHTTPRequestHandler):
+            def do_GET(self):
+                self.send_response(200)
+                self.end_headers()
+                self.wfile.write(b"OK")
+
+            def do_POST(self):
+                outer.received = self.rfile.read(int(self.headers["Content-Length"])).decode()
+                outer.path = self.path
+                self.send_response(status)
+                self.end_headers()
+                self.wfile.write(body)
+
+            def log_message(self, *args):
+                pass
+
+        self.server = http.server.HTTPServer(("127.0.0.1", 0), Handler)
+        self.url = f"http://127.0.0.1:{self.server.server_port}"
+        threading.Thread(target=self.server.serve_forever, daemon=True).start()
+
+    def close(self):
+        self.server.shutdown()
+        self.server.server_close()
+
+
+class RenderService(unittest.TestCase):
+    """Rendering through a d2-renderer service maps its answers onto the helper's statuses."""
+
+    def render(self, status, body=b"<svg/>"):
+        service = StubService(status, body)
+        self.addCleanup(service.close)
+        result = verifier.render(["@http", service.url + "/d2/svg"], "a -> b\n")
+        return result, service
+
+    def test_ok_sends_source_without_layout_flags(self):
+        (state, svg, _), service = self.render(200, b"<svg>drawn</svg>")
+        self.assertEqual((state, svg), ("ok", "<svg>drawn</svg>"))
+        self.assertEqual(service.received, "a -> b\n")
+        self.assertEqual(service.path, "/d2/svg")
+
+    def test_compile_error_is_invalid_with_the_message(self):
+        (state, _, message), _ = self.render(400, b"D2 Compilation Error:\nerr: -:3:1: bad")
+        self.assertEqual(state, "invalid")
+        self.assertIn("bad", message)
+
+    def test_server_failure_is_unavailable_never_invalid(self):
+        self.assertEqual(self.render(500)[0][0], "unavailable")
+        self.assertEqual(self.render(504)[0][0], "unavailable")
+
+    def test_unreachable_service_is_unavailable(self):
+        self.assertEqual(verifier.render(["@http", "http://127.0.0.1:9/d2/svg"], "a -> b\n")[0], "unavailable")
+
+    def test_renderer_selects_the_service_after_a_health_check(self):
+        service = StubService(200)
+        self.addCleanup(service.close)
+        saved = os.environ.get("COHERENT_D2_RENDERER_URL")
+        os.environ["COHERENT_D2_RENDERER_URL"] = service.url
+        try:
+            self.assertEqual(verifier.renderer(), ["@http", service.url + "/d2/svg"])
+            os.environ["COHERENT_D2_RENDERER_URL"] = "http://127.0.0.1:9"
+            with self.assertRaises(RuntimeError):
+                verifier.renderer()
+        finally:
+            os.environ.pop("COHERENT_D2_RENDERER_URL", None)
+            if saved is not None:
+                os.environ["COHERENT_D2_RENDERER_URL"] = saved
+
+
+class CliWithoutRenderer(unittest.TestCase):
+    """The exit code is the contract: source violations are 1 and a missing renderer is 2."""
+
+    def run_cli(self, block):
+        env = {"PATH": "/nonexistent", "COHERENT_D2_RENDERER_URL": "http://127.0.0.1:9", "HOME": tempfile.gettempdir()}
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "doc.md"
+            path.write_text("# T\n\n**Diagram: A reaches B**\n\n```d2\n" + HEADER + block + "```\n", encoding="utf-8")
+            return subprocess.run([sys.executable, "-I", str(SOURCE / "skills/d2-architect/scripts/verify-d2.py"), str(path)], capture_output=True, text=True, env=env).returncode
+
+    def test_forbidden_content_exits_one_without_a_renderer(self):
+        self.assertEqual(self.run_cli("a: A { icon: ./a.svg }\na -> b\n"), 1)
+        self.assertEqual(self.run_cli("a: A { shape: cylinder }\na -> b\n"), 1)
+
+    def test_clean_block_with_no_renderer_exits_two(self):
+        self.assertEqual(self.run_cli("a -> b\n"), 2)
+
+
+class SizeLimits(unittest.TestCase):
+    def test_full_picture_caption_is_recognized(self):
+        self.assertTrue(verifier.FULL_PICTURE.search("**Diagram 9: Full picture of the platform**"))
+        self.assertFalse(verifier.FULL_PICTURE.search("**Diagram 9: Fulfilment reserves stock**"))
 
 
 class GraphRecovery(unittest.TestCase):

@@ -52,6 +52,7 @@ MAX_NODES = 10
 MAX_SUBGRAPHS = 3
 FORBIDDEN_DIRECTIONS = ("RL", "BT")
 COMPOUND = re.compile(r"(,\s*(while|whereas|but|and)\b|\b(while|whereas|meanwhile|although)\b|;|\bas well as\b)", re.I)
+ODD_SHAPE = re.compile(r"\w(?:\(\[|\[\(|\{\{|\[\[|\(\(|\{|\(|>|\[/|\[\\)")
 ARROW = re.compile(r"\s*(?:<?-\.+-+>?|<?-{2,}>?|<?={2,}>?)\s*")
 KEYWORDS = ("flowchart", "graph", "classdef", "class ", "style ", "linkstyle", "direction", "%%", "click ")
 
@@ -171,6 +172,14 @@ Returns:
         warnings.append("quotes render literally in sequence messages; remove them")
     if kind not in ("flowchart", "graph"):
         return errors, warnings
+    for line in code.splitlines():
+        text = line.strip()
+        if text.startswith(KEYWORDS) or text.lower().startswith(KEYWORDS):
+            continue
+        text = re.sub(r"\|[^|]*\|", "", re.sub(r'"[^"]*"', "Q", text))
+        if ODD_SHAPE.search(text):
+            errors.append(f"node shape other than a plain box: {line.strip()[:70]!r}; draw every node as A[\"Label\"]")
+            break
     info = parse_flowchart(code)
     if info["direction"] in FORBIDDEN_DIRECTIONS:
         errors.append(f"direction {info['direction']} puts consumers before sources; use LR or TD")

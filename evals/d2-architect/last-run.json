@@ -1,0 +1,30 @@
+{
+  "digest": "66d910fb6481a7a7",
+  "cases": {
+    "generic-request": {
+      "outcome": "pass",
+      "passed": 1,
+      "runs": 1
+    },
+    "concept-set": {
+      "outcome": "pass",
+      "passed": 3,
+      "runs": 3
+    },
+    "source-not-target": {
+      "outcome": "pass",
+      "passed": 1,
+      "runs": 1
+    },
+    "no-visuals": {
+      "outcome": "pass",
+      "passed": 1,
+      "runs": 1
+    },
+    "look-at-it": {
+      "outcome": "pass",
+      "passed": 1,
+      "runs": 1
+    }
+  }
+}

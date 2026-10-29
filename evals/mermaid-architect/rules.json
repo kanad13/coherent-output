@@ -36,15 +36,23 @@
     "quote": "keeps its exact label in the parent diagram"
   },
   {
-    "id": "MA-SHAPES",
-    "quote": "draw it in the tier's shape in flowcharts"
-  },
-  {
     "id": "MA-QUOTES",
     "quote": "Put every flowchart node label and edge label in double quotes."
   },
   {
     "id": "MA-HOSTCOLOR",
     "quote": "with no `color:` and no `linkStyle`"
+  },
+  {
+    "id": "MA-PLAINBOX",
+    "quote": "Draw every flowchart node as `A[\"Label\"]`."
+  },
+  {
+    "id": "MA-NOASCII",
+    "quote": "Never draw a diagram with ASCII or box-drawing characters"
+  },
+  {
+    "id": "MA-ASCII-CONVERT",
+    "quote": "Convert an ASCII diagram in a document only when the user asks."
   }
 ]

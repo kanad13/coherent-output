@@ -178,9 +178,9 @@
     ]
   },
   {
-    "id": "tier-shapes",
+    "id": "plain-boxes",
     "prompt": "Draw the architecture of a mobile app that calls an orders API. The API writes to a database, publishes events to a queue, and calls an external payment provider.",
-    "rules": ["MA-SHAPES", "MA-QUOTES", "MA-HOSTCOLOR"],
+    "rules": ["MA-PLAINBOX", "MA-QUOTES", "MA-HOSTCOLOR"],
     "graders": [
       [
         "skill_loaded",
@@ -189,24 +189,10 @@
         }
       ],
       [
-        "required_regex",
+        "forbidden_regex",
         {
           "lang": "mermaid",
-          "pattern": "\\[\\(\""
-        }
-      ],
-      [
-        "required_regex",
-        {
-          "lang": "mermaid",
-          "pattern": "\\{\\{\""
-        }
-      ],
-      [
-        "required_regex",
-        {
-          "lang": "mermaid",
-          "pattern": "\\[\\[\""
+          "pattern": "\\w(\\(\\[|\\[\\(|\\{\\{|\\[\\[|\\(\\(|\\{|>)"
         }
       ],
       ["flowchart_labels_quoted", {}],
@@ -217,6 +203,62 @@
           "pattern": "color:|linkStyle"
         }
       ],
+      [
+        "diagrams_verify",
+        {
+          "lang": "mermaid"
+        }
+      ]
+    ]
+  },
+  {
+    "id": "sketch-no-ascii",
+    "tier": "smoke",
+    "prompt": "Give me a quick rough sketch of how a DNS lookup works.",
+    "rules": ["MA-NOASCII", "MA-DEFAULT"],
+    "graders": [
+      [
+        "skill_loaded",
+        {
+          "skill": "mermaid-architect"
+        }
+      ],
+      [
+        "diagram_count",
+        {
+          "lang": "mermaid",
+          "minimum": 1
+        }
+      ],
+      ["no_ascii_art", {}],
+      [
+        "diagrams_verify",
+        {
+          "lang": "mermaid"
+        }
+      ]
+    ]
+  },
+  {
+    "id": "convert-ascii",
+    "fixture": "ascii-doc.md",
+    "prompt": "Convert the ASCII diagram in ascii-doc.md into a proper diagram.",
+    "rules": ["MA-ASCII-CONVERT", "MA-NOASCII"],
+    "graders": [
+      [
+        "skill_loaded",
+        {
+          "skill": "mermaid-architect"
+        }
+      ],
+      [
+        "diagram_count",
+        {
+          "lang": "mermaid",
+          "minimum": 1
+        }
+      ],
+      ["no_ascii_art", {}],
       [
         "diagrams_verify",
         {

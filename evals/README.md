@@ -2,6 +2,10 @@
 
 These suites test whether agents follow a skill's instructions. A skill can parse, install, and still be ignored: the model may never load it, may skip a rule, or may misread a rule that is badly placed or worded. Run these checks when a skill is added or edited. They do not run each time a skill is used.
 
+## 0. When to run
+
+Every time a skill is added or edited, activate `test-strategist` for that skill. It reviews the skill's existing tests, finds the instructions that no case pressures, and adds cases and graders. Then run `check` (free), the trial (`run <skill> --all --stamp`), and `python3 scripts/sabotage_check.py` if graders or helpers changed. `verify.sh` marks a skill `STALE` until its trial has passed against the current text. A trial that cannot run because no agent CLI is logged in is reported as blocked, not as a pass.
+
 ## 1. What is tested
 
 | Question                                 | Check                                                                                                                                                                | Cost                 |
@@ -20,12 +24,12 @@ A run where the agent never ran (login failure, timeout, empty output) is report
 ```bash
 python3 scripts/skill_evals.py check                 # static; also runs in verify.sh
 python3 scripts/skill_evals.py status                # which skills changed since their last passing trial
-python3 scripts/skill_evals.py run mermaid-architect # smoke cases, 3 runs each
-python3 scripts/skill_evals.py run d2-architect --all --stamp
+python3 scripts/skill_evals.py prepare mermaid-architect --all --runs 3 # then run an agent per folder
+python3 scripts/skill_evals.py grade mermaid-architect --out <dir> --stamp
 python3 scripts/skill_evals.py grade d2-architect --out <results-dir>
 ```
 
-- **Agent:** `run` drives Claude Code in print mode. It finds `claude` on `PATH`, `COHERENT_CLAUDE_BIN`, or the desktop app's bundled binary. The binary must be logged in (`claude /login` once, or `ANTHROPIC_API_KEY`). `COHERENT_AGENT_CMD` replaces the command; the template can use `{prompt_file}` and `{workdir}`.
+- **Who runs trials:** the harness that is adding or editing the skill. Skills must work in every harness; testing them does not. `prepare` creates one folder per run (fixture copied into `workdir/`, prompt in `prompt.txt`). The harness starts a fresh agent per folder with only the prompt, using its own agent facility (subagents, or its CLI). Each agent writes its final reply to `response.md` and the skills it loaded to `skills.txt`. `grade` then judges the folders. `run` is optional automation that drives Claude Code's print mode (it needs a logged-in `claude`; `COHERENT_AGENT_CMD` replaces the command).
 - **Renderers:** graders call each skill's own verifier. Set `COHERENT_D2_RENDERER_URL` to a running d2-renderer service (`http://localhost:8080`) or provision D2 as the skill describes. An unavailable renderer blocks the check; it does not pass it.
 - **Results:** `run` writes `<out>/<skill>/<case>/run-<n>/` with `workdir/`, `transcript.jsonl`, and `response.md`. The default location is a new temporary folder outside the checkout. `grade` accepts results made by another host: add `response.md`, a `workdir/`, and a `skills.txt` that lists the skills loaded.
 - **Stamp:** a full passing run writes `evals/<skill>/last-run.json` with a digest of the skill folder and its suite. `status` compares digests, so any later edit marks the trial stale. Commit the stamp with the skill change it covers.

@@ -1,0 +1,45 @@
+{
+  "digest": "fff5d442d606af0c",
+  "cases": {
+    "auto-default": {
+      "outcome": "pass",
+      "passed": 1,
+      "runs": 1
+    },
+    "d2-named": {
+      "outcome": "pass",
+      "passed": 1,
+      "runs": 1
+    },
+    "ladder-big": {
+      "outcome": "pass",
+      "passed": 1,
+      "runs": 1
+    },
+    "sweep-explicit": {
+      "outcome": "pass",
+      "passed": 1,
+      "runs": 1
+    },
+    "adhoc-not-sweep": {
+      "outcome": "pass",
+      "passed": 1,
+      "runs": 1
+    },
+    "plain-boxes": {
+      "outcome": "pass",
+      "passed": 1,
+      "runs": 1
+    },
+    "sketch-no-ascii": {
+      "outcome": "pass",
+      "passed": 1,
+      "runs": 1
+    },
+    "convert-ascii": {
+      "outcome": "pass",
+      "passed": 1,
+      "runs": 1
+    }
+  }
+}

@@ -42,7 +42,7 @@ COLOR_OVERRIDE = re.compile(r"^\s*(fill|stroke|font-color)\s*:\s*[\"']?(#|[a-zA-
 # local icon path or a link compiles, so the source text is checked directly.
 FORBIDDEN = (
     (re.compile(r"(?:^|[{;.])\s*icon\s*:", re.M), "`icon` is not allowed: diagrams carry meaning in shapes and labels"),
-    (re.compile(r"shape\s*:\s*[\"']?image\b", re.M), "`shape: image` is not allowed"),
+    (re.compile(r"shape\s*:\s*[\"']?(?!(?:sql_table|class|sequence_diagram|rectangle)\b)\w", re.M), "only plain boxes are allowed: `shape:` may be sql_table, class, or sequence_diagram"),
     (re.compile(r"(?:^|[{;.])\s*(link|tooltip)\s*:", re.M), "`link` and `tooltip` are not allowed: static previews drop them"),
     (re.compile(r"^\s*(\.\.\.)?\s*@", re.M), "imports are not allowed: a block must be self-contained"),
     (re.compile(r"(?:^|[{;.])\s*(layers|scenarios|steps)\s*:", re.M), "`layers`, `scenarios` and `steps` are not allowed: a fence shows only the root board; use one block per level"),
@@ -342,6 +342,14 @@ def verify_blocks(blocks, strict=False, sheet=None, palette=""):
     """
     if not blocks:
         return 0
+    # Source rules need no renderer, so a violation is reported as invalid (1), not unavailable (2).
+    early = False
+    for number, block in enumerate(blocks, start=1):
+        for message in static_checks(block["caption"], block["code"])[0]:
+            print(f"Diagram {number} error: {message}", file=sys.stderr)
+            early = True
+    if early:
+        return 1
     try:
         command = renderer()
     except (OSError, RuntimeError, subprocess.TimeoutExpired) as error:

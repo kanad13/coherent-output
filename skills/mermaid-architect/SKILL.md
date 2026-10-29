@@ -1,22 +1,24 @@
 ---
 name: mermaid-architect
-description: Draws verified native Mermaid diagrams, one insight each, and splits large concepts into a zoom ladder from a 30,000-foot overview down to detail. This is the default diagramming skill. Use it automatically whenever a diagram is needed in any answer, document, README, plan, or review and the user has not named another tool. When the user invokes it explicitly on a document, sweep the whole document so every heading gets a diagram, without altering existing text. Do not use when the user asks for D2 (use d2-architect), for image files, or for rewriting surrounding prose.
+description: Draws verified native Mermaid diagrams, one insight each, and splits large concepts into a zoom ladder from a 30,000-foot overview down to detail. This is the default skill for every diagram, illustration, sketch, or visual explanation. Use it automatically whenever one is needed in any answer, document, README, plan, or review, unless the user names another tool, and use it in place of ASCII or box-drawing art. When the user invokes it explicitly on a document, sweep the whole document so every heading gets a diagram, without altering existing text. Do not use when the user asks for D2 (use d2-architect), for image files, or for rewriting surrounding prose.
 ---
 
 # Mermaid Diagram Architect
 
-Draw compilable Mermaid diagrams that a reader takes in at a glance. One diagram carries one insight. A concept too large for one diagram becomes a ladder of diagrams, from the widest view down to the detail. Every diagram is compiled before it reaches the user.
+Draw compilable Mermaid diagrams that a reader takes in at a glance. Every diagram, illustration, or visual sketch of structure is Mermaid, never ASCII art. One diagram carries one insight. A concept too large for one diagram becomes a ladder of diagrams, from the widest view down to the detail. Every diagram is compiled before it reaches the user.
 
 ---
 
 ## 1. Modes
 
-| Mode       | Starts when                                                                                                                                | Result                                                                                                    |
-| :--------- | :----------------------------------------------------------------------------------------------------------------------------------------- | :-------------------------------------------------------------------------------------------------------- |
-| **Ad hoc** | Any diagram is needed and the user named no other tool: an explanation, a design discussion, a README, a plan, a pull request description. | The diagram or ladder the request needs, placed where the reader will see it.                             |
-| **Sweep**  | The user invokes this skill explicitly on a document, or asks for diagrams across a document.                                              | Every heading (H1-H6) of the document gets at least one diagram, inserted without altering existing text. |
+| Mode       | Starts when                                                                                                                                                                             | Result                                                                                                    |
+| :--------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :-------------------------------------------------------------------------------------------------------- |
+| **Ad hoc** | Any diagram, illustration, sketch, or visual explanation is needed and the user named no other tool: an explanation, a design discussion, a README, a plan, a pull request description. | The diagram or ladder the request needs, placed where the reader will see it.                             |
+| **Sweep**  | The user invokes this skill explicitly on a document, or asks for diagrams across a document.                                                                                           | Every heading (H1-H6) of the document gets at least one diagram, inserted without altering existing text. |
 
 - **Default tool:** Mermaid is the diagram language unless the user names another. When the user names D2, stop and use d2-architect instead.
+- **No ASCII art:** Never draw a diagram with ASCII or box-drawing characters (`+--+`, `|`, `└──`, `│`, arrows built from dashes). Draw the same content as Mermaid. A directory listing, a table, or a code excerpt is not a diagram and stays as text.
+- **Converting existing ASCII:** Convert an ASCII diagram in a document only when the user asks. The conversion keeps every fact of the original and replaces the ASCII block with a caption and a Mermaid fence. It is the one exception to insertion-only.
 - **Ad hoc scope:** Draw what the request needs. Do not turn an ad hoc request into a document sweep.
 - **Sweep scope:** Work through the document section by section, in order, and leave no heading without a diagram.
 
@@ -70,11 +72,11 @@ Use a ladder when the concept needs more than 10 nodes, or when the text describ
 
 ---
 
-## 5. Default Shapes
+## 5. Default Structures
 
-Pick the shape from the content type. Each is one connected structure.
+Pick the structure from the content type. Each is one connected structure.
 
-| Content                  | Shape                                                                                       |
+| Content                  | Structure                                                                                   |
 | :----------------------- | :------------------------------------------------------------------------------------------ |
 | Comparison, alternatives | Hub: a root naming the thing compared, one edge per option labelled with the condition.     |
 | Lookup of pairs          | Two named column boxes (one per kind), one labelled edge per pair.                          |
@@ -100,18 +102,19 @@ Reuse the passage's own verbs and figures in labels.
 
 ## 7. Styling
 
-Color and shape together carry the tier, so the meaning survives color-blind viewing and monochrome print.
+Color carries the tier. Every node is a plain box, because other shapes render at uneven sizes and make diagrams look odd.
 
-- **Classes:** In flowcharts and `stateDiagram-v2`, assign every node one class from the theme block (Appendix B) by logical tier, and draw it in the tier's shape in flowcharts:
+- **Plain boxes only:** Draw every flowchart node as `A["Label"]`. Never use stadium, cylinder, hexagon, subroutine, circle, diamond, or any other node shape. A decision is a box whose label asks the question.
+- **Classes:** In flowcharts and `stateDiagram-v2`, assign every node one class from the theme block (Appendix B) by logical tier:
 
-  | Class     | Tier                                                | Flowchart shape            |
-  | :-------- | :-------------------------------------------------- | :------------------------- |
-  | `c1`      | Ingress, client, entrypoint, primary flow           | Stadium: `A(["Label"])`    |
-  | `c2`      | Compute, internal services, transforms, core engine | Rectangle: `A["Label"]`    |
-  | `c3`      | Persistence, data stores, state, caches             | Cylinder: `A[("Label")]`   |
-  | `c4`      | Messaging, queues, streaming, decision gates        | Hexagon: `A{{"Label"}}`    |
-  | `c5`      | External systems, third parties, egress, boundaries | Subroutine: `A[["Label"]]` |
-  | `default` | Uncategorized or utility nodes                      | Rectangle                  |
+  | Class     | Tier                                                |
+  | :-------- | :-------------------------------------------------- |
+  | `c1`      | Ingress, client, entrypoint, primary flow           |
+  | `c2`      | Compute, internal services, transforms, core engine |
+  | `c3`      | Persistence, data stores, state, caches             |
+  | `c4`      | Messaging, queues, streaming, decision gates        |
+  | `c5`      | External systems, third parties, egress, boundaries |
+  | `default` | Uncategorized or utility nodes                      |
 
 - **Theme:** Paste the Theme A block (the default) at the top of each flowchart, or the theme the user names. In `stateDiagram-v2`, declare only the `c1`-`c5` classes in use and omit `classDef default`, which fails to compile.
 - **Other grammars:** Sequence diagrams and the remaining grammars use native styling without classes.

@@ -44,7 +44,7 @@ Mermaid is the default diagram tool. D2 is the tool the user reaches for when th
 | 2+    | One part of the previous level, opened up the same way.   | Up to 15 nodes          |
 
 - **Order of drawing:** Draw level 0 first. Then follow one part down through its levels until the subject runs out. Then return to level 0 and open the next part.
-- **Continuity:** A container or node being opened keeps its exact label in the parent diagram. In the child it becomes the outer container, and the caption names it.
+- **Continuity:** A container or node being opened keeps its exact label in the parent diagram. In the child it becomes the outer container, and the caption begins with that label, for example `**Diagram 2: Storefront splits search from identity**`. A zoom caption that never names the opened part leaves the reader lost.
 - **One part per diagram:** A level-1 diagram opens one part. Opening three parts at once makes three diagrams.
 - **Node count:** Count leaf nodes. Containers group them and do not count. A reader takes in a ladder diagram at a glance.
 - **Stop rule:** Stop opening a part when the subject has no more structure there, or when the next level would restate one node. A diagram of one edge belongs inside its neighbor.
@@ -73,13 +73,13 @@ One all-in-one diagram of the whole subject is allowed after the ladder. Put `Fu
 - **Connected:** A diagram is one connected structure. Groups that the subject compares, pairs, or contrasts connect through a hub node, a labelled edge, or one named outer container.
 - **Faithful structure:** Edges and nesting carry only relations the subject states. Nest a container only for stated membership. Draw a tree only for a stated hierarchy.
 - **Independence:** A reader who sees only the diagram understands it. Name actors, states, and systems in full inside the labels.
-- **Consistency:** Use one term per concept, one shape per kind of thing, and the same edge conventions across every diagram in the set.
+- **Consistency:** Use one term per concept, one box style, and the same edge conventions across every diagram in the set.
 - **Grounding:** Every node, edge, and attribute traces to the user's description, the files or code the user named, or a source they pointed at. Never invent content. Mark `[Inferred]` only on an element a diagram needs to stay connected or to name a relation the subject implies, and quote the label. List every inference in the plan table so the user can reject it.
 - **Use D2's strengths:**
 
   | Content                  | Pattern                                                                                                        |
   | :----------------------- | :------------------------------------------------------------------------------------------------------------- |
-  | System architecture      | Nested containers for stated boundaries, one shape per tier, labelled edges between tiers.                     |
+  | System architecture      | Nested containers for stated boundaries, plain boxes, labelled edges between tiers.                            |
   | Trust or ownership zones | One container per zone, edges that cross zones declared at the root.                                           |
   | Database schema          | `shape: sql_table` per entity when the subject names columns, otherwise plain boxes; one edge per foreign key. |
   | Class hierarchy, types   | `shape: class` per type, edges for stated inheritance or composition.                                          |
@@ -115,30 +115,24 @@ vars: {
 ### No icons, images, or links
 
 - Never write `icon`, `shape: image`, `link`, `tooltip`, or an import. The user does not use them, and the offline renderer rejects remote assets.
-- Shapes, containers, and labels carry all meaning.
+- Boxes, containers, and labels carry all meaning.
 
-### Shapes carry the tier, the theme carries the color
+### Plain boxes only
 
-Leave `fill` and `stroke` at their theme defaults. A fixed color breaks text contrast in the other color scheme, and D2 colors accept only named or six-digit hex values (no alpha). Allowed emphasis: `style.stroke-dash`, `style.multiple`, `style.double-border`, and `style.opacity`.
+Draw every node as the default rectangle. Never write `shape:` with another value (`cylinder`, `queue`, `cloud`, `diamond`, `person`, `document`, `circle`, and the rest): they render at uneven sizes and make diagrams look odd. The only `shape:` values allowed are `sql_table`, `class`, and `sequence_diagram`, and only when the subject is a schema, a class model, or a message protocol.
 
-| Kind of node                   | Shape                                      |
-| :----------------------------- | :----------------------------------------- |
-| Person or actor                | `shape: person`                            |
-| Service or process             | Default rectangle                          |
-| Data store                     | `shape: cylinder`                          |
-| Queue or stream                | `shape: queue`                             |
-| External system or third party | `shape: cloud` with `style.stroke-dash: 4` |
-| Decision                       | `shape: diamond`                           |
-| Document or artifact           | `shape: document`                          |
+- **Meaning comes from containers and labels:** A data store is a box labelled "Orders database". An external system is a box with `style.stroke-dash: 4` inside no container of the platform. A decision is a box whose label asks the question.
+- **Color:** Leave `fill` and `stroke` at their theme defaults. A fixed color breaks text contrast in the other color scheme, and D2 colors accept only named or six-digit hex values (no alpha).
+- **Allowed emphasis:** `style.stroke-dash` and `style.opacity` only.
 
 ### Classes and legends
 
-- **Classes:** When three or more nodes share a shape or a style, declare a `classes` entry once and assign `class:` to each node. Keep the class meaning identical across the set.
+- **Classes:** When three or more nodes share a style, declare a `classes` entry once and assign `class:` to each node. Keep the class meaning identical across the set.
 - **Legend:** When a diagram uses dashed edges or `[Inferred]` labels, add a small legend container with `near: bottom-center` that names each convention. Skip the legend when nothing needs explaining.
 
 ### House palette
 
-The palette lives in `assets/house-palette.d2` beside this `SKILL.md`. A previewer or the helper prepends it to a block, and D2 merges the repeated `vars` blocks, so the block's own configuration still governs the layout. The palette recolors D2's named theme slots, so each shape keeps its tint in light and dark: people blue, databases green, documents violet, queues and decisions slate, and containers a blue ramp from outer to inner. Pass it to the helper with `--palette`.
+The palette lives in `assets/house-palette.d2` beside this `SKILL.md`. A previewer or the helper prepends it to a block, and D2 merges the repeated `vars` blocks, so the block's own configuration still governs the layout. The palette recolors D2's named theme slots, so the boxes keep their tint in light and dark: containers get a blue ramp from outer to inner, and boxes, edges, and text get slate and blue. Pass it to the helper with `--palette`.
 
 ### Names, labels, and edges
 
@@ -182,7 +176,7 @@ The script lives in `scripts/` beside this `SKILL.md`. Resolve `<skill_dir>` to 
 - Raw diagram: `python3 <skill_dir>/scripts/verify-d2.py --diagram <diagram.d2> --sheet <temp_dir> --palette <skill_dir>/assets/house-palette.d2`
 - Renderer order: `COHERENT_D2_RENDERER_URL` (a running d2-renderer service, for example `http://localhost:8080`), then `COHERENT_D2_BIN`, then a `d2` on `PATH`, then the Docker image `d2lang/d2:v0.9.0` run without network access. D2 v0.9.0 or later bundles TALA. The helper never downloads during verification; provision once with `docker pull d2lang/d2:v0.9.0` or `brew install d2`.
 - The helper renders each block without a layout flag, so the block's own `layout-engine` governs.
-- Checks before the report: the header names TALA; no `icon`, image shape, link, tooltip, or import; each block compiles; each diagram is one connected structure. Warnings cover compound captions, color overrides, and size (above 15 leaf nodes, or above 40 for a `Full picture` diagram). `--strict` fails on warnings.
+- Checks before the report: the header names TALA; no `icon`, link, tooltip, import, or `shape:` other than a box, `sql_table`, `class`, or `sequence_diagram`; each block compiles; each diagram is one connected structure. Warnings cover compound captions, color overrides, and size (above 15 leaf nodes, or above 40 for a `Full picture` diagram). `--strict` fails on warnings.
 - Palette: `--palette` prepends the file to every render, and error line numbers still point into your block.
 - Contact sheet: an HTML page with each diagram beside its caption and source, plus the rendered SVG files.
 - Exit codes: `0` compiled (or the document has no D2 fences), `1` invalid syntax, header, content rule, or structure, `2` verification could not run (no renderer). Report exit `2` as an unverified result. Each render has a timeout, and temporary files are removed.
