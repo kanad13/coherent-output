@@ -6,3 +6,5 @@ __pycache__/
 /evaluations/
 /SKILL-EVALUATION.md
 /DISCOVERY-EVALUATION.md
+# Written by the Claude desktop app when ~/.claude/skills links to skills/.
+/skills/synced/

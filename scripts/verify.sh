@@ -2,7 +2,7 @@
 # verify.sh: Single-command validation runner for deployment sync, test suites, and formatting.
 set -euo pipefail
 # Agent runtimes may not load the user's shell profile.
-export PATH="${PATH:-}:$HOME/.local/bin:/opt/homebrew/bin:/usr/local/bin"
+export PATH="${PATH:-}:$HOME/.local/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin"
 
 REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
