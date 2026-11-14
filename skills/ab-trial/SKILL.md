@@ -14,6 +14,7 @@ Run a small, fair experiment before committing to a change whose effect is uncer
 - Activate `worth-the-squeeze` on the question "is testing this worth the cost?" Without it, answer in three sentences: the cost of a wrong choice, the cost of the trial, and whether a cheaper check (a deterministic test, a quick read) settles it.
 - Stop and decide directly when the change is cheap to reverse, taste decides it, or an existing check already settles it. Say why no trial ran.
 - Activate `claim-validator` when the hypothesis hides several claims. Without it, split the hypothesis into one testable statement per option.
+- State the planned agent count and a rough token cost in the gate answer. Each agent carries tens of thousands of tokens of overhead, so a trial should cost a fraction of what the change is worth.
 
 ---
 
@@ -31,9 +32,10 @@ Write these down first, and do not change them after seeing outputs.
 
 ## 3. Run Independent Arms
 
-- **Isolation:** each run gets a fresh agent, one arm, and one task. Never tell an agent about the hypothesis, the other arms, or the checks.
-- **Blinding:** give each run a random ID. Store its arm file and task under that ID, and keep the ID-to-arm map away from the agents and the judge.
-- **Models:** run at least two model strengths when the artifact will run on different hosts. A strong model can hide a weakness that a weaker one shows.
+- **Agents:** use one independent subagent per arm, and no more than three agents in total, judge included. Each arm agent gets its own copy of the arm and the full task list, treats each task as a separate request, and writes each output to its own file. Never tell an agent about the hypothesis, the other arms, or the checks. Use a fresh agent per task only when a task needs tools or a multi-turn dialogue, or must not see the other tasks.
+- **Order:** shuffle the task order separately for each arm, so an order effect does not line up with one arm.
+- **Blinding:** name each output file with a random ID, and keep the ID-to-arm map away from the judge.
+- **Models:** run a second model strength only when the artifact will run on different hosts. A strong model can hide a weakness that a weaker one shows. Each extra strength adds one agent per arm, so keep the total small.
 - **Judge:** use a model from a different family than the agents when one is available. Score each output against its checklist, one run at a time. Send content to an external service only when the cross-family judge adds signal.
 - **Scratch space:** keep arms, outputs, and scores outside the repository.
 
@@ -44,7 +46,7 @@ Write these down first, and do not change them after seeing outputs.
 1. Compute deterministic checks first. Then judge scores. Then size and length per arm.
 2. Audit every output where the judge and the deterministic checks or the length disagree. Judges miss real defects and invent false ones. Correct the verdict and say so.
 3. Check for copying: text from an example appearing in unrelated outputs.
-4. State the sample size, the ceiling effect if nearly everything passed, and what the trial could not detect.
+4. State the sample size, the ceiling effect if nearly everything passed, that tasks within an arm shared one agent's context, and what the trial could not detect.
 
 ---
 
