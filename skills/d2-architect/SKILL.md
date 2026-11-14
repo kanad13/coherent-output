@@ -136,7 +136,10 @@ The script lives in `scripts/` beside this `SKILL.md`. Resolve `<skill_dir>` to 
 
 - Document: `python3 <skill_dir>/scripts/verify-d2.py <document.md> --sheet <temp_dir> --palette <skill_dir>/assets/house-palette.d2`
 - Raw diagram: `python3 <skill_dir>/scripts/verify-d2.py --diagram <diagram.d2> --sheet <temp_dir> --palette <skill_dir>/assets/house-palette.d2`
-- Provisioning: the helper needs D2 v0.9.0 or later, the first release that bundles TALA. It uses `COHERENT_D2_BIN` when set, then a `d2` on `PATH`, then the Docker image `d2lang/d2:v0.9.0`, run without network access. It never downloads during verification; provision once with `docker pull d2lang/d2:v0.9.0` or `brew install d2`.
+- Renderer: the helper tries two renderers in this fixed order and reads no environment variable, credential, or configuration file to find either.
+  1. A d2-renderer service already running at `http://127.0.0.1:8088` (it must answer `/health` with `OK` and identify itself as `D2Renderer`). Start one with `python3 server.py --bind 127.0.0.1` from a d2-renderer checkout; it needs `d2` v0.9.0 or later on `PATH`.
+  2. The Docker image `d2lang/d2:v0.9.0`, run without network access.
+  3. When neither is available the helper exits `2` and no diagram is verified. Do not search for another renderer, install one, or pull an image. Report the result as unverified and name both options.
 - The helper renders each block without a layout flag, so the block's own `layout-engine` governs.
 - Checks before the report: the standard header names TALA, each block compiles, each diagram is one connected structure, and warnings cover compound captions, color overrides, and diagrams above 40 nodes (`--strict` fails on them).
 - Palette: `--palette` prepends the file to every render, and error line numbers still point into your block.

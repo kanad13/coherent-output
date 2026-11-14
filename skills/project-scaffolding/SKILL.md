@@ -36,17 +36,17 @@ For continuity-only work, define acceptance criteria around existing workflows, 
 
 Give each needed kind of information one canonical home that future agents can find. Link shared facts to that home.
 
-| Information           | What Must Be Discoverable                                                                | Possible Home                                                  |
-| :-------------------- | :--------------------------------------------------------------------------------------- | :------------------------------------------------------------- |
-| Purpose and operation | Scope, setup, run commands, prerequisites, and architecture overview                     | `README.md` or existing entry document                         |
-| Change history        | Inspectable implementation changes and meaningful reasons                                | Version control history or an existing change record           |
-| Active plan           | Current goal, acceptance criteria, progress, blockers, and next action                   | `PLAN.md`, a README section, or an accessible project tracker  |
-| Decisions             | Non-obvious constraints, alternatives, chosen approach, trade-offs, and revisit triggers | `DECISIONS.md`, existing decision records, or a README section |
-| Verification          | Real workflows, expected outcomes, checks, commands, and execution triggers              | `TESTING.md` or existing testing documentation                 |
-| Agent workflow        | Where to read context and when to update the canonical records                           | `AGENTS.md` or an existing project instruction file            |
+| Information           | What Must Be Discoverable                                                                                       | Possible Home                                                  |
+| :-------------------- | :-------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------- |
+| Purpose and operation | Scope, setup, run commands, prerequisites, and architecture overview                                            | `README.md` or existing entry document                         |
+| Change history        | Inspectable implementation changes and meaningful reasons                                                       | Version control history or an existing change record           |
+| Active plan           | Current goal, acceptance criteria, progress, blockers, and next action                                          | `PLAN.md`, a README section, or an accessible project tracker  |
+| Decisions             | Each non-obvious choice as one current rule: where it applies, the approach, rejected options, revisit triggers | `DECISIONS.md`, existing decision records, or a README section |
+| Verification          | Real workflows, expected outcomes, checks, commands, and execution triggers                                     | `TESTING.md` or existing testing documentation                 |
+| Agent workflow        | Where to read context and when to update the canonical records                                                  | `AGENTS.md` or an existing project instruction file            |
 
 - **Instruction file:** use `AGENTS.md` as the canonical file. Claude Code reads it directly when no `CLAUDE.md` exists; if a `CLAUDE.md` already exists, have it import `AGENTS.md` (`@AGENTS.md`).
-- **Keep records current:** update plans and operating guidance in place, retain decision rationale, and mark superseded decisions explicitly. Route history to version control.
+- **Keep records current:** update plans, operating guidance, and decisions in place. When a decision changes, rewrite its record and delete a record that no longer governs; version control holds the history.
 - **Version control:** initialize local version control when it is missing and within scope. Commits and remote publication follow the authorized Git workflow.
 - **Minimal shapes** (extend only when the project needs more):
 
@@ -61,12 +61,35 @@ Blockers: <none | list>
 ```
 
 ```markdown
-## <date> — <decision>
+# Architectural Decision Records
 
-Context: <constraint or problem>
-Chosen: <approach> Alternatives: <rejected options and why>
-Revisit when: <condition>
+## Decision 001 - <the chosen approach, named as a noun phrase>
+
+### Decision context
+
+<The situation in which this decision governs: what is being decided and when a reader must consult it.>
+
+### Selected approach
+
+<The rule. Say what to always do, how to do it, and what never to do.>
+
+### Rejected approaches
+
+- **<Option>:** <the property that rules it out, as a fact.>
+
+### Revisit decision when
+
+- <An observable condition or threshold that reopens the decision.>
 ```
+
+Write a decision record as a current rule, not a story:
+
+- **Title:** names the chosen approach. Number records in order; no date or status field.
+- **Context:** states where the decision applies. It does not describe what existed before.
+- **Selected approach:** gives instructions a reader can follow without the other sections.
+- **Rejected approaches:** one fact-based line per option, with no narrative ("we tried", "it turned out", "previously").
+- **Revisit:** names a measurable trigger, not "if needed".
+- **Changes:** edit the record in place. Delete a record that no longer governs.
 
 ## 4. Encode and Audit the Maintenance Contract
 
@@ -78,7 +101,7 @@ Write project-specific instructions in the instruction file. They must tell futu
 | Select the next increment                           | Record the intended outcome, acceptance criteria, scope, and necessary verification in the active plan.                                  |
 | Complete an increment or encounter a blocker        | Update progress, verification status, blockers, and the next actionable step.                                                            |
 | Discover a changed requirement or failed assumption | Revise the affected plan and record the reason before continuing work that depends on the old assumption.                                |
-| Make a consequential design choice                  | Record the rationale, considered alternatives, trade-offs, and conditions for revisiting the choice.                                     |
+| Make a consequential design choice                  | Add a decision record: its context, selected approach, rejected approaches, and revisit conditions.                                      |
 | Change behavior, interfaces, tooling, or setup      | Update affected tests and canonical instructions alongside implementation; audit the testing strategy when its assumptions change.       |
 | End a session or hand off work                      | Record completed work, remaining work, unresolved decisions, verification evidence, and the next action.                                 |
 

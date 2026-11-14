@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
-"""Compile D2 diagrams with a version-checked renderer and report what was drawn.
+"""Compile D2 diagrams with a local renderer and report what was drawn.
 
-The helper travels with the skill. It never downloads a dependency during a check and
-distinguishes invalid diagrams (exit 1) from unavailable tooling (exit 2).
+The helper travels with the skill. It tries two renderers in a fixed order, a d2-renderer
+service on this machine and then a pinned Docker image, and reads no environment variable
+to find either. It never downloads a dependency during a check and distinguishes invalid
+diagrams (exit 1) from unavailable tooling (exit 2).
 
 Each block is rendered WITHOUT a layout flag: a flag would override the block's own
 `layout-engine`, hiding a missing or wrong setting. The compiled SVG also names every
@@ -22,10 +24,11 @@ import re
 import shutil
 import subprocess
 import sys
-import tempfile
+import urllib.error
+import urllib.request
 
+SERVICE_URL = "http://127.0.0.1:8088"
 D2_IMAGE = "d2lang/d2:v0.9.0"
-MIN_VERSION = (0, 9, 0)
 RENDER_TIMEOUT = 90
 SOFT_NODE_LIMIT = 40
 os.environ["PATH"] = os.pathsep.join([os.environ.get("PATH", ""), str(Path.home() / ".local/bin"), "/opt/homebrew/bin", "/usr/local/bin"])
@@ -34,45 +37,44 @@ COMPOUND = re.compile(r"(,\s*(while|whereas|but|and)\b|\b(while|whereas|meanwhil
 HEADING = re.compile(r"^ {0,3}(#{1,6})\s+(.*?)\s*#*\s*$")
 OPENING = re.compile(r"^ {0,3}(`{3,}|~{3,})\s*([\w-]*)")
 CONNECTION = re.compile(r"^(?:(?P<prefix>.*)\.)?\((?P<left>.+?) (?P<arrow><->|->|<-|--) (?P<right>.*?)\)\[\d+\]$")
+REMOTE_ICON = re.compile(r"\b(icon|image)\s*:\s*[\"']?https?://", re.I)
 COLOR_OVERRIDE = re.compile(r"^\s*(fill|stroke|font-color)\s*:\s*[\"']?(#|[a-zA-Z])", re.M)
 
 
-def parse_version(text):
-    """Extract a (major, minor, patch) tuple from `d2 --version` output, or None."""
-    found = re.search(r"(\d+)\.(\d+)\.(\d+)", text)
-    return tuple(int(part) for part in found.groups()) if found else None
-
-
 def renderer():
-    """Locate a D2 renderer without downloading anything.
+    """Locate a renderer in a fixed order without downloading anything.
 
-    Order: explicit COHERENT_D2_BIN, a `d2` on PATH, then the pinned Docker image run
-    with networking disabled so remote icons cannot make a block pass here and fail
-    elsewhere.
+    1. A d2-renderer service already listening on this machine at SERVICE_URL. It is the
+       fastest path and runs D2 offline with `--bundle=false`.
+    2. The pinned Docker image, run without network access so a remote icon cannot make a
+       block pass here and fail elsewhere.
+
+    The order is fixed in code. No environment variable or search path is read.
 
     Returns:
-        The argument list that, followed by `- -`, renders stdin to stdout.
+        A backend tuple: ("service", url) or ("docker", command_prefix).
 
     Raises:
-        RuntimeError: No renderer is available or the version is too old.
-        OSError: A candidate cannot be launched.
-        subprocess.TimeoutExpired: Version discovery exceeds ten seconds.
+        RuntimeError: Neither renderer is available.
     """
-    explicit = os.environ.get("COHERENT_D2_BIN")
-    binary = explicit or shutil.which("d2")
-    if binary:
-        result = subprocess.run([binary, "--version"], capture_output=True, text=True, timeout=10)
-        version = parse_version(result.stdout + result.stderr)
-        if version and version >= MIN_VERSION:
-            return [binary]
-        if explicit:
-            raise RuntimeError(f"D2 must be v{'.'.join(map(str, MIN_VERSION))} or later (TALA is bundled from that release); received {result.stdout.strip()!r}.")
+    try:
+        with urllib.request.urlopen(SERVICE_URL + "/health", timeout=2) as reply:
+            body = reply.read(16).decode("ascii", errors="replace").strip()
+            if reply.status == 200 and body == "OK" and reply.headers.get("Server", "").startswith("D2Renderer"):
+                return ("service", SERVICE_URL)
+    except (OSError, ValueError):
+        pass
     docker = shutil.which("docker")
     if docker:
-        probe = subprocess.run([docker, "image", "inspect", D2_IMAGE], capture_output=True, timeout=30)
-        if probe.returncode == 0:
-            return [docker, "run", "--rm", "-i", "--network", "none", "--entrypoint", "d2", D2_IMAGE]
-    raise RuntimeError(f"D2 unavailable. Provision it with `docker pull {D2_IMAGE}` or `brew install d2` (v0.9.0 or later); no diagrams were verified.")
+        try:
+            probe = subprocess.run([docker, "image", "inspect", D2_IMAGE], capture_output=True, timeout=30)
+        except (OSError, subprocess.TimeoutExpired):
+            probe = None
+        if probe is not None and probe.returncode == 0:
+            return ("docker", [docker, "run", "--rm", "-i", "--network", "none", "--entrypoint", "d2", D2_IMAGE])
+    raise RuntimeError(
+        f"no D2 renderer available: no d2-renderer service answered at {SERVICE_URL} and Docker image {D2_IMAGE} is not present. No diagrams were verified."
+    )
 
 
 def parse_blocks(content):
@@ -128,6 +130,8 @@ def static_checks(caption, code):
         errors.append(f"layout-engine is {engine.group(1)}; every block must use tala")
     if caption and COMPOUND.search(caption):
         warnings.append("compound caption: one diagram carries one idea; split it or state the single relation")
+    if REMOTE_ICON.search(code):
+        errors.append("remote icon or image URL: blocks must be self-contained because the renderer works offline")
     if COLOR_OVERRIDE.search(code):
         warnings.append("fill, stroke or font-color override: fixed colors break contrast in the other color scheme; let the theme color it")
     return errors, warnings
@@ -220,22 +224,34 @@ def shift_lines(message, offset):
     return re.sub(r"-:(\d+):(\d+)", lambda m: f"-:{max(int(m.group(1)) - offset, 1)}:{m.group(2)}", message)
 
 
-def render(command, code, palette=""):
+def render(backend, code, palette=""):
     """Render one block with the block's own configuration.
 
     Args:
-        command: Renderer prefix from renderer().
+        backend: Renderer from renderer().
         code: D2 source.
         palette: Optional D2 text prepended before rendering (the house palette).
 
     Returns:
         (status, svg, diagnostic) where status is "ok", "invalid" or "unavailable".
     """
-    env = {key: value for key, value in os.environ.items() if not key.startswith("D2_")}
     source = palette + code if not palette or palette.endswith("\n") else palette + "\n" + code
     offset = source.count("\n") - code.count("\n")
+    kind, target = backend
+    if kind == "service":
+        request = urllib.request.Request(target + "/d2/svg", data=source.encode("utf-8"), method="POST")
+        try:
+            with urllib.request.urlopen(request, timeout=RENDER_TIMEOUT) as reply:
+                return "ok", reply.read().decode("utf-8"), ""
+        except urllib.error.HTTPError as error:
+            message = shift_lines(error.read().decode("utf-8", errors="replace").strip(), offset)
+            error.close()
+            # The service answers 400 only for a compile failure; 413, 500 and 504 are its own limits.
+            return ("invalid" if error.code == 400 else "unavailable"), "", message
+        except (OSError, ValueError) as error:
+            return "unavailable", "", f"service request failed: {error}"
     try:
-        result = subprocess.run(command + ["-", "-"], input=source.encode("utf-8"), capture_output=True, timeout=RENDER_TIMEOUT, env=env)
+        result = subprocess.run(target + ["-", "-"], input=source.encode("utf-8"), capture_output=True, timeout=RENDER_TIMEOUT)
     except subprocess.TimeoutExpired:
         return "unavailable", "", f"render exceeded {RENDER_TIMEOUT}s"
     stderr = shift_lines(result.stderr.decode("utf-8", errors="replace").strip(), offset)
@@ -298,14 +314,14 @@ def verify_blocks(blocks, strict=False, sheet=None, palette=""):
     if not blocks:
         return 0
     try:
-        command = renderer()
+        backend = renderer()
     except (OSError, RuntimeError, subprocess.TimeoutExpired) as error:
         print(f"D2 verification unavailable: {error}", file=sys.stderr)
         return 2
     failed, warned, entries = False, False, []
     for number, block in enumerate(blocks, start=1):
         errors, warnings = static_checks(block["caption"], block["code"])
-        status, svg, diagnostic = render(command, block["code"], palette)
+        status, svg, diagnostic = render(backend, block["code"], palette)
         if status == "unavailable":
             print(f"Diagram {number}: verification unavailable: {diagnostic}", file=sys.stderr)
             return 2

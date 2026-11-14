@@ -5,10 +5,13 @@ none is provisioned, because a missing checker is an unavailable result and not 
 """
 
 import base64
+import http.server
 import importlib.util
 from pathlib import Path
 import tempfile
+import threading
 import unittest
+from unittest import mock
 
 SOURCE = Path(__file__).resolve().parent.parent
 spec = importlib.util.spec_from_file_location("d2_verifier", SOURCE / "skills/d2-architect/scripts/verify-d2.py")
@@ -83,9 +86,81 @@ class GraphRecovery(unittest.TestCase):
         svg = "".join(group(f"n{i}") + group(f"(n{i} -&gt; n{i + 1})[0]") for i in range(45)) + group("n45")
         self.assertTrue(any("nodes" in w for w in verifier.graph_checks(verifier.graph_from_svg(svg))[1]))
 
-    def test_version_parsing(self):
-        self.assertEqual(verifier.parse_version("v0.9.0\n"), (0, 9, 0))
-        self.assertIsNone(verifier.parse_version("none"))
+    def test_remote_icon_is_a_static_error(self):
+        errors, _ = verifier.static_checks(None, HEADER + "x: X { icon: https://icons.example.invalid/x.svg }")
+        self.assertTrue(any("remote icon" in e for e in errors))
+
+
+class FakeRenderer(http.server.BaseHTTPRequestHandler):
+    """Stand in for the d2-renderer service: the contract the helper relies on."""
+
+    server_version = "D2Renderer/1.0"
+    health_body = b"OK"
+
+    def log_message(self, *args):
+        pass
+
+    def do_GET(self):
+        self.send_response(200)
+        self.send_header("Content-Length", str(len(self.health_body)))
+        self.end_headers()
+        self.wfile.write(self.health_body)
+
+    def do_POST(self):
+        source = self.rfile.read(int(self.headers["Content-Length"])).decode()
+        if "boom" in source:
+            code, body = 500, b"D2 compiler binary 'd2' not found"
+        elif "bad" in source:
+            code, body = 400, b"D2 Compilation Error:\nerr: failed to compile: -:3:1: unexpected text"
+        else:
+            code, body = 200, b"<svg/>"
+        self.send_response(code)
+        self.send_header("Content-Length", str(len(body)))
+        self.end_headers()
+        self.wfile.write(body)
+
+
+class ServiceBackend(unittest.TestCase):
+    """Check renderer selection and the service reply mapping without D2 installed."""
+
+    def serve(self, body=b"OK"):
+        handler = type("Handler", (FakeRenderer,), {"health_body": body})
+        server = http.server.HTTPServer(("127.0.0.1", 0), handler)
+        threading.Thread(target=server.serve_forever, daemon=True).start()
+        self.addCleanup(server.shutdown)
+        self.addCleanup(server.server_close)
+        return f"http://127.0.0.1:{server.server_port}"
+
+    def test_running_service_is_chosen_first(self):
+        url = self.serve()
+        with mock.patch.object(verifier, "SERVICE_URL", url), mock.patch.object(verifier.shutil, "which", return_value=None):
+            self.assertEqual(verifier.renderer(), ("service", url))
+
+    def test_other_server_on_the_port_is_not_trusted(self):
+        url = self.serve(body=b"something else")
+        with mock.patch.object(verifier, "SERVICE_URL", url), mock.patch.object(verifier.shutil, "which", return_value=None):
+            with self.assertRaises(RuntimeError):
+                verifier.renderer()
+
+    def test_no_service_and_no_docker_is_unavailable(self):
+        with mock.patch.object(verifier, "SERVICE_URL", "http://127.0.0.1:9"), mock.patch.object(verifier.shutil, "which", return_value=None):
+            with self.assertRaises(RuntimeError):
+                verifier.renderer()
+            self.assertEqual(verifier.verify_blocks([{"caption": None, "heading": "T", "code": HEADER + "a -> b"}]), 2)
+
+    def test_service_reply_codes_map_to_status(self):
+        backend = ("service", self.serve())
+        self.assertEqual(verifier.render(backend, "a -> b")[0], "ok")
+        status, _, message = verifier.render(backend, "bad", palette="x: 1\n")
+        self.assertEqual(status, "invalid")
+        self.assertIn("-:2:1", message)  # the palette line is subtracted
+        self.assertEqual(verifier.render(backend, "boom")[0], "unavailable")
+
+    def test_environment_does_not_select_a_renderer(self):
+        with mock.patch.dict(verifier.os.environ, {"COHERENT_D2_BIN": "/bin/echo"}), \
+                mock.patch.object(verifier, "SERVICE_URL", "http://127.0.0.1:9"), mock.patch.object(verifier.shutil, "which", return_value=None):
+            with self.assertRaises(RuntimeError):
+                verifier.renderer()
 
 
 class RealRenders(unittest.TestCase):
