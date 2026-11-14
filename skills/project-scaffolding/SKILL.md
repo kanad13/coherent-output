@@ -7,7 +7,7 @@ description: Audits and establishes project foundations that satisfy requirement
 
 Turn project requirements and existing practices into verified foundations and a working continuity process. Follow stages 1–7 in order, carrying each stage's findings into the next, and revisit a stage when later evidence changes it. The project records its concrete files, tools, layout, and maintenance instructions; this skill supplies the audit, decision, implementation, and verification sequence.
 
-**Size the work to the project.** A script or single-session task needs a README section and one verification command, nothing more. Add `PLAN.md`, `DECISIONS.md`, and `TESTING.md` only when work will span sessions or involves non-obvious decisions.
+**Size the work to the project.** A script or single-session task needs a `README.md` section and one verification command, nothing more. Add `docs/010-plan.md`, `docs/020-decisions.md` (or `docs/020-decisions/`), and `tests/README.md` only when work will span sessions or involves non-obvious decisions.
 
 ## 1. Establish the Project Baseline
 
@@ -36,28 +36,39 @@ For continuity-only work, define acceptance criteria around existing workflows, 
 
 Give each needed kind of information one canonical home that future agents can find. Link shared facts to that home.
 
-| Information           | What Must Be Discoverable                                                                                       | Possible Home                                                  |
-| :-------------------- | :-------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------- |
-| Purpose and operation | Scope, setup, run commands, prerequisites, and architecture overview                                            | `README.md` or existing entry document                         |
-| Change history        | Inspectable implementation changes and meaningful reasons                                                       | Version control history or an existing change record           |
-| Active plan           | Current goal, acceptance criteria, progress, blockers, and next action                                          | `PLAN.md`, a README section, or an accessible project tracker  |
-| Decisions             | Each non-obvious choice as one current rule: where it applies, the approach, rejected options, revisit triggers | `DECISIONS.md`, existing decision records, or a README section |
-| Verification          | Real workflows, expected outcomes, checks, commands, and execution triggers                                     | `TESTING.md` or existing testing documentation                 |
-| Agent workflow        | Where to read context and when to update the canonical records                                                  | `AGENTS.md` or an existing project instruction file            |
+- **Clean root invariant:** the repository root contains only primary entrypoints (`README.md`, `AGENTS.md`), project manifests (such as `package.json` or `pyproject.toml`), and standard tool configurations (`.gitignore`, `LICENSE`). Bar secondary operational files (`PLAN.md`, `DECISIONS.md`, `TESTING.md`, `TODO.md`) from the bare root; place them in `docs/` or `tests/`.
+- **File naming:** format all file paths in code backticks (`docs/010-plan.md`), never in bold.
 
-- **Instruction file:** use `AGENTS.md` as the canonical file. Claude Code reads it directly when no `CLAUDE.md` exists; if a `CLAUDE.md` already exists, have it import `AGENTS.md` (`@AGENTS.md`).
-- **Keep records current:** update plans, operating guidance, and decisions in place. When a decision changes, rewrite its record and delete a record that no longer governs; version control holds the history.
+| Information           | What Must Be Discoverable                                                                                       | Possible Home                                                                              |
+| :-------------------- | :-------------------------------------------------------------------------------------------------------------- | :----------------------------------------------------------------------------------------- |
+| Purpose and operation | Scope, setup, run commands, prerequisites, and architecture overview                                            | `README.md` or existing entry document                                                     |
+| Change history        | Inspectable implementation changes and meaningful reasons                                                       | Version control history or an existing change record                                       |
+| Active plan           | Current goal, acceptance criteria, progress, blockers, and next action                                          | `docs/010-plan.md`, a `README.md` section, or an accessible project tracker                |
+| Decisions             | Each non-obvious choice as one current rule: where it applies, the approach, rejected options, revisit triggers | `docs/020-decisions.md` (or `docs/020-decisions/`), existing records, or a `README.md` sec |
+| Verification          | Real workflows, expected outcomes, checks, commands, and execution triggers                                     | `tests/README.md` or existing test documentation                                           |
+| Agent workflow        | Where to read context and when to update the canonical records                                                  | `AGENTS.md` or an existing project instruction file                                        |
+
+- **Instruction file:** use `AGENTS.md` as the canonical file. Link shared facts from `AGENTS.md` to `docs/` and `tests/README.md`.
+- **Active plan upkeep and pruning:** the active plan is an execution steering aid, not a changelog or git log. Bounded size: keep `docs/010-plan.md` under 35 lines. Pruning rule: at each new increment or end of turn, prune completed items older than the immediately preceding step. Historical achievements live in git commit messages, not in the active plan.
+- **Architectural Decision Records (ADRs) vs Architecture:**
+  - Architecture describes current living topology: what the system is right now.
+  - Decisions record discrete historical turning points: why approach X was chosen over Y.
+  - Decision records live in `docs/020-decisions.md` or `docs/020-decisions/` numbered sequentially (`001-`, `002-`).
+  - Decision immutability: never delete an ADR when requirements change. Update its status line to `Status: Superseded by Decision XXX` and link to the replacement; do not erase historical decisions.
 - **Version control:** initialize local version control when it is missing and within scope. Commits and remote publication follow the authorized Git workflow.
 - **Minimal shapes** (extend only when the project needs more):
 
 ```markdown
-# Plan
+# Active Plan
 
-Goal: <one sentence>
+Goal: <one sentence defining active milestone>
 Acceptance: <observable checks>
-Done: <items>
 Next action: <one concrete, runnable step>
 Blockers: <none | list>
+
+Recent context:
+
+- [x] <immediately preceding completed step>
 ```
 
 ```markdown
@@ -65,9 +76,11 @@ Blockers: <none | list>
 
 ## Decision 001 - <the chosen approach, named as a noun phrase>
 
+Status: Accepted <!-- or Superseded by Decision XXX -->
+
 ### Decision context
 
-<The situation in which this decision governs: what is being decided and when a reader must consult it.>
+<The situation in which this decision governs: what is being decided and the constraint forcing the choice.>
 
 ### Selected approach
 
@@ -75,7 +88,7 @@ Blockers: <none | list>
 
 ### Rejected approaches
 
-- **<Option>:** <the property that rules it out, as a fact.>
+- `<Option>`: <the property that rules it out, as a fact.>
 
 ### Revisit decision when
 
@@ -84,38 +97,39 @@ Blockers: <none | list>
 
 Write a decision record as a current rule, not a story:
 
-- **Title:** names the chosen approach. Number records in order; no date or status field.
-- **Context:** states where the decision applies. It does not describe what existed before.
+- **Title:** names the chosen approach. Number records sequentially in order (`001`, `002`).
+- **Status:** explicitly states `Status: Accepted` or `Status: Superseded by Decision XXX`.
+- **Context:** states where the decision applies and the constraint that forced it. It does not describe what existed before.
 - **Selected approach:** gives instructions a reader can follow without the other sections.
 - **Rejected approaches:** one fact-based line per option, with no narrative ("we tried", "it turned out", "previously").
 - **Revisit:** names a measurable trigger, not "if needed".
-- **Changes:** edit the record in place. Delete a record that no longer governs.
+- **Changes:** edit the record in place or mark as superseded; never delete past decisions.
 
 ## 4. Encode and Audit the Maintenance Contract
 
 Write project-specific instructions in the instruction file. They must tell future agents to act at these points:
 
-| Trigger                                             | Required Project Practice                                                                                                                |
-| :-------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------- |
-| Start or resume work                                | Read the canonical plan, relevant decisions, testing guidance, and version control changes; reconcile stale state before dependent work. |
-| Select the next increment                           | Record the intended outcome, acceptance criteria, scope, and necessary verification in the active plan.                                  |
-| Complete an increment or encounter a blocker        | Update progress, verification status, blockers, and the next actionable step.                                                            |
-| Discover a changed requirement or failed assumption | Revise the affected plan and record the reason before continuing work that depends on the old assumption.                                |
-| Make a consequential design choice                  | Add a decision record: its context, selected approach, rejected approaches, and revisit conditions.                                      |
-| Change behavior, interfaces, tooling, or setup      | Update affected tests and canonical instructions alongside implementation; audit the testing strategy when its assumptions change.       |
-| End a session or hand off work                      | Record completed work, remaining work, unresolved decisions, verification evidence, and the next action.                                 |
+| Trigger                                             | Required Project Practice                                                                                                                 |
+| :-------------------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------- |
+| Start or resume work                                | Read the canonical plan, relevant decisions, testing guidance, and version control changes; reconcile stale state before dependent work.  |
+| Select the next increment                           | Record the intended outcome, acceptance criteria, scope, and necessary verification in the active plan; prune older completed tasks.      |
+| Complete an increment or encounter a blocker        | Update progress, verification status, blockers, and the next actionable step.                                                             |
+| Discover a changed requirement or failed assumption | Revise the affected plan and record the reason before continuing work that depends on the old assumption.                                 |
+| Make a consequential design choice                  | Add a decision record: its context, selected approach, rejected approaches, and revisit conditions.                                       |
+| Change behavior, interfaces, tooling, or setup      | Update affected tests and canonical instructions alongside implementation; audit the testing strategy when its assumptions change.        |
+| End a session or hand off work                      | Record completed work, remaining work, unresolved decisions, verification evidence, and the next action; prune completed checklist items. |
 
 Name the project's real files and commands. Reference a skill only where its workflow is needed, and carry forward project constraints without repeating universal agent policy. A sample of the finished text:
 
 ```markdown
 ## Working agreements
 
-- Start: read PLAN.md, the latest DECISIONS.md entries, and `git log -10`; fix stale items first.
-- Before an increment: write its goal and acceptance check in PLAN.md.
-- After it: update PLAN.md, then run `<test command>`.
-- A design choice with trade-offs: add a DECISIONS.md entry.
-- A behavior or tooling change: update TESTING.md and the README in the same change.
-- End of session: leave "Next action" runnable by a reader with no chat history.
+- Start: read `docs/010-plan.md`, the latest `docs/020-decisions.md` entries, and `git log -10`; fix stale items first.
+- Before an increment: write its goal and acceptance check in `docs/010-plan.md`.
+- After it: update `docs/010-plan.md`, prune older completed tasks, then run `<test command>`.
+- A design choice with trade-offs: add a `docs/020-decisions.md` entry.
+- A behavior or tooling change: update `tests/README.md` and `README.md` in the same change.
+- End of session: leave "Next action" runnable by a reader with no chat history; prune completed checklist residue.
 ```
 
 **Check effectiveness:** compare a recent work item with repository changes and recorded progress. Repair stale records and missing triggers within the authorized task.
@@ -137,12 +151,12 @@ Act only on what is undecided or broken: compare requirements with the current s
 
 ## 6. Establish Verification for Real Behavior
 
-Activate `test-strategist` for the strategy, harness, and `TESTING.md`. Without it, define for each acceptance criterion the real entry point, the action, the expected observable result, and the command or manual procedure, and record them in the testing document. Resolve high-risk assumptions early, and revise milestone order when evidence changes the risks.
+Activate `test-strategist` for the strategy, harness, and `tests/README.md`. Without it, define for each acceptance criterion the real entry point, the action, the expected observable result, and the command or manual procedure, and record them in `tests/README.md`. Resolve high-risk assumptions early, and revise milestone order when evidence changes the risks.
 
 ## 7. Verify Foundations and Demonstrate Continuity
 
 - **Run it:** execute the documented setup, launch, test, and packaging commands in a clean or isolated environment where practical. Disclose environment-dependent prerequisites. For a produced package, launch the actual artifact. Build success and screenshots alone do not establish runtime behavior.
-- **Cold-start test:** start a fresh agent or subagent with only the repository. Ask it for the current goal, the last verified result, and the next action, and have it run the documented check. Each wrong or missing answer marks a gap in the records or instructions. Repair it and repeat.
+- **Cold-start test:** start a fresh agent or subagent with only the repository. Ask it for the current goal, the last verified result, and the next action, and have it run the documented check. If subagents are unavailable, simulate a cold start by evaluating whether a fresh reader with only the working tree can execute the next step without conversational context. Each wrong or missing answer marks a gap in the records or instructions. Repair it and repeat.
 - **Report honestly:** name failed or blocked checks, the exact barrier, and the unverified outcome. Hand any staging, committing, or pushing to `commit-scribe` with the user's Git instructions.
 
 ## 8. Completion Criteria

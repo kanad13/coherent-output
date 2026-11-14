@@ -30,13 +30,14 @@ Evaluate target repositories against these structural standards:
 - **Index File Naming:**
   - Directory index files and root documentation hubs use the exact name `README.md` as the standard exception to numeric prefixes.
 - **Justified Exceptions:**
+  - Root operational entrypoints (`README.md`, `AGENTS.md`) and co-located testing guides (`tests/README.md`) follow standard unnumbered naming conventions.
   - Standard development directories, code packages, tools, adapters, and skill bundles follow standard unnumbered naming conventions.
-  - System configuration rules inside `rules/` follow a standard two-digit convention (`01-`, `02-`).
+  - Architectural Decision Records inside decision directories (such as `docs/020-decisions/` or `decisions/`) follow sequential three-digit numbering (`001-`, `002-`) rather than increments of ten.
 
 ### 2. Directory & Root Index Standards
 
 - **Directory README Coverage:**
-  - Every content subdirectory must contain a `README.md` serving as its local index.
+  - Every major content hub and documentation subdirectory with three or more content files must contain a `README.md` serving as its local index. Single-purpose leaf folders and asset directories (`images/`, `figures/`) do not require a local index file.
 - **Directory README Structure:**
   - Purpose: declare the directory scope and intended usage.
   - Start Here: identify the primary entry point when documents have a logical reading order.
@@ -119,8 +120,10 @@ Use this structured deliverable:
 
 ## 4. Two-Phase Execution Gate
 
+- **Lens Boundary:** `markdown-audit` is strictly a non-destructive inspection lens. It never executes repository scaffolding, creates missing code manifests, or modifies non-documentation files. If foundational files are missing, record them in the findings table as informational gaps or suggest establishing repository foundations.
+- **Callee Mode:** When invoked by a parent workflow, return the findings table directly without pausing for an interactive user approval prompt. The calling workflow decides which remediations to apply.
 - **Phase 1 Output:** Conclude with the audit report and correction plan.
-- **Phase 2 Implementation:** Perform actual file moves, renames, and link updates **only after the user explicitly approves** the correction plan.
+- **Phase 2 Implementation:** Perform actual file moves, renames, and link updates **only after the user explicitly approves** the correction plan. The user may approve all documentation fixes or select specific items to resolve.
 - When applying changes:
   1. Apply renames and moves in dependency order.
   2. Update all affected internal links in the same atomic operation.

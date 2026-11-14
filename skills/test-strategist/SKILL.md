@@ -5,7 +5,7 @@ description: Audits and evolves project-specific testing strategies against real
 
 # Test Strategy & Behavioral Verification
 
-Turn the project's requirements, existing checks, and runtime evidence into a testing strategy that proves the behavior users and callers rely on. Follow stages 1–6 in order, carrying findings forward, and revisit a stage when execution exposes a changed assumption. This skill owns the content of the project's canonical testing document (`TESTING.md` or a testing section in `README.md`); other skills only point to it. Use the smallest strategy that supports the claim: a small project may need one command and a short workflow table.
+Turn the project's requirements, existing checks, and runtime evidence into a testing strategy that proves the behavior users and callers rely on. Follow stages 1–6 in order, carrying findings forward, and revisit a stage when execution exposes a changed assumption. This skill owns the content of the project's canonical testing document (`tests/README.md` or a testing section in `README.md`); other skills only point to it. Use the smallest strategy that supports the claim: a small project may need one command and a short workflow table.
 
 ## 1. Establish Scope and Baseline
 
