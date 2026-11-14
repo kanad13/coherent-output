@@ -44,11 +44,19 @@ The open specification permits optional fields, including license, compatibility
 
 Use selected STE100 and Google developer-documentation principles: direct verbs, clear references, consistent terms, familiar words, and definitions at first use. Preserve necessary domain vocabulary, facts, commitments, uncertainty, and protected assets. Treat a Gunning Fog aim near 10 as an informal diagnostic. Claim a measured score only with a stated assessment method; these instructions do not establish full ASD-STE100 conformance.
 
+Write every instruction, example, and statement so that a reader with no memory of earlier work understands it. A new session, a different agent, or a new maintainer sees only the file. Name things in full instead of pointing at prior conversation ("as discussed", "the earlier change"). Use examples from common domains that a stranger can follow. Match the file's audience: text installed for every project (such as the global instructions) uses no jargon from this repository, while a document about this repository may use its terms. Record history in commit messages, not in the text.
+
 For substantial explanations, introduce the purpose, major aspects, and their relationships before deep implementation detail. Later sections must add mechanisms, consequences, choices, or actionable detail. Keep decision-critical limits and safety warnings early. Choose connected paragraphs, lists, tables, and diagrams for the content. Preserve executable procedure order, required chronology, lookup access, explicit templates, and short-answer limits.
 
 [progressive-documentation](../skills/progressive-documentation/SKILL.md) owns whole-document progression. [cognitive-clarity-refactor](../skills/cognitive-clarity-refactor/SKILL.md) owns dense-text conversion into its strict two-tier bullet hierarchy. They can cooperate when both contracts apply. Neither layout is the default for every artifact.
 
 Use this section as the canonical authoring policy. Give each portable skill a short local version of the principles needed to execute on its own. Retain artifact-specific requirements: emails preserve recipient tone and modality; notes preserve comprehensive context; explanations preserve prerequisite order. Update those local versions together when the central policy changes.
+
+### Examples and edge cases
+
+A worked example anchors the shape of every output and adds tokens to every invocation. Do not add one to satisfy a generic quality score. Prefer a short edge-case list that says what to do with a brief question, an ambiguous request, a missing or contradictory input, and an input that is already fine. Add an example only after an [ab-trial](../skills/ab-trial/SKILL.md) shows a gain. Then mark it as shape only, pick a domain unlike typical use, keep it small, and put longer ones in `references/`.
+
+Warnings from outside quality checkers about `version`, `metadata`, or a "Purpose" heading do not override this contract. Treat each as a prompt to investigate, not an instruction.
 
 ### Dependencies and portable resources
 
@@ -90,7 +98,7 @@ Raw transcripts, duplicated skill snapshots, and historical evaluation reports s
 
 ## 3. Skills inventory
 
-The library provides 17 situational skills organized by operational domain:
+The library provides situational skills organized by operational domain:
 
 ### Repository Operations & Git Hygiene
 
@@ -102,12 +110,13 @@ The library provides 17 situational skills organized by operational domain:
 
 ### Engineering Strategy & Quality Assurance
 
-| Skill                                                     | Description                                                                                            |
-| :-------------------------------------------------------- | :----------------------------------------------------------------------------------------------------- |
-| [test-strategist](../skills/test-strategist/SKILL.md)     | Audit behavior, implement verification strategies, execute checks, and maintain test instructions.     |
-| [claim-validator](../skills/claim-validator/SKILL.md)     | Stress-test claims, proposals, and strategies against verified evidence.                               |
-| [worth-the-squeeze](../skills/worth-the-squeeze/SKILL.md) | Audit proposals, migrations, and refactors against empirical ROI and friction without compliance bias. |
-| [web-research](../skills/web-research/SKILL.md)           | Conduct multi-source web research with strict source hierarchy and citation trails.                    |
+| Skill                                                     | Description                                                                                                    |
+| :-------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------- |
+| [test-strategist](../skills/test-strategist/SKILL.md)     | Audit behavior, implement verification strategies, execute checks, and maintain test instructions.             |
+| [claim-validator](../skills/claim-validator/SKILL.md)     | Stress-test claims, proposals, and strategies against verified evidence.                                       |
+| [worth-the-squeeze](../skills/worth-the-squeeze/SKILL.md) | Audit proposals, migrations, and refactors against empirical ROI and friction without compliance bias.         |
+| [web-research](../skills/web-research/SKILL.md)           | Conduct multi-source web research with strict source hierarchy and citation trails.                            |
+| [ab-trial](../skills/ab-trial/SKILL.md)                   | Decide between uncertain options with blind, independent trials and an adopt, reject, or inconclusive verdict. |
 
 ### Content Refactoring & Writing
 
@@ -171,10 +180,13 @@ Rules that every skill follows:
 | [repo-evergreen-sync](../skills/repo-evergreen-sync/SKILL.md)               | workflow | test-strategist, commit-scribe | markdown-audit, progressive-documentation, cognitive-clarity-refactor                              | none                                            | Drift ledger outcome, check results, commit-scribe report |
 | [project-scaffolding](../skills/project-scaffolding/SKILL.md)               | workflow | none                           | test-strategist, web-research, worth-the-squeeze, commit-scribe                                    | none                                            | Verified foundations and a cold-start result              |
 | [grill-me](../skills/grill-me/SKILL.md)                                     | workflow | none                           | web-research, worth-the-squeeze                                                                    | none                                            | Decision plan and a tracker file                          |
+| [ab-trial](../skills/ab-trial/SKILL.md)                                     | workflow | none                           | worth-the-squeeze, claim-validator                                                                 | none                                            | Verdict (adopt, reject, inconclusive), evidence, cost     |
 | [articulation-review](../skills/articulation-review/SKILL.md)               | workflow | worth-the-squeeze              | web-research, cognitive-clarity-refactor, progressive-documentation, markdown-audit, commit-scribe | none                                            | Review with three options per issue, then final text      |
 
 `./scripts/deploy.sh` reads this table. It fails when a listed skill does not exist, when the graph has a cycle, when a workflow is called, when a lens calls a workflow, when a lens with calls lacks a callee-mode line, or when a skill's text names another skill that its row does not list (or lists one it never names). Edit the row in the same change that adds or removes a reference.
 
 ## 5. Maintenance and validation
 
-Follow the acceptance steps in [the authoring contract](#2-skill-authoring-contract) for every skill change. Deploy the updated sources and run `./scripts/verify.sh`. Record independent behavior trials when the output contract changes.
+Follow the acceptance steps in [the authoring contract](#2-skill-authoring-contract) for every skill change. Use [ab-trial](../skills/ab-trial/SKILL.md) when a change could make output worse and the effect can be measured; the procedure is in the [verification strategy](../scripts/README.md#3-verification-strategy).
+
+An outside evaluator such as NVIDIA SkillEvaluator is a one-time reference, not a gate. Its keyless quality score flags metadata this contract omits on purpose. Its security scan flags formatter comments, bytecode caches, and rules that forbid unsafe Git actions; read each finding before acting. Its LLM rubric is useful for spotting weak error handling. Its live evaluation needs a host that activates the skill and a dataset of authored cases; one generated case gives no signal. Deploy the updated sources and run `./scripts/verify.sh`. Record independent behavior trials when the output contract changes.
