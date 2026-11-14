@@ -1,62 +1,97 @@
 ---
 name: ab-trial
-description: Decides whether a proposed change is better, worse, or no different by running blind, independent trials of each option and reporting adopt, reject, or inconclusive with evidence and cost. Use when the better of two or more plausible options can only be learned by running each one, and a wrong choice is costly, such as two wordings of a prompt, two ranking rules, or two caching strategies tested on the same inputs. Do not use for obvious fixes, matters of taste, or changes that a deterministic test already settles.
+description: Compares competing instruction variants or high-blast-radius changes through a controlled A/B/n hypothesis tournament with isolated subagents and reports an adopt, reject, or inconclusive verdict. Use when deciding between two to five plausible options whose effect is uncertain and a wrong choice is costly. Do not use for obvious bug fixes, trivial edits, or changes that a deterministic test already settles.
 ---
 
-# A/B Trial: Blind Comparison of Options
+# A/B/n Hypothesis Tournament: Controlled Trial of Competing Options
 
-Run a small, fair experiment before committing to a change whose effect is uncertain. Independent agents each receive one option and a task. A separate judge scores the outputs without knowing which option produced them. Report the evidence, its limits, and the cost. A sample is evidence for that sample, not proof.
-
----
-
-## 1. Gate: Is a Trial Worth It?
-
-- Activate `worth-the-squeeze` on the question "is testing this worth the cost?" Without it, answer in three sentences: the cost of a wrong choice, the cost of the trial, and whether a cheaper check (a deterministic test, a quick read) settles it.
-- Stop and decide directly when the change is cheap to reverse, taste decides it, or an existing check already settles it. Say why no trial ran.
-- Activate `claim-validator` when the hypothesis hides several claims. Without it, split the hypothesis into one testable statement per option.
-- State the planned agent count and a rough token cost in the gate answer. Each agent carries tens of thousands of tokens of overhead, so a trial should cost a fraction of what the change is worth.
+Run an empirical experiment before committing a high-blast-radius change to instructions, behavioral rules, or architecture. The coordinator frames 2 to 5 competing hypotheses (including an unchanged control arm), runs each arm in an isolated subagent on the identical model to prevent context contamination, executes a standard benchmark battery, and grades results through deterministic checks and blinded scoring.
 
 ---
 
-## 2. Pre-Register Before Any Run
+## 1. Gate: Is a Trial Worth the Squeeze?
 
-Write these down first, and do not change them after seeing outputs.
-
-1. **Hypothesis:** what the change should improve, and what it might harm.
-2. **Arms:** one change per arm against an unchanged control. Record each arm's cost, such as prompt length in tokens or run time.
-3. **Tasks:** at least eight. Cover normal use, a boundary case where the change should not apply, and an incomplete or off-distribution input. Keep them hard enough to fail. A task every arm passes carries no signal.
-4. **Checks:** a short binary checklist per task. Prefer deterministic checks (required strings, length, a verifier tool). Use the judge only for what code cannot test.
-5. **Decision rule:** adopt only if the arm is no worse than control on every task type, better on the boundary or incomplete tasks, and inside a stated size budget. A tie keeps the cheaper arm.
+- **High-Stakes Trigger:** Run when changing foundational instructions, system prompts, or behavioral directives with wide downstream impact, or when explicitly requested by the user. Do not run for obvious bug fixes, routine code refactors, or changes already settled by deterministic unit tests.
+- **Cost & Value Audit:** Activate `worth-the-squeeze` on the question: "Does testing these candidate options justify the token cost?" Without it, answer in three sentences: the cost of a wrong choice, the token budget of the tournament, and whether a cheaper read or existing test settles it.
+- **Decompose Hypotheses:** Activate `claim-validator` when candidate proposals conflate multiple independent changes. Without it, isolate one distinct mechanism or coherent strategy per candidate arm.
+- **Tournament Topology:** Limit the tournament to $K \in [2, 5]$ hypotheses: Arm 0 is always the unchanged Control; Arms 1 through $K-1$ are candidate variants. Bound total subagent count strictly to $K$ (one agent per arm).
 
 ---
 
-## 3. Run Independent Arms
+## 2. Pre-Registration Protocol
 
-- **Agents:** use one independent subagent per arm, and no more than three agents in total, judge included. Each arm agent gets its own copy of the arm and the full task list, treats each task as a separate request, and writes each output to its own file. Never tell an agent about the hypothesis, the other arms, or the checks. Use a fresh agent per task only when a task needs tools or a multi-turn dialogue, or must not see the other tasks.
-- **Order:** shuffle the task order separately for each arm, so an order effect does not line up with one arm.
-- **Blinding:** name each output file with a random ID, and keep the ID-to-arm map away from the judge.
-- **Models:** run a second model strength only when the artifact will run on different hosts. A strong model can hide a weakness that a weaker one shows. Each extra strength adds one agent per arm, so keep the total small.
-- **Judge:** use a model from a different family than the agents when one is available. Score each output against its checklist, one run at a time. Send content to an external service only when the cross-family judge adds signal.
-- **Scratch space:** keep arms, outputs, and scores outside the repository.
+Before launching any subagent or generating outputs, record these four items. Do not alter them after observing outputs:
+
+1. **Hypotheses & Arms ($K \in [2, 5]$):**
+   - `Arm 0 (Control)`: Unchanged status quo.
+   - `Arm 1..N (Variants)`: Competing articulations, permutations, additions/removals of directives, or structural reorganizations.
+2. **Benchmark Test Battery (3 to 4 Tasks):**
+   - `Task 1 (Happy Path)`: Typical input representing core workflow.
+   - `Task 2 (Boundary Case)`: Edge condition where the instruction must gracefully abstain, preserve assets, or enforce negative constraints.
+   - `Task 3 (Adversarial / Stress)`: Ambiguous, malformed, or out-of-distribution input designed to surface failure modes.
+   - `Task 4 (Optional)`: Domain-specific regression scenario.
+3. **Scoring Checklist:**
+   - Define a binary pass/fail rubric per task.
+   - Order checks deterministically first (length bounds, exit codes, required strings, format compliance, AST/schema validity).
+   - Reserve qualitative checks for aspects programmatic code cannot verify.
+4. **Decision Rule:**
+   - Define the explicit condition required to adopt a variant (for example: pass 100% of deterministic checks, outperform Control on at least two tasks with zero regressions, and remain within a token size budget).
+   - Inconclusive default: If no variant demonstrably beats Control, retain Control.
 
 ---
 
-## 4. Read the Results Honestly
+## 3. Hermetic Execution Protocol
 
-1. Compute deterministic checks first. Then judge scores. Then size and length per arm.
-2. Audit every output where the judge and the deterministic checks or the length disagree. Judges miss real defects and invent false ones. Correct the verdict and say so.
-3. Check for copying: text from an example appearing in unrelated outputs.
-4. State the sample size, the ceiling effect if nearly everything passed, that tasks within an arm shared one agent's context, and what the trial could not detect.
+- **Single Model Invariant:** Run every arm on the **exact same model** and environment configuration. Never mix model tiers or families across arms in a trial; holding the model constant guarantees observed variance is caused strictly by the candidate instructions.
+- **Isolated Subagents (1 Subagent per Arm):**
+  - Spawn exactly one independent subagent per hypothesis arm ($K$ subagents total).
+  - Provide each subagent only its assigned arm variant and the full benchmark battery.
+  - Never disclose the hypothesis, other candidate arms, scoring rubrics, or Control identity to the subagent.
+  - Subagents execute all battery tasks in isolation and write raw responses to temporary scratch files outside the repository checkout (such as `.scratch/ab-trial-<id>/arm-<k>/task-<m>.txt`).
+- **Single-Agent Fallback:** When the host environment does not support subagents, execute arms sequentially in separate temporary scratch directories, wiping working memory between arms to prevent context pollution.
+- **Blinding:** Assign each output a random anonymous hash ID (`run-a1`, `run-b2`, etc.). Retain the hash-to-arm lookup map privately in coordinator memory away from the evaluation step.
 
 ---
 
-## 5. Deliverable
+## 4. Evaluation & Verification
 
-Return:
+1. **Deterministic Audit First:** Evaluate code, character/token counts, formatting integrity, and regex assertions against blinded files. Mark hard failures immediately.
+2. **Blinded Qualitative Audit:** Evaluate remaining blinded outputs against the pre-registered checklist. Evaluate one output at a time with a binary pass/fail rubric to prevent position bias.
+3. **Discrepancy & Hallucination Check:** Inspect any output where qualitative scoring conflicts with deterministic indicators. Check for copied text, circular reasoning, or rule evasion.
+4. **Follow-Up Round (Optional):** If two candidate variants tie or a clear hybrid emerges, run one targeted head-to-head playoff between the top two variants using two fresh boundary tasks.
 
-1. **Verdict:** adopt, reject, or inconclusive, tied to the pre-registered rule.
-2. **Evidence table:** per arm and task type, checks passed, size, and length.
-3. **Cost:** tokens added or time spent, against the observed benefit.
-4. **Limits:** sample size, models used, judge audit notes, and the next test that would settle an inconclusive result.
+---
 
-Inconclusive is a valid result. It means keep the control and do not claim a benefit.
+## 5. Deliverable: Tournament Ledger
+
+Return the evaluation in this format:
+
+```markdown
+### A/B/n Tournament: [Topic / Directive Evaluated]
+
+#### 1. Pre-Registered Hypotheses & Protocol
+
+- **Arm 0 (Control):** [Description of current status quo]
+- **Arm 1 (Variant A):** [Description of hypothesis 1]
+- **Arm 2 (Variant B):** [Description of hypothesis 2]
+- **Decision Rule:** [Explicit adoption condition]
+
+#### 2. Benchmark Evaluation Matrix
+
+| Arm                   | Task 1 (Happy) | Task 2 (Boundary) | Task 3 (Stress) | Deterministic Pass % | Size / Cost Delta |
+| :-------------------- | :------------- | :---------------- | :-------------- | :------------------- | :---------------- |
+| **Arm 0 (Control)**   | Pass / Fail    | Pass / Fail       | Pass / Fail     | %                    | Baseline          |
+| **Arm 1 (Variant A)** | Pass / Fail    | Pass / Fail       | Pass / Fail     | %                    | +/- tokens        |
+| **Arm 2 (Variant B)** | Pass / Fail    | Pass / Fail       | Pass / Fail     | %                    | +/- tokens        |
+
+#### 3. Juice vs. Squeeze Analysis
+
+- **Observed Benefit:** [Concrete functional gain over Control]
+- **Operational Squeeze:** [Instruction bloat, token overhead, maintenance friction]
+
+#### 4. Final Verdict
+
+- **Verdict:** [ADOPT (Arm X) | REJECT | INCONCLUSIVE]
+- **Rationale:** [How the evidence met or failed the pre-registered decision rule]
+- **Repository Landing:** [Exact file modifications to commit, or none if Control retained]
+```

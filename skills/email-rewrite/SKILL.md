@@ -18,6 +18,9 @@ Follow this protocol to transform unstructured notes, messy thoughts, or poorly 
   - Every factual assertion, date, number, metric, and stakeholder identity.
   - Every hard commitment, deadline, dependency, and owner.
   - Every operational warning, blocker, and unresolved uncertainty.
+- **The Zero-Addition Invariant:** Add no new facts, metrics, deadlines, or obligations absent from the draft:
+  - Do not invent polite excuses, backstories, fake timeframes, or unverified technical root causes.
+  - Use explicit placeholders (e.g., `[Client Name]`, `[Target Time]`) when details or recipient identities are unspecified in the source.
 - **Calibrated Modality Directive:**
   - Purge subservient filler, hollow apologies (`"sorry for the curveball"`), and corporate buzzwords.
   - **Preserve Epistemic & Diplomatic Hedging:** Strictly preserve hedging when it communicates genuine technical contingency, commercial flexibility, or non-final exploratory options (e.g., `"we could potentially pilot this in Q3"`). Never convert tentative options into unintended commitments or hard promises into vague suggestions.

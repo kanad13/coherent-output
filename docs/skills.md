@@ -110,13 +110,13 @@ The library provides situational skills organized by operational domain:
 
 ### Engineering Strategy & Quality Assurance
 
-| Skill                                                     | Description                                                                                                    |
-| :-------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------- |
-| [test-strategist](../skills/test-strategist/SKILL.md)     | Audit behavior, implement verification strategies, execute checks, and maintain test instructions.             |
-| [claim-validator](../skills/claim-validator/SKILL.md)     | Stress-test claims, proposals, and strategies against verified evidence.                                       |
-| [worth-the-squeeze](../skills/worth-the-squeeze/SKILL.md) | Audit proposals, migrations, and refactors against empirical ROI and friction without compliance bias.         |
-| [web-research](../skills/web-research/SKILL.md)           | Conduct multi-source web research with strict source hierarchy and citation trails.                            |
-| [ab-trial](../skills/ab-trial/SKILL.md)                   | Decide between uncertain options with blind, independent trials and an adopt, reject, or inconclusive verdict. |
+| Skill                                                     | Description                                                                                                      |
+| :-------------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------- |
+| [test-strategist](../skills/test-strategist/SKILL.md)     | Audit behavior, implement verification strategies, execute checks, and maintain test instructions.               |
+| [claim-validator](../skills/claim-validator/SKILL.md)     | Stress-test claims, proposals, and strategies against verified evidence.                                         |
+| [worth-the-squeeze](../skills/worth-the-squeeze/SKILL.md) | Audit proposals, migrations, and refactors against empirical ROI and friction without compliance bias.           |
+| [web-research](../skills/web-research/SKILL.md)           | Conduct multi-source web research with strict source hierarchy and citation trails.                              |
+| [ab-trial](../skills/ab-trial/SKILL.md)                   | Compare competing options or instruction variants through a controlled A/B/n tournament with isolated subagents. |
 
 ### Content Refactoring & Writing
 
