@@ -24,7 +24,7 @@ Evaluate target repositories against these structural standards:
 ### 1. Predictable Numbering & Naming
 
 - **Curated Documentation Guides:**
-  - Content files in curated documentation libraries use a three-digit numeric prefix followed by lowercase kebab-case (e.g., `010-introduction.md`, `020-architecture.md`).
+  - Content files in curated documentation libraries use a three-digit numeric prefix followed by lowercase kebab-case (e.g., `010-introduction.md`, `020-quickstart.md`).
 - **Standard Increments:**
   - Use primary sequence increments of ten (`010`, `020`, `030`) to reserve intermediate numbers (`015-prerequisites.md`) for future insertions without renumbering.
 - **Index File Naming:**

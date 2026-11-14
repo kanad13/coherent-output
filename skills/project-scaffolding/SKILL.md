@@ -50,10 +50,10 @@ Give each needed kind of information one canonical home that future agents can f
 
 - **Instruction file:** use `AGENTS.md` as the canonical file. Link shared facts from `AGENTS.md` to `docs/` and `tests/README.md`.
 - **Active plan upkeep and pruning:** the active plan is an execution steering aid, not a changelog or git log. Bounded size: keep `docs/010-plan.md` under 35 lines. Pruning rule: at each new increment or end of turn, prune completed items older than the immediately preceding step. Historical achievements live in git commit messages, not in the active plan.
-- **Architectural Decision Records (ADRs) vs Architecture:**
-  - Architecture describes current living topology: what the system is right now.
-  - Decisions record discrete historical turning points: why approach X was chosen over Y.
-  - Decision records live in `docs/020-decisions.md` or `docs/020-decisions/` numbered sequentially (`001-`, `002-`).
+- **Single home for architecture and decisions (no separate architecture file):**
+  - Do not create a separate architecture file (`architecture.md` or `docs/architecture.md`). Maintaining separate architecture and decision files creates split-brain drift and ongoing maintenance overhead.
+  - A concise, high-level architecture overview (component topology, entry points) belongs directly in `README.md`.
+  - All concrete architectural rules, boundaries, component choices, invariants, and trade-offs live in `docs/020-decisions.md` (or `docs/020-decisions/`), numbered sequentially (`001-`, `002-`).
   - Decision immutability: never delete an ADR when requirements change. Update its status line to `Status: Superseded by Decision XXX` and link to the replacement; do not erase historical decisions.
 - **Version control:** initialize local version control when it is missing and within scope. Commits and remote publication follow the authorized Git workflow.
 - **Minimal shapes** (extend only when the project needs more):
